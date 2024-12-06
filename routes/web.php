@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\UserController;
+use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,3 +24,11 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+
+Route::get('/admin', function () {
+    return 'Admin Dashboard';
+})->middleware(RoleMiddleware::class . ':admin'); // Utilisation explicite
+
+Route::get('/technicien', function () {
+    return 'Technicien Dashboard';
+})->middleware(RoleMiddleware::class . ':technicien');
