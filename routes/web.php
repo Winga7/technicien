@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\InterventionController;
+use App\Models\User;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -16,6 +17,12 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+Route::get('/users', function () {
+    return Inertia::render('Users/Index', [
+        'users' => User::all(),
+    ]);
+})->middleware(['auth']);
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('clients', ClientController::class);
@@ -30,8 +37,7 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
-});
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/users', [UserController::class, 'index']);
+    // Routes pour les utilisateurs
+    Route::resource('users', UserController::class);
 });
