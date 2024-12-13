@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+import { Link } from '@inertiajs/vue3';
+</script>
 <template>
     <!-- Quick Stats -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
