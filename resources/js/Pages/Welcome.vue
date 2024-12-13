@@ -37,19 +37,14 @@ defineProps({
         required: true,
     },
 });
-
-function handleImageError() {
-    document.getElementById("screenshot-container")?.classList.add("!hidden");
-    document.getElementById("docs-card")?.classList.add("!row-span-1");
-    document.getElementById("docs-card-content")?.classList.add("!flex-row");
-    document.getElementById("background")?.classList.add("!hidden");
-}
 </script>
 
 <template>
     <Head title="Bienvenue" />
 
-    <div class="min-h-screen bg-zinc-900 text-white">
+    <div
+        class="min-h-screen bg-zinc-900 text-white flex flex-col justify-between"
+    >
         <!-- Navbar -->
         <div class="relative sm:flex sm:justify-center sm:items-center">
             <div class="p-6 flex justify-end items-center gap-4">
@@ -109,7 +104,9 @@ function handleImageError() {
         </div>
 
         <!-- Hero Section -->
-        <div class="max-w-7xl mx-auto px-6 py-16">
+        <div
+            class="flex-grow flex flex-col justify-center items-center px-6 py-16"
+        >
             <h1 class="text-4xl font-bold mb-8 text-center">
                 Bienvenue sur l'Intranet Technicien
             </h1>
@@ -118,10 +115,17 @@ function handleImageError() {
                 <p class="text-xl text-gray-400 mb-8">
                     Plateforme de gestion des interventions techniques.
                 </p>
-                <p class="text-lg text-gray-500">
+                <p class="text-lg text-gray-500 mb-8">
                     Veuillez vous connecter pour accéder à votre espace de
                     travail.
                 </p>
+                <div class="flex justify-center max-w-xs mx-auto">
+                    <img
+                        src="/images/accueil.jpg"
+                        alt="Accueil"
+                        class="rounded-lg shadow-lg max-w-full h-auto"
+                    />
+                </div>
             </div>
         </div>
     </div>
