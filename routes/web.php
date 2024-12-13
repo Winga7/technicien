@@ -25,10 +25,6 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::get('/admin', function () {
-    return 'Admin Dashboard';
-})->middleware(RoleMiddleware::class . ':admin'); // Utilisation explicite
-
-Route::get('/technicien', function () {
-    return 'Technicien Dashboard';
-})->middleware(RoleMiddleware::class . ':technicien');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/users', [UserController::class, 'index']);
+});

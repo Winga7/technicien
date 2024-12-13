@@ -16,13 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
-            \App\Http\Middleware\RoleMiddleware::class, // Ajout ici pour le groupe 'web'
         ]);
 
         // Middleware pour le groupe 'api'
-        $middleware->api(append: [
-            \App\Http\Middleware\RoleMiddleware::class, // Ajout ici pour le groupe 'api' si nécessaire
-        ]);
+        $middleware->api(append: []);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
