@@ -1,12 +1,12 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { Head, Link } from "@inertiajs/vue3";
-import ThemeToggle from '@/Components/ThemeToggle.vue';
+import ThemeToggle from "@/Components/ThemeToggle.vue";
 
-const isDark = ref(localStorage.getItem('theme') === 'dark');
+const isDark = ref(localStorage.getItem("theme") === "dark");
 
 onMounted(() => {
-    window.addEventListener('theme-changed', (e) => {
+    window.addEventListener("theme-changed", (e) => {
         isDark.value = e.detail;
     });
 });
@@ -32,7 +32,9 @@ defineProps({
 <template>
     <Head title="Bienvenue" />
 
-    <div class="min-h-screen bg-white dark:bg-zinc-900 text-gray-800 dark:text-white flex flex-col justify-between">
+    <div
+        class="min-h-screen bg-white dark:bg-zinc-900 text-gray-800 dark:text-white flex flex-col justify-between"
+    >
         <!-- Navbar -->
         <div class="relative sm:flex sm:justify-center sm:items-center">
             <div class="p-6 flex justify-end items-center gap-4">
@@ -50,13 +52,6 @@ defineProps({
                             class="font-semibold text-gray-800 dark:text-white hover:text-gray-600 dark:hover:text-gray-300"
                         >
                             Connexion
-                        </Link>
-                        <Link
-                            v-if="canRegister"
-                            :href="route('register')"
-                            class="ml-4 font-semibold text-gray-800 dark:text-white hover:text-gray-600 dark:hover:text-gray-300"
-                        >
-                            Inscription
                         </Link>
                     </template>
                 </template>
