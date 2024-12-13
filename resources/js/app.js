@@ -8,7 +8,11 @@ import { ZiggyVue } from "../../vendor/tightenco/ziggy";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
-// Dans resources/js/app.js
+// Modification du thème par défaut
+if (!localStorage.theme) {
+    localStorage.theme = "dark";
+}
+
 if (
     localStorage.theme === "dark" ||
     (!("theme" in localStorage) &&
