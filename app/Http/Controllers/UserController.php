@@ -5,14 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class UserController extends Controller
 {
     use AuthorizesRequests;
+
     public function index()
     {
         $this->authorize('viewAny', User::class);
-        return response()->json(User::all(), 200);
+        return Inertia::render('Users/Index', [
+            'users' => User::all()
+        ]);
+    }
+
+    public function create()
+    {
+        $this->authorize('create', User::class);
+        return Inertia::render('Users/Create');
     }
 
     public function store(Request $request)
@@ -29,7 +39,8 @@ class UserController extends Controller
         $validated['password'] = bcrypt($validated['password']);
         $user = User::create($validated);
 
-        return response()->json($user, 201);
+        return redirect()->route('users.index')
+            ->with('message', 'Utilisateur créé avec succès.');
     }
 
     public function update(Request $request, User $user)
@@ -44,15 +55,16 @@ class UserController extends Controller
 
         $user->update($validated);
 
-        return response()->json($user);
+        return redirect()->route('users.index')
+            ->with('message', 'Utilisateur mis à jour avec succès.');
     }
 
     public function destroy(User $user)
     {
         $this->authorize('delete', $user);
-
         $user->delete();
 
-        return response()->json(['message' => 'Utilisateur supprimé avec succès.']);
+        return redirect()->route('users.index')
+            ->with('message', 'Utilisateur supprimé avec succès.');
     }
 }

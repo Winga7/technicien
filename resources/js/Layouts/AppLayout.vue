@@ -60,6 +60,13 @@ const toggleTheme = () => {
                                 class="dark:text-gray-200">
                                 Dashboard
                             </NavLink>
+                            <NavLink
+                                v-if="$page.props.auth.user.role === 'admin'"
+                                :href="route('users.index')"
+                                :active="route().current('users.index')"
+                                class="dark:text-gray-200">
+                                Utilisateurs
+                            </NavLink>
                         </div>
                     </div>
 
@@ -120,6 +127,12 @@ const toggleTheme = () => {
                 <div class="pt-2 pb-3 space-y-1">
                     <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
                         Dashboard
+                    </ResponsiveNavLink>
+                    <ResponsiveNavLink
+                        v-if="$page.props.auth.user.role === 'admin'"
+                        :href="route('users.index')"
+                        :active="route().current('users.index')">
+                        Utilisateurs
                     </ResponsiveNavLink>
                 </div>
 
