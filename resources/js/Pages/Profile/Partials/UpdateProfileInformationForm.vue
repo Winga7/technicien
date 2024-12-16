@@ -15,8 +15,9 @@ const props = defineProps({
 
 const form = useForm({
     _method: 'PUT',
-    name: props.user.name,
+    name: props.user.nom,
     email: props.user.email,
+    telephone: props.user.telephone,
     photo: null,
 });
 
@@ -78,17 +79,20 @@ const clearPhotoFileInput = () => {
 <template>
     <FormSection @submitted="updateProfileInformation">
         <template #title>
-            Profile Information
+            <span class="text-gray-900 dark:text-gray-100">
+                Informations du profil
+            </span>
         </template>
 
         <template #description>
-            Update your account's profile information and email address.
+            <span class="text-gray-600 dark:text-gray-400">
+                Mettez à jour vos informations de profil et votre adresse e-mail.
+            </span>
         </template>
 
         <template #form>
             <!-- Profile Photo -->
             <div v-if="$page.props.jetstream.managesProfilePhotos" class="col-span-6 sm:col-span-4">
-                <!-- Profile Photo File Input -->
                 <input
                     id="photo"
                     ref="photoInput"
@@ -97,7 +101,7 @@ const clearPhotoFileInput = () => {
                     @change="updatePhotoPreview"
                 >
 
-                <InputLabel for="photo" value="Photo" />
+                <InputLabel for="photo" value="Photo" class="text-gray-700 dark:text-gray-300" />
 
                 <!-- Current Profile Photo -->
                 <div v-show="! photoPreview" class="mt-2">
@@ -112,17 +116,17 @@ const clearPhotoFileInput = () => {
                     />
                 </div>
 
-                <SecondaryButton class="mt-2 me-2" type="button" @click.prevent="selectNewPhoto">
-                    Select A New Photo
+                <SecondaryButton class="mt-2 me-2 bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-zinc-600" type="button" @click.prevent="selectNewPhoto">
+                    Selectionner une nouvelle photo
                 </SecondaryButton>
 
                 <SecondaryButton
                     v-if="user.profile_photo_path"
                     type="button"
-                    class="mt-2"
+                    class="mt-2 bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-zinc-600"
                     @click.prevent="deletePhoto"
                 >
-                    Remove Photo
+                    Supprimer la photo
                 </SecondaryButton>
 
                 <InputError :message="form.errors.photo" class="mt-2" />
@@ -130,12 +134,12 @@ const clearPhotoFileInput = () => {
 
             <!-- Name -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="name" value="Name" />
+                <InputLabel for="name" value="Nom" class="text-gray-700 dark:text-gray-300" />
                 <TextInput
                     id="name"
                     v-model="form.name"
                     type="text"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full bg-white dark:bg-zinc-900 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-gray-100"
                     required
                     autocomplete="name"
                 />
@@ -144,46 +148,63 @@ const clearPhotoFileInput = () => {
 
             <!-- Email -->
             <div class="col-span-6 sm:col-span-4">
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="email" value="Email" class="text-gray-700 dark:text-gray-300" />
                 <TextInput
                     id="email"
                     v-model="form.email"
                     type="email"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full bg-white dark:bg-zinc-900 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-gray-100"
                     required
                     autocomplete="username"
                 />
                 <InputError :message="form.errors.email" class="mt-2" />
 
                 <div v-if="$page.props.jetstream.hasEmailVerification && user.email_verified_at === null">
-                    <p class="text-sm mt-2">
-                        Your email address is unverified.
+                    <p class="text-sm mt-2 text-gray-700 dark:text-gray-300">
+                        Votre adresse e-mail n'est pas vérifiée.
 
                         <Link
                             :href="route('verification.send')"
                             method="post"
                             as="button"
-                            class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-zinc-800"
                             @click.prevent="sendEmailVerification"
                         >
-                            Click here to re-send the verification email.
+                            Cliquez ici pour ré-envoyer l'e-mail de vérification.
                         </Link>
                     </p>
 
-                    <div v-show="verificationLinkSent" class="mt-2 font-medium text-sm text-green-600">
-                        A new verification link has been sent to your email address.
+                    <div v-show="verificationLinkSent" class="mt-2 font-medium text-sm text-green-600 dark:text-green-400">
+                        Un nouvel e-mail de vérification a été envoyé à votre adresse e-mail.
                     </div>
                 </div>
+            </div>
+
+            <!-- Telephone -->
+            <div class="col-span-6 sm:col-span-4">
+                <InputLabel for="telephone" value="Téléphone" class="text-gray-700 dark:text-gray-300" />
+                <TextInput
+                    id="telephone"
+                    v-model="form.telephone"
+                    type="tel"
+                    class="mt-1 block w-full bg-white dark:bg-zinc-900 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-gray-100"
+                    autocomplete="tel"
+                />
+                <InputError :message="form.errors.telephone" class="mt-2" />
             </div>
         </template>
 
         <template #actions>
-            <ActionMessage :on="form.recentlySuccessful" class="me-3">
-                Saved.
+            <ActionMessage :on="form.recentlySuccessful" class="me-3 text-gray-600 dark:text-gray-400">
+                Sauvegardé.
             </ActionMessage>
 
-            <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                Save
+            <PrimaryButton
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+                class="bg-gray-800 dark:bg-gray-200 hover:bg-gray-700 dark:hover:bg-gray-300 text-white dark:text-gray-900"
+            >
+                Sauvegarder
             </PrimaryButton>
         </template>
     </FormSection>

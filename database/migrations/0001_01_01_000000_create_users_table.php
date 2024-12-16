@@ -15,13 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('nom');
             $table->string('email')->unique();
-            $table->integer('telephone')->unique();
+            $table->string('telephone')->nullable();
+            $table->string('role')->default('technicien');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->rememberToken();
-            $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
-            $table->string('role')->default('technicien');
+            $table->foreignId('current_team_id')->nullable()->index();
+            $table->boolean('must_reset_password')->default(false);
+            $table->rememberToken();
             $table->timestamps();
         });
 

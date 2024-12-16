@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from 'vue';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { ref, watch } from 'vue';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import ApplicationMark from '@/Components/ApplicationMark.vue';
 import Banner from '@/Components/Banner.vue';
 import Dropdown from '@/Components/Dropdown.vue';
@@ -34,6 +34,17 @@ const toggleTheme = () => {
     localStorage.setItem('theme', isDark.value ? 'dark' : 'light');
     document.documentElement.classList.toggle('dark', isDark.value);
 };
+
+const page = usePage();
+
+watch(() => page.props.auth.user, (user) => {
+    if (user?.must_reset_password && route().current() !== 'profile.show') {
+        router.visit(route('profile.show'), {
+            preserveState: true,
+            preserveScroll: true,
+        });
+    }
+}, { immediate: true });
 </script>
 
 <template>
