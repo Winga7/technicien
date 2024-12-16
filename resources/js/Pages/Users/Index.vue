@@ -36,7 +36,7 @@ const deleteUser = (id) => {
                 <Link
                     v-if="$page.props.auth.user.role === 'admin'"
                     :href="route('users.create')"
-                    class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+                    class="bg-blue-500 dark:bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-600 dark:hover:bg-blue-700 transition"
                 >
                     Créer un utilisateur
                 </Link>
@@ -84,14 +84,14 @@ const deleteUser = (id) => {
                                     <Link
                                         v-if="$page.props.auth.user.role === 'admin'"
                                         :href="route('users.edit', user.id)"
-                                        class="inline-flex items-center px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+                                        class="inline-flex items-center px-3 py-1 bg-blue-500 dark:bg-blue-600 text-white rounded-md hover:bg-blue-600 dark:hover:bg-blue-700 transition"
                                     >
                                         Modifier
                                     </Link>
                                     <button
                                         v-if="$page.props.auth.user.role === 'admin'"
                                         @click="deleteUser(user.id)"
-                                        class="inline-flex items-center px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
+                                        class="inline-flex items-center px-3 py-1 bg-red-500 dark:bg-red-600 text-white rounded-md hover:bg-red-600 dark:hover:bg-red-700 transition"
                                     >
                                         Supprimer
                                     </button>

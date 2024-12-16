@@ -1,12 +1,11 @@
 <?php
 
 use App\Http\Controllers\UserController;
-use App\Http\Middleware\RoleMiddleware;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\InterventionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\ClientController;
-use App\Http\Controllers\InterventionController;
 use App\Models\User;
 
 Route::get('/', function () {
@@ -18,17 +17,6 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/users', function () {
-    return Inertia::render('Users/Index', [
-        'users' => User::all(),
-    ]);
-})->middleware(['auth']);
-
-Route::middleware(['auth'])->group(function () {
-    Route::resource('clients', ClientController::class);
-    Route::resource('interventions', InterventionController::class);
-});
-
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -38,6 +26,8 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    // Routes pour les utilisateurs
+    // Routes pour les ressources
+    Route::resource('clients', ClientController::class);
+    Route::resource('interventions', InterventionController::class);
     Route::resource('users', UserController::class);
 });
