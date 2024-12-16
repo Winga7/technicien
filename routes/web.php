@@ -6,6 +6,10 @@ use App\Http\Controllers\InterventionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\InterventionController;
+use App\Http\Controllers\TicketController;
+
 use App\Models\User;
 
 Route::get('/', function () {
@@ -16,6 +20,20 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+Route::get('/users', function () {
+    return Inertia::render('Users/Index', [
+        'users' => User::all(),
+    ]);
+})->middleware(['auth']);
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('clients', ClientController::class);
+    Route::resource('interventions', InterventionController::class);
+});
+
+Route::resource('tickets', TicketController::class)
+    ->middleware(['auth:sanctum', 'verified']);
 
 Route::middleware([
     'auth:sanctum',

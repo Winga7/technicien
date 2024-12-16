@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Intervention;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class InterventionController extends Controller
 {
@@ -77,5 +80,13 @@ class InterventionController extends Controller
         $intervention->update(['statut' => $validated['statut']]);
 
         return response()->json(['message' => 'Statut mis à jour avec succès.', 'intervention' => $intervention]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('Interventions/Create', [
+            'clients' => Client::all(),
+            'techniciens' => User::where('role', 'technicien')->get(),
+        ]);
     }
 }
