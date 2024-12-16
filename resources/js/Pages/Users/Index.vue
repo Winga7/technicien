@@ -1,6 +1,7 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from "@inertiajs/vue3";
+import { router } from '@inertiajs/vue3';
 
 const props = defineProps({
     users: {
@@ -14,81 +15,83 @@ const editUser = (user) => {
 };
 
 const deleteUser = (id) => {
-    alert("Supprimer l'utilisateur avec ID " + id);
+    if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
+        router.delete(route('users.destroy', id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                // Le rechargement sera géré par Inertia
+            },
+        });
+    }
 };
 </script>
 
 <template>
     <AppLayout title="Gestion des Utilisateurs">
         <template #header>
-            <h2
-                class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
-            >
-                Gestion des Utilisateurs
-            </h2>
+            <div class="flex justify-between items-center">
+                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                    Gestion des Utilisateurs
+                </h2>
+                <Link
+                    v-if="$page.props.auth.user.role === 'admin'"
+                    :href="route('users.create')"
+                    class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+                >
+                    Créer un utilisateur
+                </Link>
+            </div>
         </template>
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div
-                    class="bg-white dark:bg-zinc-800 overflow-hidden shadow-xl sm:rounded-lg p-6"
-                >
+                <div class="bg-white dark:bg-zinc-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
                     <table class="w-full">
                         <thead>
                             <tr class="text-left">
-                                <th
-                                    class="px-4 py-2 text-gray-700 dark:text-gray-300"
-                                >
+                                <th class="px-4 py-2 text-gray-700 dark:text-gray-300">
                                     Nom
                                 </th>
-                                <th
-                                    class="px-4 py-2 text-gray-700 dark:text-gray-300"
-                                >
+                                <th class="px-4 py-2 text-gray-700 dark:text-gray-300">
                                     Email
                                 </th>
-                                <th
-                                    class="px-4 py-2 text-gray-700 dark:text-gray-300"
-                                >
+                                <th class="px-4 py-2 text-gray-700 dark:text-gray-300">
+                                    Téléphone
+                                </th>
+                                <th class="px-4 py-2 text-gray-700 dark:text-gray-300">
                                     Rôle
                                 </th>
-                                <th
-                                    class="px-4 py-2 text-gray-700 dark:text-gray-300"
-                                >
+                                <th class="px-4 py-2 text-gray-700 dark:text-gray-300">
                                     Actions
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr
-                                v-for="user in users"
-                                :key="user.id"
-                                class="border-t dark:border-zinc-700"
-                            >
-                                <td
-                                    class="px-4 py-2 text-gray-800 dark:text-gray-200"
-                                >
+                            <tr v-for="user in users" :key="user.id" class="border-t dark:border-zinc-700">
+                                <td class="px-4 py-2 text-gray-800 dark:text-gray-200">
                                     {{ user.nom }}
                                 </td>
-                                <td
-                                    class="px-4 py-2 text-gray-800 dark:text-gray-200"
-                                >
+                                <td class="px-4 py-2 text-gray-800 dark:text-gray-200">
                                     {{ user.email }}
                                 </td>
-                                <td
-                                    class="px-4 py-2 text-gray-800 dark:text-gray-200"
-                                >
+                                <td class="px-4 py-2 text-gray-800 dark:text-gray-200">
+                                    {{ user.telephone }}
+                                </td>
+                                <td class="px-4 py-2 text-gray-800 dark:text-gray-200">
                                     {{ user.role }}
                                 </td>
-                                <td class="px-4 py-2">
-                                    <button
-                                        @click="editUser(user)"
-                                        class="bg-blue-500 text-white px-3 py-1 rounded mr-2 hover:bg-blue-600"
+                                <td class="px-4 py-2 space-x-2">
+                                    <Link
+                                        v-if="$page.props.auth.user.role === 'admin'"
+                                        :href="route('users.edit', user.id)"
+                                        class="inline-flex items-center px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
                                     >
                                         Modifier
-                                    </button>
+                                    </Link>
                                     <button
+                                        v-if="$page.props.auth.user.role === 'admin'"
                                         @click="deleteUser(user.id)"
-                                        class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                                        class="inline-flex items-center px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
                                     >
                                         Supprimer
                                     </button>

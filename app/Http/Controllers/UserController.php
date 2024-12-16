@@ -13,9 +13,8 @@ class UserController extends Controller
 
     public function index()
     {
-        $this->authorize('viewAny', User::class);
         return Inertia::render('Users/Index', [
-            'users' => User::all()
+            'users' => User::select('id', 'nom', 'email', 'telephone', 'role')->get()
         ]);
     }
 
@@ -34,6 +33,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:8',
             'role' => 'required|string|in:admin,technicien',
+            'telephone' => 'nullable|string|max:20',
         ]);
 
         $validated['password'] = bcrypt($validated['password']);
@@ -50,6 +50,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'nom' => 'sometimes|string|max:255',
             'email' => 'sometimes|email|unique:users,email,' . $user->id,
+            'telephone' => 'sometimes|string|max:20',
             'role' => 'sometimes|string|in:admin,technicien',
         ]);
 
@@ -64,7 +65,6 @@ class UserController extends Controller
         $this->authorize('delete', $user);
         $user->delete();
 
-        return redirect()->route('users.index')
-            ->with('message', 'Utilisateur supprimé avec succès.');
+        return redirect()->back()->with('message', 'Utilisateur supprimé avec succès');
     }
 }

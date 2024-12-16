@@ -40,40 +40,51 @@ const closeModal = () => {
 <template>
     <ActionSection>
         <template #title>
-            Delete Account
+            <span class="text-gray-900 dark:text-gray-100">
+                Supprimer le compte
+            </span>
         </template>
 
         <template #description>
-            Permanently delete your account.
+            <span class="text-gray-600 dark:text-gray-400">
+                Supprimer définitivement votre compte.
+            </span>
         </template>
 
         <template #content>
-            <div class="max-w-xl text-sm text-gray-600">
-                Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.
+            <div class="max-w-xl text-sm text-gray-600 dark:text-gray-400">
+                Une fois votre compte supprimé, tous ses ressources et données seront supprimées définitivement. Avant de supprimer votre compte, veuillez télécharger les données ou informations que vous souhaitez conserver.
             </div>
 
             <div class="mt-5">
-                <DangerButton @click="confirmUserDeletion">
-                    Delete Account
+                <DangerButton
+                    @click="confirmUserDeletion"
+                    class="bg-red-600 dark:bg-red-500 hover:bg-red-700 dark:hover:bg-red-600 text-white"
+                >
+                    Supprimer le compte
                 </DangerButton>
             </div>
 
             <!-- Delete Account Confirmation Modal -->
             <DialogModal :show="confirmingUserDeletion" @close="closeModal">
                 <template #title>
-                    Delete Account
+                    <span class="text-gray-900 dark:text-gray-100">
+                        Supprimer le compte
+                    </span>
                 </template>
 
                 <template #content>
-                    Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.
+                    <span class="text-gray-600 dark:text-gray-400">
+                        Êtes-vous sûr de vouloir supprimer votre compte ? Une fois votre compte supprimé, tous ses ressources et données seront supprimées définitivement. Veuillez entrer votre mot de passe pour confirmer que vous souhaitez supprimer définitivement votre compte.
+                    </span>
 
                     <div class="mt-4">
                         <TextInput
                             ref="passwordInput"
                             v-model="form.password"
                             type="password"
-                            class="mt-1 block w-3/4"
-                            placeholder="Password"
+                            class="mt-1 block w-3/4 bg-white dark:bg-zinc-900 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-gray-100"
+                            placeholder="Mot de passe"
                             autocomplete="current-password"
                             @keyup.enter="deleteUser"
                         />
@@ -83,17 +94,20 @@ const closeModal = () => {
                 </template>
 
                 <template #footer>
-                    <SecondaryButton @click="closeModal">
-                        Cancel
+                    <SecondaryButton
+                        @click="closeModal"
+                        class="bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-zinc-600"
+                    >
+                        Annuler
                     </SecondaryButton>
 
                     <DangerButton
-                        class="ms-3"
+                        class="ms-3 bg-red-600 dark:bg-red-500 hover:bg-red-700 dark:hover:bg-red-600 text-white"
                         :class="{ 'opacity-25': form.processing }"
                         :disabled="form.processing"
                         @click="deleteUser"
                     >
-                        Delete Account
+                        Supprimer le compte
                     </DangerButton>
                 </template>
             </DialogModal>
