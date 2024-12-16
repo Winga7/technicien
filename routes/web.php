@@ -1,13 +1,15 @@
 <?php
 
 use App\Http\Controllers\UserController;
-use App\Http\Middleware\RoleMiddleware;
+use App\Http\Controllers\ClientController;
+use App\Http\Controllers\InterventionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\InterventionController;
 use App\Http\Controllers\TicketController;
+
 use App\Models\User;
 
 Route::get('/', function () {
@@ -42,6 +44,8 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    // Routes pour les utilisateurs
+    // Routes pour les ressources
+    Route::resource('clients', ClientController::class);
+    Route::resource('interventions', InterventionController::class);
     Route::resource('users', UserController::class);
 });

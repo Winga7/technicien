@@ -1,13 +1,13 @@
 <script setup>
-import { ref } from "vue";
-import { Head, Link, router } from "@inertiajs/vue3";
-import ApplicationMark from "@/Components/ApplicationMark.vue";
-import Banner from "@/Components/Banner.vue";
-import Dropdown from "@/Components/Dropdown.vue";
-import DropdownLink from "@/Components/DropdownLink.vue";
-import NavLink from "@/Components/NavLink.vue";
-import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
-import ThemeToggle from "@/Components/ThemeToggle.vue";
+import { ref, watch } from 'vue';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
+import ApplicationMark from '@/Components/ApplicationMark.vue';
+import Banner from '@/Components/Banner.vue';
+import Dropdown from '@/Components/Dropdown.vue';
+import DropdownLink from '@/Components/DropdownLink.vue';
+import NavLink from '@/Components/NavLink.vue';
+import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import ThemeToggle from '@/Components/ThemeToggle.vue';
 
 defineProps({
     title: String,
@@ -38,6 +38,17 @@ const toggleTheme = () => {
     localStorage.setItem("theme", isDark.value ? "dark" : "light");
     document.documentElement.classList.toggle("dark", isDark.value);
 };
+
+const page = usePage();
+
+watch(() => page.props.auth.user, (user) => {
+    if (user?.must_reset_password && route().current() !== 'profile.show') {
+        router.visit(route('profile.show'), {
+            preserveState: true,
+            preserveScroll: true,
+        });
+    }
+}, { immediate: true });
 </script>
 
 <template>
@@ -330,7 +341,7 @@ const toggleTheme = () => {
 
         <!-- Page Heading -->
         <header v-if="$slots.header" class="bg-white dark:bg-zinc-800 shadow">
-            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8">
                 <slot name="header" />
             </div>
         </header>

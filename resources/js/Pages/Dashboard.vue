@@ -6,9 +6,29 @@ import Welcome from "@/Components/Welcome.vue";
 <template>
     <AppLayout title="Dashboard">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                Dashboard
-            </h2>
+            <div>
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-gray-100 dark:bg-zinc-900 p-3 rounded-lg border border-gray-200 dark:border-zinc-700">
+                        <h3 class="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-200">
+                            Interventions en attente
+                        </h3>
+                        <p class="text-2xl font-bold text-blue-400">12</p>
+                    </div>
+                    <div class="bg-gray-100 dark:bg-zinc-900 p-3 rounded-lg border border-gray-200 dark:border-zinc-700">
+                        <h3 class="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-200">
+                            Interventions en cours
+                        </h3>
+                        <p class="text-2xl font-bold text-yellow-400">5</p>
+                    </div>
+                    <div class="bg-gray-100 dark:bg-zinc-900 p-3 rounded-lg border border-gray-200 dark:border-zinc-700">
+                        <h3 class="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-200">
+                            Interventions terminées
+                        </h3>
+                        <p class="text-2xl font-bold text-green-400">28</p>
+                    </div>
+                </div>
+            </div>
         </template>
 
         <div class="py-12">

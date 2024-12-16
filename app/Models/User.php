@@ -36,6 +36,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'telephone',
     ];
 
     /**
@@ -64,13 +65,9 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'must_reset_password' => 'boolean',
+    ];
 
     public function isAdmin()
     {
@@ -80,5 +77,10 @@ class User extends Authenticatable
     public function isTechnician()
     {
         return $this->role === 'technicien';
+    }
+
+    public function shouldResetPassword(): bool
+    {
+        return $this->must_reset_password;
     }
 }

@@ -1,59 +1,89 @@
 <script setup>
 import { ref } from "vue";
+import AppLayout from "@/Layouts/AppLayout.vue";
+import InputLabel from '@/Components/InputLabel.vue';
+import TextInput from '@/Components/TextInput.vue';
+import InputError from '@/Components/InputError.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import { useForm, router } from '@inertiajs/vue3';
 
-const form = ref({
+const form = useForm({
     nom: "",
     email: "",
     role: "technicien",
 });
 
 const submit = () => {
-    alert("Soumission du formulaire avec : " + JSON.stringify(form.value));
+    form.post(route('users.store'), {
+        onSuccess: () => {
+            router.visit(route('users.index'));
+        },
+    });
 };
 </script>
 
 <template>
-    <div class="max-w-2xl mx-auto p-4">
-        <form @submit.prevent="submit">
-            <div class="mb-4">
-                <label class="block mb-2">Nom</label>
-                <input
-                    v-model="form.nom"
-                    type="text"
-                    class="w-full px-3 py-2 border rounded"
-                    required
-                />
-            </div>
+    <AppLayout title="Créer un utilisateur">
+        <template #header>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                Créer un utilisateur
+            </h2>
+        </template>
 
-            <div class="mb-4">
-                <label class="block mb-2">Email</label>
-                <input
-                    v-model="form.email"
-                    type="email"
-                    class="w-full px-3 py-2 border rounded"
-                    required
-                />
-            </div>
+        <div class="py-12">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div class="bg-white dark:bg-zinc-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
+                    <form @submit.prevent="submit">
+                        <div class="mb-6">
+                            <InputLabel for="nom" value="Nom" class="text-gray-700 dark:text-gray-300" />
+                            <TextInput
+                                id="nom"
+                                v-model="form.nom"
+                                type="text"
+                                class="mt-1 block w-full bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-600 text-gray-900 dark:text-gray-100"
+                                required
+                                autofocus
+                            />
+                            <InputError :message="form.errors.nom" class="mt-2" />
+                        </div>
 
-            <div class="mb-4">
-                <label class="block mb-2">Rôle</label>
-                <select
-                    v-model="form.role"
-                    class="w-full px-3 py-2 border rounded"
-                >
-                    <option value="technicien">Technicien</option>
-                    <option value="admin">Administrateur</option>
-                </select>
-            </div>
+                        <div class="mb-6">
+                            <InputLabel for="email" value="Email" class="text-gray-700 dark:text-gray-300" />
+                            <TextInput
+                                id="email"
+                                v-model="form.email"
+                                type="email"
+                                class="mt-1 block w-full bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-600 text-gray-900 dark:text-gray-100"
+                                required
+                            />
+                            <InputError :message="form.errors.email" class="mt-2" />
+                        </div>
 
-            <div>
-                <button
-                    type="submit"
-                    class="bg-blue-500 text-white px-4 py-2 rounded"
-                >
-                    Ajouter
-                </button>
+                        <div class="mb-6">
+                            <InputLabel for="role" value="Rôle" class="text-gray-700 dark:text-gray-300" />
+                            <select
+                                id="role"
+                                v-model="form.role"
+                                class="mt-1 block w-full bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-600 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            >
+                                <option value="technicien">Technicien</option>
+                                <option value="admin">Administrateur</option>
+                            </select>
+                            <InputError :message="form.errors.role" class="mt-2" />
+                        </div>
+
+                        <div class="flex items-center justify-end">
+                            <PrimaryButton
+                                :class="{ 'opacity-25': form.processing }"
+                                :disabled="form.processing"
+                                class="bg-indigo-600 dark:bg-indigo-500 hover:bg-indigo-700 dark:hover:bg-indigo-600"
+                            >
+                                Créer l'utilisateur
+                            </PrimaryButton>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </AppLayout>
 </template>
