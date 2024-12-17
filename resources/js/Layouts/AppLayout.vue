@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import ApplicationMark from '@/Components/ApplicationMark.vue';
 import Banner from '@/Components/Banner.vue';
@@ -49,6 +49,11 @@ watch(() => page.props.auth.user, (user) => {
         });
     }
 }, { immediate: true });
+
+const userInitials = computed(() => {
+    const names = page.props.auth.user.nom.split(' ');
+    return names.map(name => name.charAt(0).toUpperCase()).join('').slice(0, 2);
+});
 </script>
 
 <template>
@@ -115,14 +120,20 @@ watch(() => page.props.auth.user, (user) => {
                                         "
                                         class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition"
                                     >
-                                        <img
-                                            class="size-8 rounded-full object-cover"
-                                            :src="
-                                                $page.props.auth.user
-                                                    .profile_photo_url
-                                            "
-                                            :alt="$page.props.auth.user.name"
-                                        />
+                                        <template v-if="$page.props.auth.user.profile_photo_url">
+                                            <img
+                                                class="size-8 rounded-full object-cover"
+                                                :src="$page.props.auth.user.profile_photo_url"
+                                                :alt="$page.props.auth.user.name"
+                                            />
+                                        </template>
+                                        <template v-else>
+                                            <div
+                                                class="size-8 rounded-full flex items-center justify-center bg-indigo-600 dark:bg-indigo-500 text-white text-sm font-medium"
+                                            >
+                                                {{ userInitials }}
+                                            </div>
+                                        </template>
                                     </button>
 
                                     <span v-else class="inline-flex rounded-md">
@@ -155,11 +166,11 @@ watch(() => page.props.auth.user, (user) => {
                                     <div
                                         class="block px-4 py-2 text-xs text-gray-400"
                                     >
-                                        Manage Account
+                                        Gestion du compte
                                     </div>
 
                                     <DropdownLink :href="route('profile.show')">
-                                        Profile
+                                        Profil
                                     </DropdownLink>
 
                                     <DropdownLink
@@ -176,7 +187,7 @@ watch(() => page.props.auth.user, (user) => {
                                     <!-- Authentication -->
                                     <form @submit.prevent="logout">
                                         <DropdownLink as="button">
-                                            Log Out
+                                            Déconnexion
                                         </DropdownLink>
                                     </form>
                                 </template>

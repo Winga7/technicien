@@ -52,7 +52,12 @@ class UserController extends Controller
             'email' => 'sometimes|email|unique:users,email,' . $user->id,
             'telephone' => 'sometimes|string|max:20',
             'role' => 'sometimes|string|in:admin,technicien',
+            'photo' => 'nullable|image|max:2048',
         ]);
+
+        if ($request->hasFile('photo')) {
+            $user->updateProfilePhoto($request->file('photo'));
+        }
 
         $user->update($validated);
 
