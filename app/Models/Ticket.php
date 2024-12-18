@@ -31,4 +31,9 @@ class Ticket extends Model
     {
         return $this->belongsTo(User::class, 'technicien_id');
     }
+
+    public function interventions()
+    {
+        return $this->hasMany(Intervention::class);
+    }
 }

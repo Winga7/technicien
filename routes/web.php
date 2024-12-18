@@ -28,6 +28,7 @@ Route::get('/users', function () {
 Route::middleware(['auth'])->group(function () {
     Route::resource('clients', ClientController::class);
     Route::resource('interventions', InterventionController::class);
+    Route::post('interventions', [InterventionController::class, 'store'])->name('interventions.store');
 });
 
 Route::resource('tickets', TicketController::class)
@@ -47,6 +48,5 @@ Route::middleware([
 
     // Routes pour les ressources
     Route::resource('clients', ClientController::class);
-    Route::resource('interventions', InterventionController::class);
     Route::resource('users', UserController::class);
 });
