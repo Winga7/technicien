@@ -16,7 +16,7 @@ class ClientApiTest extends TestCase
         $this->actingAs($user); // Simuler la connexion de l'utilisateur
 
         $response = $this->postJson('/clients', [
-            'nom' => 'Test Client',
+            'name' => 'Test Client',
             'email' => 'test@example.com',
             'telephone' => '123456789',
             'addresse' => '123 Test Street',

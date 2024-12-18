@@ -1,13 +1,13 @@
 <script setup>
-import { ref, watch, computed } from 'vue';
-import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import ApplicationMark from '@/Components/ApplicationMark.vue';
-import Banner from '@/Components/Banner.vue';
-import Dropdown from '@/Components/Dropdown.vue';
-import DropdownLink from '@/Components/DropdownLink.vue';
-import NavLink from '@/Components/NavLink.vue';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import ThemeToggle from '@/Components/ThemeToggle.vue';
+import { ref, watch, computed } from "vue";
+import { Head, Link, router, usePage } from "@inertiajs/vue3";
+import ApplicationMark from "@/Components/ApplicationMark.vue";
+import Banner from "@/Components/Banner.vue";
+import Dropdown from "@/Components/Dropdown.vue";
+import DropdownLink from "@/Components/DropdownLink.vue";
+import NavLink from "@/Components/NavLink.vue";
+import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
+import ThemeToggle from "@/Components/ThemeToggle.vue";
 
 defineProps({
     title: String,
@@ -41,18 +41,25 @@ const toggleTheme = () => {
 
 const page = usePage();
 
-watch(() => page.props.auth.user, (user) => {
-    if (user?.must_reset_password && route().current() !== 'profile.show') {
-        router.visit(route('profile.show'), {
-            preserveState: true,
-            preserveScroll: true,
-        });
-    }
-}, { immediate: true });
+watch(
+    () => page.props.auth.user,
+    (user) => {
+        if (user?.must_reset_password && route().current() !== "profile.show") {
+            router.visit(route("profile.show"), {
+                preserveState: true,
+                preserveScroll: true,
+            });
+        }
+    },
+    { immediate: true }
+);
 
 const userInitials = computed(() => {
-    const names = page.props.auth.user.nom.split(' ');
-    return names.map(name => name.charAt(0).toUpperCase()).join('').slice(0, 2);
+    const names = page.props.auth.user.name.split(" ");
+    return names
+        .map((name) => name.charAt(0).toUpperCase())
+        .join("")
+        .slice(0, 2);
 });
 </script>
 
@@ -120,20 +127,14 @@ const userInitials = computed(() => {
                                         "
                                         class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition"
                                     >
-                                        <template v-if="$page.props.auth.user.profile_photo_url">
-                                            <img
-                                                class="size-8 rounded-full object-cover"
-                                                :src="$page.props.auth.user.profile_photo_url"
-                                                :alt="$page.props.auth.user.name"
-                                            />
-                                        </template>
-                                        <template v-else>
-                                            <div
-                                                class="size-8 rounded-full flex items-center justify-center bg-indigo-600 dark:bg-indigo-500 text-white text-sm font-medium"
-                                            >
-                                                {{ userInitials }}
-                                            </div>
-                                        </template>
+                                        <img
+                                            class="size-8 rounded-full object-cover"
+                                            :src="
+                                                $page.props.auth.user
+                                                    .profile_photo_url
+                                            "
+                                            :alt="$page.props.auth.user.name"
+                                        />
                                     </button>
 
                                     <span v-else class="inline-flex rounded-md">
@@ -162,7 +163,7 @@ const userInitials = computed(() => {
                                 </template>
 
                                 <template #content>
-                                    <!-- Account Management -->
+                                    <!-- Gestion du Compte -->
                                     <div
                                         class="block px-4 py-2 text-xs text-gray-400"
                                     >
@@ -184,7 +185,7 @@ const userInitials = computed(() => {
 
                                     <div class="border-t border-gray-200" />
 
-                                    <!-- Authentication -->
+                                    <!-- Déconnexion -->
                                     <form @submit.prevent="logout">
                                         <DropdownLink as="button">
                                             Déconnexion
