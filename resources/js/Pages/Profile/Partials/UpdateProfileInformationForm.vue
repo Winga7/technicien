@@ -116,20 +116,11 @@ const clearPhotoFileInput = () => {
 
                 <!-- Current Profile Photo -->
                 <div v-show="!photoPreview" class="mt-2">
-                    <template v-if="user.profile_photo_url">
-                        <img
-                            :src="user.profile_photo_url"
-                            :alt="user.name"
-                            class="rounded-full size-20 object-cover"
-                        />
-                    </template>
-                    <template v-else>
-                        <div
-                            class="rounded-full size-20 flex items-center justify-center bg-indigo-600 dark:bg-indigo-500 text-white font-medium text-xl"
-                        >
-                            {{ getUserInitials }}
-                        </div>
-                    </template>
+                    <img
+                        :src="user.profile_photo_url"
+                        :alt="user.name"
+                        class="rounded-full size-20 object-cover"
+                    />
                 </div>
 
                 <!-- New Profile Photo Preview -->
