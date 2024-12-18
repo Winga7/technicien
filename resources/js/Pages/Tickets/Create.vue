@@ -26,7 +26,7 @@ const form = useForm({
     statut: "en attente",
     client_id: "",
     client: {
-        nom: "",
+        name: "",
         prenom: "",
         email: "",
         telephone: "",
@@ -135,7 +135,7 @@ const submit = () => {
                                     :key="client.id"
                                     :value="client.id"
                                 >
-                                    {{ client.nom }} - {{ client.prenom }}
+                                    {{ client.name }} - {{ client.prenom }}
                                 </option>
                             </select>
                         </div>
@@ -143,14 +143,14 @@ const submit = () => {
                         <!-- Formulaire nouveau client -->
                         <div v-else class="space-y-4">
                             <div class="grid grid-cols-2 gap-4">
-                                <!-- Nom -->
+                                <!-- name -->
                                 <div>
                                     <InputLabel
                                         class="dark:text-gray-200"
                                         value="Nom"
                                     />
                                     <TextInput
-                                        v-model="form.client.nom"
+                                        v-model="form.client.name"
                                         type="text"
                                         class="mt-1 block w-full border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                         required
@@ -253,7 +253,7 @@ const submit = () => {
                                     :key="tech.id"
                                     :value="tech.id"
                                 >
-                                    {{ tech.nom }}
+                                    {{ tech.name }}
                                 </option>
                             </select>
                         </div>

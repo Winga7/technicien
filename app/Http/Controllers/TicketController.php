@@ -35,7 +35,7 @@ class TicketController extends Controller
                 'description' => 'required|string',
                 'client_id' => 'required_without:client|nullable|exists:clients,id',
                 'client' => 'required_without:client_id|array',
-                'client.nom' => 'required_with:client|string',
+                'client.name' => 'required_with:client|string',
                 'client.prenom' => 'required_with:client|string',
                 'client.email' => 'required_with:client|email|unique:clients,email',
                 'client.telephone' => 'nullable|string',
@@ -50,7 +50,7 @@ class TicketController extends Controller
             if (!isset($validated['client_id']) && isset($validated['client'])) {
                 Log::info('Création d\'un nouveau client');
                 $client = Client::create([
-                    'nom' => $validated['client']['nom'],
+                    'name' => $validated['client']['name'],
                     'prenom' => $validated['client']['prenom'], // Assurez-vous que le prénom est inclus
                     'email' => $validated['client']['email'],
                     'telephone' => $validated['client']['telephone'],

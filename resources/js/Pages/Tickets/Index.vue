@@ -104,7 +104,7 @@ const getStatusColor = (statut) => {
                                     <td
                                         class="px-4 py-3 text-gray-800 dark:text-gray-200"
                                     >
-                                        {{ ticket.client.nom }}
+                                        {{ ticket.client.name }}
                                         {{ ticket.client.prenom }}
                                     </td>
                                     <td class="px-4 py-3">

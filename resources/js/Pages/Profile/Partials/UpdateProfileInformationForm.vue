@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref } from "vue";
 import { Link, router, useForm } from "@inertiajs/vue3";
 import ActionMessage from "@/Components/ActionMessage.vue";
 import FormSection from "@/Components/FormSection.vue";
@@ -14,65 +14,27 @@ const props = defineProps({
 });
 
 const form = useForm({
-    nom: props.user.nom,
+    _method: "PUT",
+    name: props.user.name,
     email: props.user.email,
     telephone: props.user.telephone,
     photo: null,
 });
-
-watch(
-    () => props.user,
-    (newUser) => {
-        form.nom = newUser.nom;
-        form.email = newUser.email;
-        form.telephone = newUser.telephone ?? "";
-    },
-    { deep: true }
-);
-
-watch(
-    () => props.user.telephone,
-    (newTelephone) => {
-        form.telephone = newTelephone ?? "";
-    },
-    { immediate: true }
-);
 
 const verificationLinkSent = ref(null);
 const photoPreview = ref(null);
 const photoInput = ref(null);
 
 const updateProfileInformation = () => {
-    if (photoInput.value?.files?.length > 0) {
-        const photo = photoInput.value.files[0];
-        const formData = new FormData();
-
-        formData.append("_method", "PUT");
-        formData.append("nom", form.nom);
-        formData.append("email", form.email);
-        formData.append("telephone", form.telephone || "");
-        formData.append("photo", photo, photo.name);
-
-        router.post(route("user-profile-information.update"), formData, {
-            preserveScroll: true,
-            headers: {
-                Accept: "application/json",
-                "X-Requested-With": "XMLHttpRequest",
-                "Content-Type": "multipart/form-data",
-            },
-            onSuccess: () => {
-                clearPhotoFileInput();
-                form.recentlySuccessful = true;
-                photoPreview.value = null;
-                window.location.reload();
-            },
-            onError: (errors) => {
-                console.error("Upload errors:", errors);
-            },
-        });
-    } else {
-        form.put(route("user-profile-information.update"));
+    if (photoInput.value) {
+        form.photo = photoInput.value.files[0];
     }
+
+    form.post(route("user-profile-information.update"), {
+        errorBag: "updateProfileInformation",
+        preserveScroll: true,
+        onSuccess: () => clearPhotoFileInput(),
+    });
 };
 
 const sendEmailVerification = () => {
@@ -80,7 +42,7 @@ const sendEmailVerification = () => {
 };
 
 const selectNewPhoto = () => {
-    photoInput.value?.click();
+    photoInput.value.click();
 };
 
 const updatePhotoPreview = () => {
@@ -112,18 +74,13 @@ const clearPhotoFileInput = () => {
         photoInput.value.value = null;
     }
 };
-
-const getUserInitials = computed(() => {
-    const names = props.user.nom.split(" ");
-    return names
-        .map((name) => name.charAt(0).toUpperCase())
-        .join("")
-        .slice(0, 2);
-});
 </script>
 
 <template>
-    <FormSection @submitted="updateProfileInformation">
+    <FormSection
+        @submitted="updateProfileInformation"
+        enctype="multipart/form-data"
+    >
         <template #title>
             <span class="text-gray-900 dark:text-gray-100">
                 Informations du profil
@@ -208,19 +165,19 @@ const getUserInitials = computed(() => {
             <!-- Name -->
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel
-                    for="nom"
+                    for="name"
                     value="Nom"
                     class="text-gray-700 dark:text-gray-300"
                 />
                 <TextInput
-                    id="nom"
-                    v-model="form.nom"
+                    id="name"
+                    v-model="form.name"
                     type="text"
                     class="mt-1 block w-full bg-white dark:bg-zinc-900 border-gray-300 dark:border-zinc-700 text-gray-900 dark:text-gray-100"
                     required
                     autocomplete="name"
                 />
-                <InputError :message="form.errors.nom" class="mt-2" />
+                <InputError :message="form.errors.name" class="mt-2" />
             </div>
 
             <!-- Email -->
