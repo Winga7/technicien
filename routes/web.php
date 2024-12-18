@@ -42,6 +42,9 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
+    Route::get('/tickets/{ticket}', [TicketController::class, 'show'])
+        ->name('tickets.show');
+
     // Routes pour les ressources
     Route::resource('clients', ClientController::class);
     Route::resource('interventions', InterventionController::class);

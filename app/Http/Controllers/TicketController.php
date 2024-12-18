@@ -27,6 +27,14 @@ class TicketController extends Controller
         ]);
     }
 
+    public function show(Ticket $ticket)
+    {
+
+        return Inertia::render('Tickets/Show', [
+            'ticket' => $ticket->load(['client', 'technicien']),
+        ]);
+    }
+
     public function store(Request $request)
     {
         try {
