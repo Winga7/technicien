@@ -41,6 +41,7 @@ class HandleInertiaRequests extends Middleware
                     'id' => $request->user()->id,
                     'nom' => $request->user()->nom,
                     'email' => $request->user()->email,
+                    'telephone' => $request->user()->telephone,
                     'role' => $request->user()->role,
                     'must_reset_password' => $request->user()->must_reset_password,
                 ] : null,
