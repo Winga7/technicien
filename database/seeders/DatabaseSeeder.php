@@ -24,5 +24,13 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password'),
             'role' => 'technicien',
         ]);
+
+        // Création d'un technicien de secours
+        User::factory()->create([
+            'name' => 'Backup Tech User',
+            'email' => 'back@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'technicien',
+        ]);
     }
 }

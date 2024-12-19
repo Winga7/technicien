@@ -12,9 +12,10 @@ class Intervention extends Model
     protected $fillable = [
         'titre',
         'description',
-        'statut',  // 'status' devient 'statut'
+        'statut',
         'client_id',
         'technicien_id',
+        'ticket_id',
         'images'
     ];
 
@@ -30,5 +31,10 @@ class Intervention extends Model
     public function technicien() // 'technician' devient 'technicien'
     {
         return $this->belongsTo(User::class, 'technicien_id');
+    }
+
+    public function ticket()
+    {
+        return $this->belongsTo(Ticket::class);
     }
 }

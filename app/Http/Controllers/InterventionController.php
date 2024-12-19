@@ -26,6 +26,7 @@ class InterventionController extends Controller
             'statut' => 'required|string|in:en attente,en cours,terminé',
             'client_id' => 'required|exists:clients,id',
             'technicien_id' => 'nullable|exists:users,id',
+            'ticket_id' => 'nullable|exists:tickets,id',
             'images' => 'nullable|array',
         ]);
 
@@ -33,7 +34,7 @@ class InterventionController extends Controller
 
         $intervention = Intervention::create($validated);
 
-        return response()->json($intervention, 201);
+        return back()->with('message', 'Intervention créée avec succès');
     }
 
     // Méthode pour afficher une intervention spécifique

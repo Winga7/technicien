@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { Link } from "@inertiajs/vue3";
+import { Link, router } from "@inertiajs/vue3"; // Ajout de router ici
 import { ref } from "vue";
 
 const props = defineProps({
@@ -9,6 +9,22 @@ const props = defineProps({
         required: true,
     },
 });
+
+const deleteTicket = (id) => {
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce ticket ?")) {
+        router.delete(route("tickets.destroy", id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                // Optionnel : Vous pouvez ajouter un traitement après la suppression réussie
+                console.log("Ticket supprimé avec succès");
+            },
+            onError: () => {
+                // Optionnel : Gestion des erreurs
+                console.error("Erreur lors de la suppression du ticket");
+            },
+        });
+    }
+};
 
 const getStatusColor = (statut) => {
     switch (statut) {
@@ -152,6 +168,16 @@ const getStatusColor = (statut) => {
                                             >
                                                 Modifier
                                             </Link>
+                                            <button
+                                                v-if="
+                                                    $page.props.auth.user
+                                                        .role === 'admin'
+                                                "
+                                                @click="deleteTicket(ticket.id)"
+                                                class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                                            >
+                                                Supprimer
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>

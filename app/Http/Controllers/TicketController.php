@@ -31,7 +31,17 @@ class TicketController extends Controller
     {
 
         return Inertia::render('Tickets/Show', [
+            'ticket' => $ticket->load(['client', 'technicien', 'interventions.technicien']),
+            'techniciens' => User::where('role', 'technicien')->get(),
+        ]);
+    }
+
+    public function edit(Ticket $ticket)
+    {
+        return Inertia::render('Tickets/Edit', [
             'ticket' => $ticket->load(['client', 'technicien']),
+            'clients' => Client::all(),
+            'techniciens' => User::where('role', 'technicien')->get(),
         ]);
     }
 
@@ -106,5 +116,12 @@ class TicketController extends Controller
                 'error' => 'Une erreur est survenue lors de la création du ticket: ' . $e->getMessage()
             ])->withInput();
         }
+    }
+
+    public function destroy(Ticket $ticket)
+    {
+        $ticket->delete();
+        return redirect()->route('tickets.index')
+            ->with('message', 'Ticket supprimé avec succès');
     }
 }
