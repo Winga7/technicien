@@ -10,10 +10,6 @@ const props = defineProps({
     },
 });
 
-const editUser = (user) => {
-    alert("Modifier " + user.name);
-};
-
 const deleteUser = (id) => {
     if (confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")) {
         router.delete(route("users.destroy", id), {

@@ -3,12 +3,10 @@
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\InterventionController;
+use App\Http\Controllers\TicketController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\TicketController;
-
-use App\Models\User;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -19,6 +17,8 @@ Route::get('/', function () {
     ]);
 });
 
+// Debut
+
 Route::get('/users', function () {
     return Inertia::render('Users/Index', [
         'users' => User::all(),
@@ -26,13 +26,15 @@ Route::get('/users', function () {
 })->middleware(['auth']);
 
 Route::middleware(['auth'])->group(function () {
-    Route::resource('clients', ClientController::class);
-    Route::resource('interventions', InterventionController::class);
     Route::post('interventions', [InterventionController::class, 'store'])->name('interventions.store');
 });
 
 Route::resource('tickets', TicketController::class)
     ->middleware(['auth:sanctum', 'verified']);
+
+
+// Fin
+
 
 Route::middleware([
     'auth:sanctum',
@@ -46,10 +48,8 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    Route::get('/tickets/{ticket}', [TicketController::class, 'show'])
-        ->name('tickets.show');
-
-    // Routes pour les ressources
-    Route::resource('clients', ClientController::class);
     Route::resource('users', UserController::class);
+    Route::resource('clients', ClientController::class);
+    Route::resource('tickets', TicketController::class);
+    Route::resource('interventions', InterventionController::class);
 });
