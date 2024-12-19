@@ -39,6 +39,9 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+    Route::get('/storage/{path}', function ($path) {
+        return response()->file(storage_path('app/public/' . $path));
+    })->where('path', '.*');
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');

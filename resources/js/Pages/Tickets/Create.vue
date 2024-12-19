@@ -236,27 +236,7 @@ const submit = () => {
                             />
                         </div>
 
-                        <div>
-                            <InputLabel
-                                class="dark:text-gray-200"
-                                value="Technicien assigné"
-                            />
-                            <select
-                                v-model="form.technicien_id"
-                                class="mt-1 block w-full border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                            >
-                                <option value="">
-                                    Sélectionner un technicien
-                                </option>
-                                <option
-                                    v-for="tech in techniciens"
-                                    :key="tech.id"
-                                    :value="tech.id"
-                                >
-                                    {{ tech.name }}
-                                </option>
-                            </select>
-                        </div>
+                        
 
                         <!-- Upload d'images -->
                         <div>

@@ -190,13 +190,13 @@ const submit = () => {
                                     class="relative"
                                 >
                                     <img
-                                        :src="
-                                            typeof image === 'string' &&
-                                            image.startsWith('/storage')
-                                                ? image
-                                                : image
-                                        "
-                                        class="w-full h-32 object-cover rounded"
+                                        v-for="(image, index) in JSON.parse(
+                                            ticket.images
+                                        )"
+                                        :key="index"
+                                        :src="`/storage/${image}`"
+                                        :alt="'Image ' + (index + 1)"
+                                        class="w-full h-48 object-cover rounded-lg"
                                     />
                                     <button
                                         @click.prevent="removeImage(index)"

@@ -1,13 +1,49 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from "@inertiajs/vue3";
+import { ref } from "vue";
+import { useForm } from "@inertiajs/vue3";
+import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/TextInput.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 
-defineProps({
+// Props existants
+const props = defineProps({
     ticket: {
         type: Object,
         required: true,
     },
+    techniciens: {
+        type: Array,
+        required: true,
+    },
 });
+
+const showInterventionForm = ref(false);
+const processing = ref(false);
+
+const interventionForm = useForm({
+    titre: "",
+    description: "",
+    ticket_id: props.ticket.id,
+    client_id: props.ticket.client_id,
+    technicien_id: "",
+    statut: "en attente",
+});
+
+const submitIntervention = async () => {
+    processing.value = true;
+    interventionForm.post(route("interventions.store"), {
+        onSuccess: () => {
+            showInterventionForm.value = false;
+            interventionForm.reset();
+        },
+        onFinish: () => {
+            processing.value = false;
+        },
+    });
+};
 
 const getStatusColor = (statut) => {
     switch (statut) {
@@ -113,7 +149,7 @@ const getStatusColor = (statut) => {
                                             ticket.images
                                         )"
                                         :key="index"
-                                        :src="'/storage/' + image"
+                                        :src="`/storage/${image}`"
                                         :alt="'Image ' + (index + 1)"
                                         class="w-full h-48 object-cover rounded-lg"
                                     />
@@ -191,6 +227,158 @@ const getStatusColor = (statut) => {
                                         {{ ticket.technicien.name }}
                                     </span>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section des interventions -->
+        <div class="py-6">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div
+                    class="bg-white dark:bg-zinc-800 overflow-hidden shadow-xl sm:rounded-lg p-6"
+                >
+                    <div class="flex justify-between items-center mb-6">
+                        <h3
+                            class="text-lg font-medium text-gray-900 dark:text-gray-100"
+                        >
+                            Interventions
+                        </h3>
+                        <button
+                            @click="showInterventionForm = true"
+                            class="px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-600 transition"
+                        >
+                            Nouvelle intervention
+                        </button>
+                    </div>
+
+                    <!-- Formulaire d'intervention -->
+                    <div
+                        v-if="showInterventionForm"
+                        class="mb-6 p-4 border border-gray-200 dark:border-zinc-700 rounded-lg"
+                    >
+                        <form
+                            @submit.prevent="submitIntervention"
+                            class="space-y-4"
+                        >
+                            <div>
+                                <InputLabel
+                                    value="Titre"
+                                    class="dark:text-gray-200"
+                                />
+                                <TextInput
+                                    v-model="interventionForm.titre"
+                                    type="text"
+                                    class="mt-1 block w-full border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                    required
+                                />
+                            </div>
+
+                            <div>
+                                <InputLabel
+                                    value="Description"
+                                    class="dark:text-gray-200"
+                                />
+                                <textarea
+                                    v-model="interventionForm.description"
+                                    rows="3"
+                                    class="mt-1 block w-full border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                    required
+                                ></textarea>
+                            </div>
+
+                            <div>
+                                <InputLabel
+                                    value="Technicien"
+                                    class="dark:text-gray-200"
+                                />
+                                <select
+                                    v-model="interventionForm.technicien_id"
+                                    class="mt-1 block w-full border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                >
+                                    <option value="">
+                                        Sélectionner un technicien
+                                    </option>
+                                    <option
+                                        v-for="tech in techniciens"
+                                        :key="tech.id"
+                                        :value="tech.id"
+                                    >
+                                        {{ tech.name }}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="flex justify-end space-x-3">
+                                <SecondaryButton
+                                    @click="showInterventionForm = false"
+                                >
+                                    Annuler
+                                </SecondaryButton>
+                                <PrimaryButton
+                                    type="submit"
+                                    :disabled="processing"
+                                >
+                                    Ajouter l'intervention
+                                </PrimaryButton>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Liste des interventions -->
+                    <div class="space-y-4">
+                        <div
+                            v-for="intervention in ticket.interventions"
+                            :key="intervention.id"
+                            class="p-4 border border-gray-200 dark:border-zinc-700 rounded-lg"
+                        >
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4
+                                        class="font-medium text-gray-900 dark:text-gray-100"
+                                    >
+                                        {{ intervention.titre }}
+                                    </h4>
+                                    <p
+                                        class="mt-1 text-gray-600 dark:text-gray-400"
+                                    >
+                                        {{ intervention.description }}
+                                    </p>
+                                    <!-- Ajout de l'information du technicien -->
+                                    <div class="mt-2 text-sm">
+                                        <span
+                                            class="text-gray-500 dark:text-gray-400"
+                                            >Technicien:
+                                        </span>
+                                        <span
+                                            class="text-gray-700 dark:text-gray-300"
+                                        >
+                                            {{
+                                                intervention.technicien
+                                                    ? intervention.technicien
+                                                          .name
+                                                    : "Non assigné"
+                                            }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <span
+                                    :class="getStatusColor(intervention.statut)"
+                                    class="px-2 py-1 rounded-full text-xs font-medium"
+                                >
+                                    {{ intervention.statut }}
+                                </span>
+                            </div>
+                            <div
+                                class="mt-2 text-sm text-gray-500 dark:text-gray-400"
+                            >
+                                {{
+                                    new Date(
+                                        intervention.created_at
+                                    ).toLocaleDateString()
+                                }}
                             </div>
                         </div>
                     </div>
