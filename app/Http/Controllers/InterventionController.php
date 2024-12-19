@@ -23,7 +23,6 @@ class InterventionController extends Controller
         $validated = $request->validate([
             'titre' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'statut' => 'required|string|in:en attente,en cours,terminé',
             'client_id' => 'required|exists:clients,id',
             'technicien_id' => 'nullable|exists:users,id',
             'ticket_id' => 'nullable|exists:tickets,id',
@@ -50,7 +49,6 @@ class InterventionController extends Controller
         $validated = $request->validate([
             'titre' => 'sometimes|string|max:255',
             'description' => 'sometimes|string',
-            'statut' => 'sometimes|string|in:en attente,en cours,terminé',
             'technicien_id' => 'nullable|exists:users,id',
             'images' => 'sometimes|array',
         ]);
@@ -69,18 +67,6 @@ class InterventionController extends Controller
     {
         $intervention->delete();
         return response()->json(['message' => 'Intervention supprimée avec succès.']);
-    }
-
-    // Méthode pour changer uniquement le statut d’une intervention
-    public function changeStatut(Request $request, Intervention $intervention)
-    {
-        $validated = $request->validate([
-            'statut' => 'required|string|in:en attente,en cours,terminé',
-        ]);
-
-        $intervention->update(['statut' => $validated['statut']]);
-
-        return response()->json(['message' => 'Statut mis à jour avec succès.', 'intervention' => $intervention]);
     }
 
     public function create()

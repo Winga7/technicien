@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('titre');
             $table->text('description')->nullable();
-            $table->string('statut')->default('en attente'); // en attente, en cours, terminé
             $table->foreignId('client_id')->constrained()->onDelete('cascade');
             $table->foreignId('technicien_id')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('ticket_id')->constrained()->onDelete('cascade'); // Ajout de la relation avec tickets
