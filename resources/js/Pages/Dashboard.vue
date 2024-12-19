@@ -9,21 +9,33 @@ import Welcome from "@/Components/Welcome.vue";
             <div>
                 <!-- Quick Stats -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="bg-gray-100 dark:bg-zinc-900 p-3 rounded-lg border border-gray-200 dark:border-zinc-700">
-                        <h3 class="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-200">
-                            Interventions en attente
+                    <div
+                        class="bg-gray-100 dark:bg-zinc-900 p-3 rounded-lg border border-gray-200 dark:border-zinc-700"
+                    >
+                        <h3
+                            class="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-200"
+                        >
+                            Tickets en attente
                         </h3>
                         <p class="text-2xl font-bold text-blue-400">12</p>
                     </div>
-                    <div class="bg-gray-100 dark:bg-zinc-900 p-3 rounded-lg border border-gray-200 dark:border-zinc-700">
-                        <h3 class="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-200">
-                            Interventions en cours
+                    <div
+                        class="bg-gray-100 dark:bg-zinc-900 p-3 rounded-lg border border-gray-200 dark:border-zinc-700"
+                    >
+                        <h3
+                            class="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-200"
+                        >
+                            Ticket en cours
                         </h3>
                         <p class="text-2xl font-bold text-yellow-400">5</p>
                     </div>
-                    <div class="bg-gray-100 dark:bg-zinc-900 p-3 rounded-lg border border-gray-200 dark:border-zinc-700">
-                        <h3 class="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-200">
-                            Interventions terminées
+                    <div
+                        class="bg-gray-100 dark:bg-zinc-900 p-3 rounded-lg border border-gray-200 dark:border-zinc-700"
+                    >
+                        <h3
+                            class="text-lg font-semibold mb-1 text-gray-800 dark:text-gray-200"
+                        >
+                            Tickets terminées
                         </h3>
                         <p class="text-2xl font-bold text-green-400">28</p>
                     </div>

@@ -45,6 +45,59 @@ class TicketController extends Controller
         ]);
     }
 
+    public function update(Request $request, Ticket $ticket)
+    {
+        $validated = $request->validate([
+            'titre' => 'required|string|max:255',
+            'description' => 'required|string',
+            'statut' => 'required|string|in:en attente,en cours,terminé',
+            'client_id' => 'required_without:client|nullable|exists:clients,id',
+            'client' => 'required_without:client_id|array',
+            'client.name' => 'required_with:client|string',
+            'client.prenom' => 'required_with:client|string',
+            'client.email' => 'required_with:client|email|unique:clients,email,' . $ticket->client_id,
+            'client.telephone' => 'nullable|string',
+            'client.addresse' => 'nullable|string',
+            'technicien_id' => 'nullable|exists:users,id',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        // Créer un nouveau client si nécessaire
+        if (!isset($validated['client_id']) && isset($validated['client'])) {
+            $client = Client::create([
+                'name' => $validated['client']['name'],
+                'prenom' => $validated['client']['prenom'],
+                'email' => $validated['client']['email'],
+                'telephone' => $validated['client']['telephone'],
+                'addresse' => $validated['client']['addresse'],
+            ]);
+            $validated['client_id'] = $client->id;
+            unset($validated['client']);
+        }
+
+        // Gérer les images
+        $imagePaths = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('tickets', 'public');
+                $imagePaths[] = $path;
+            }
+        }
+
+        // Mettre à jour le ticket
+        $ticket->update([
+            'titre' => $validated['titre'],
+            'description' => $validated['description'],
+            'statut' => $validated['statut'],
+            'client_id' => $validated['client_id'],
+            'technicien_id' => $validated['technicien_id'] ?? null,
+            'images' => !empty($imagePaths) ? json_encode($imagePaths) : null
+        ]);
+
+        return redirect(url()->current())
+            ->with('message', 'Ticket mis à jour avec succès');
+    }
+
     public function store(Request $request)
     {
         try {

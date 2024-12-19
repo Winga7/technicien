@@ -68,12 +68,20 @@ const getStatusColor = (statut) => {
                 >
                     Ticket #{{ ticket.id }} - {{ ticket.titre }}
                 </h2>
-                <Link
-                    :href="route('tickets.index')"
-                    class="px-4 py-2 bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900 rounded-md hover:bg-gray-700 dark:hover:bg-gray-300 transition"
-                >
-                    Retour aux tickets
-                </Link>
+                <div class="flex space-x-4">
+                    <Link
+                        :href="route('tickets.edit', ticket.id)"
+                        class="px-4 py-2 bg-yellow-600 dark:bg-yellow-500 text-white rounded-md hover:bg-yellow-700 dark:hover:bg-yellow-600 transition"
+                    >
+                        Modifier
+                    </Link>
+                    <Link
+                        :href="route('tickets.index')"
+                        class="px-4 py-2 bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900 rounded-md hover:bg-gray-700 dark:hover:bg-gray-300 transition"
+                    >
+                        Retour aux tickets
+                    </Link>
+                </div>
             </div>
         </template>
 
