@@ -364,12 +364,6 @@ const getStatusColor = (statut) => {
                                         </span>
                                     </div>
                                 </div>
-                                <span
-                                    :class="getStatusColor(intervention.statut)"
-                                    class="px-2 py-1 rounded-full text-xs font-medium"
-                                >
-                                    {{ intervention.statut }}
-                                </span>
                             </div>
                             <div
                                 class="mt-2 text-sm text-gray-500 dark:text-gray-400"
