@@ -17,25 +17,6 @@ Route::get('/', function () {
     ]);
 });
 
-// Debut
-
-Route::get('/users', function () {
-    return Inertia::render('Users/Index', [
-        'users' => User::all(),
-    ]);
-})->middleware(['auth']);
-
-Route::middleware(['auth'])->group(function () {
-    Route::post('interventions', [InterventionController::class, 'store'])->name('interventions.store');
-});
-
-Route::resource('tickets', TicketController::class)
-    ->middleware(['auth:sanctum', 'verified']);
-
-
-// Fin
-
-
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
