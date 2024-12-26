@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import AppLayout from "@/Layouts/AppLayout.vue";
 import InputLabel from "@/Components/InputLabel.vue";
@@ -25,15 +25,27 @@ const form = useForm({
     description: "",
     statut: "en attente",
     client_id: "",
-    client: {
-        name: "",
-        prenom: "",
-        email: "",
-        telephone: "",
-        addresse: "",
-    },
+    client: null,
     technicien_id: "",
     images: [],
+});
+
+// Regarder les changements de isNewClient pour réinitialiser les champs appropriés
+watch(isNewClient, (newValue) => {
+    if (newValue) {
+        // Si nouveau client, initialiser l'objet client et réinitialiser client_id
+        form.client = {
+            name: "",
+            prenom: "",
+            email: "",
+            telephone: "",
+            addresse: "",
+        };
+        form.client_id = "";
+    } else {
+        // Si client existant, réinitialiser l'objet client
+        form.client = null;
+    }
 });
 
 const handleImageUpload = (e) => {
@@ -57,6 +69,11 @@ const removeImage = (index) => {
 };
 
 const submit = () => {
+    // Supprimer les données client si on utilise un client existant
+    if (!isNewClient.value) {
+        form.client = null;
+    }
+
     form.post(route("tickets.store"), {
         onSuccess: () => {
             form.reset();
@@ -235,8 +252,6 @@ const submit = () => {
                                 required
                             />
                         </div>
-
-                        
 
                         <!-- Upload d'images -->
                         <div>
