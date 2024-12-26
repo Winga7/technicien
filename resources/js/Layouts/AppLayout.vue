@@ -87,32 +87,68 @@ const userInitials = computed(() => {
                         <div
                             class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
                         >
-                            <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
+                            <NavLink
+                                :href="route('dashboard')"
+                                :active="route().current('dashboard')"
+                                class="text-gray-700 dark:text-gray-200"
+                            >
                                 <span class="flex items-center">
-                                    <span class="text-xl mr-3" role="img" aria-label="dashboard">📊</span>
+                                    <span
+                                        class="text-xl mr-3"
+                                        role="img"
+                                        aria-label="dashboard"
+                                        >📊</span
+                                    >
                                     <span>Tableau de bord</span>
                                 </span>
                             </NavLink>
 
-                            <NavLink :href="route('tickets.index')" :active="route().current('tickets.*')">
+                            <!-- Lien Users visible pour tous mais avec des permissions différentes -->
+                            <NavLink
+                                :href="route('users.index')"
+                                :active="route().current('users.*')"
+                                class="text-gray-700 dark:text-gray-200"
+                            >
                                 <span class="flex items-center">
-                                    <span class="text-xl mr-3" role="img" aria-label="tickets">🎫</span>
-                                    <span>Tickets</span>
+                                    <span
+                                        class="text-xl mr-3"
+                                        role="img"
+                                        aria-label="utilisateurs"
+                                        >👨‍💻</span
+                                    >
+                                    <span>Utilisateurs</span>
                                 </span>
                             </NavLink>
 
-                            <NavLink :href="route('clients.index')" :active="route().current('clients.*')">
+                            <NavLink
+                                :href="route('clients.index')"
+                                :active="route().current('clients.*')"
+                                class="text-gray-700 dark:text-gray-200"
+                            >
                                 <span class="flex items-center">
-                                    <span class="text-xl mr-3" role="img" aria-label="clients">👥</span>
+                                    <span
+                                        class="text-xl mr-3"
+                                        role="img"
+                                        aria-label="clients"
+                                        >👥</span
+                                    >
                                     <span>Clients</span>
                                 </span>
                             </NavLink>
 
-                            <!-- Lien Users visible pour tous mais avec des permissions différentes -->
-                            <NavLink :href="route('users.index')" :active="route().current('users.*')">
+                            <NavLink
+                                :href="route('tickets.index')"
+                                :active="route().current('tickets.*')"
+                                class="text-gray-700 dark:text-gray-200"
+                            >
                                 <span class="flex items-center">
-                                    <span class="text-xl mr-3" role="img" aria-label="utilisateurs">👨‍💻</span>
-                                    <span>Utilisateurs</span>
+                                    <span
+                                        class="text-xl mr-3"
+                                        role="img"
+                                        aria-label="tickets"
+                                        >🎫</span
+                                    >
+                                    <span>Tickets</span>
                                 </span>
                             </NavLink>
                         </div>

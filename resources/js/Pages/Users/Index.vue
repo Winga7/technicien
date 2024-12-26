@@ -2,7 +2,7 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from "@inertiajs/vue3";
 import { router } from "@inertiajs/vue3";
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const props = defineProps({
     users: {
@@ -34,8 +34,12 @@ const togglePhone = (userId) => {
         <template #header>
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-3">
-                    <span class="text-2xl" role="img" aria-label="utilisateurs">👨‍💻</span>
-                    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                    <span class="text-2xl" role="img" aria-label="utilisateurs"
+                        >👨‍💻</span
+                    >
+                    <h2
+                        class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
+                    >
                         Gestion des Utilisateurs
                     </h2>
                 </div>
@@ -45,7 +49,9 @@ const togglePhone = (userId) => {
                     class="px-4 py-2 bg-green-600 dark:bg-green-500 text-white rounded-md hover:bg-green-700 dark:hover:bg-green-600 transition"
                 >
                     <span class="flex items-center space-x-2">
-                        <span class="text-lg" role="img" aria-label="nouveau">➕</span>
+                        <span class="text-lg" role="img" aria-label="nouveau"
+                            >➕</span
+                        >
                         <span>Nouvel Utilisateur</span>
                     </span>
                 </button>
@@ -81,6 +87,9 @@ const togglePhone = (userId) => {
                                     Rôle
                                 </th>
                                 <th
+                                    v-if="
+                                        $page.props.auth.user.role === 'admin'
+                                    "
                                     class="px-4 py-2 text-gray-700 dark:text-gray-300"
                                 >
                                     Actions
@@ -107,12 +116,17 @@ const togglePhone = (userId) => {
                                     class="px-4 py-2 text-gray-800 dark:text-gray-200"
                                 >
                                     <div class="flex items-center space-x-2">
-                                        <span v-if="$page.props.auth.user.role === 'admin'">
+                                        <span
+                                            v-if="
+                                                $page.props.auth.user.role ===
+                                                'admin'
+                                            "
+                                        >
                                             {{ user.telephone }}
                                         </span>
                                         <span v-else>
                                             <span v-if="!showPhone[user.id]">
-                                                {{ '•'.repeat(10) }}
+                                                {{ "•".repeat(10) }}
                                             </span>
                                             <span v-else>
                                                 {{ user.telephone }}
@@ -121,7 +135,9 @@ const togglePhone = (userId) => {
                                                 @click="togglePhone(user.id)"
                                                 class="ml-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                                             >
-                                                <span v-if="!showPhone[user.id]">👁️</span>
+                                                <span v-if="!showPhone[user.id]"
+                                                    >👁️</span
+                                                >
                                                 <span v-else>👁️‍🗨️</span>
                                             </button>
                                         </span>
@@ -132,7 +148,12 @@ const togglePhone = (userId) => {
                                 >
                                     {{ user.role }}
                                 </td>
-                                <td class="px-4 py-2 space-x-2">
+                                <td
+                                    v-if="
+                                        $page.props.auth.user.role === 'admin'
+                                    "
+                                    class="px-4 py-2 space-x-2"
+                                >
                                     <Link
                                         v-if="
                                             $page.props.auth.user.role ===
