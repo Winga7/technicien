@@ -44,16 +44,20 @@ const getStatusColor = (statut) => {
     <AppLayout title="Tickets">
         <template #header>
             <div class="flex justify-between items-center">
-                <h2
-                    class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
-                >
-                    Tickets
-                </h2>
+                <div class="flex items-center space-x-3">
+                    <span class="text-2xl" role="img" aria-label="tickets">🎫</span>
+                    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                        Gestion des Tickets
+                    </h2>
+                </div>
                 <Link
                     :href="route('tickets.create')"
-                    class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition"
+                    class="px-4 py-2 bg-green-600 dark:bg-green-500 text-white rounded-md hover:bg-green-700 dark:hover:bg-green-600 transition"
                 >
-                    Nouveau Ticket
+                    <span class="flex items-center space-x-2">
+                        <span class="text-lg" role="img" aria-label="nouveau">➕</span>
+                        <span>Nouveau Ticket</span>
+                    </span>
                 </Link>
             </div>
         </template>
