@@ -157,7 +157,7 @@ const getStatusColor = (statut) => {
                                                         ticket.id
                                                     )
                                                 "
-                                                class="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300"
+                                                class="px-3 py-1.5 bg-indigo-600 dark:bg-indigo-500 text-white rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-600 transition text-sm font-medium"
                                             >
                                                 Voir
                                             </Link>
@@ -168,7 +168,7 @@ const getStatusColor = (statut) => {
                                                         ticket.id
                                                     )
                                                 "
-                                                class="text-yellow-600 hover:text-yellow-800 dark:text-yellow-400 dark:hover:text-yellow-300"
+                                                class="px-3 py-1.5 bg-yellow-600 dark:bg-yellow-500 text-white rounded-md hover:bg-yellow-700 dark:hover:bg-yellow-600 transition text-sm font-medium"
                                             >
                                                 Modifier
                                             </Link>
@@ -178,7 +178,7 @@ const getStatusColor = (statut) => {
                                                         .role === 'admin'
                                                 "
                                                 @click="deleteTicket(ticket.id)"
-                                                class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                                                class="px-3 py-1.5 bg-red-600 dark:bg-red-500 text-white rounded-md hover:bg-red-700 dark:hover:bg-red-600 transition text-sm font-medium"
                                             >
                                                 Supprimer
                                             </button>

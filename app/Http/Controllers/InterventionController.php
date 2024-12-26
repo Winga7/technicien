@@ -25,13 +25,28 @@ class InterventionController extends Controller
             'description' => 'nullable|string',
             'client_id' => 'required|exists:clients,id',
             'technicien_id' => 'nullable|exists:users,id',
-            'ticket_id' => 'nullable|exists:tickets,id',
-            'images' => 'nullable|array',
+            'ticket_id' => 'required|exists:tickets,id',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $validated['images'] = json_encode($validated['images'] ?? []);
+        // Gérer les images
+        $imagePaths = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('interventions', 'public');
+                $imagePaths[] = $path;
+            }
+        }
 
-        $intervention = Intervention::create($validated);
+        // Créer l'intervention avec les chemins d'images
+        $intervention = Intervention::create([
+            'titre' => $validated['titre'],
+            'description' => $validated['description'],
+            'client_id' => $validated['client_id'],
+            'technicien_id' => $validated['technicien_id'],
+            'ticket_id' => $validated['ticket_id'],
+            'images' => !empty($imagePaths) ? json_encode($imagePaths) : null
+        ]);
 
         return back()->with('message', 'Intervention créée avec succès');
     }
@@ -47,26 +62,21 @@ class InterventionController extends Controller
     public function update(Request $request, Intervention $intervention)
     {
         $validated = $request->validate([
-            'titre' => 'sometimes|string|max:255',
-            'description' => 'sometimes|string',
+            'titre' => 'required|string|max:255',
+            'description' => 'required|string',
             'technicien_id' => 'nullable|exists:users,id',
-            'images' => 'sometimes|array',
         ]);
-
-        if (isset($validated['images'])) {
-            $validated['images'] = json_encode($validated['images']);
-        }
 
         $intervention->update($validated);
 
-        return response()->json($intervention);
+        return back();
     }
 
     // Méthode pour supprimer une intervention
     public function destroy(Intervention $intervention)
     {
         $intervention->delete();
-        return response()->json(['message' => 'Intervention supprimée avec succès.']);
+        return back()->with('message', 'Intervention supprimée avec succès');
     }
 
     public function create()
