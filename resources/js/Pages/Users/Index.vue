@@ -152,13 +152,13 @@ const togglePhone = (userId) => {
                                 >
                                     <Link
                                         :href="route('users.edit', user.id)"
-                                        class="inline-flex items-center px-3 py-1 bg-blue-500 dark:bg-blue-600 text-white rounded-md hover:bg-blue-600 dark:hover:bg-blue-700 transition"
+                                        class="px-3 py-1.5 bg-yellow-600 dark:bg-yellow-500 text-white rounded-md hover:bg-yellow-700 dark:hover:bg-yellow-600 transition text-sm font-medium"
                                     >
                                         Modifier
                                     </Link>
                                     <button
                                         @click="deleteUser(user.id)"
-                                        class="inline-flex items-center px-3 py-1 bg-red-500 dark:bg-red-600 text-white rounded-md hover:bg-red-600 dark:hover:bg-red-700 transition"
+                                        class="px-3 py-1.5 bg-red-600 dark:bg-red-500 text-white rounded-md hover:bg-red-700 dark:hover:bg-red-600 transition text-sm font-medium"
                                     >
                                         Supprimer
                                     </button>
