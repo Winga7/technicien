@@ -40,20 +40,20 @@ const submit = () => {
         <template #header>
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-3">
-                    <span class="text-2xl" role="img" aria-label="clients">👥</span>
+                    <span class="text-2xl" role="img" aria-label="clients">��</span>
                     <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                         Gestion des Clients
                     </h2>
                 </div>
-                <Link
-                    :href="route('clients.create')"
+                <button
+                    @click="showCreateForm = true"
                     class="px-4 py-2 bg-green-600 dark:bg-green-500 text-white rounded-md hover:bg-green-700 dark:hover:bg-green-600 transition"
                 >
                     <span class="flex items-center space-x-2">
                         <span class="text-lg" role="img" aria-label="nouveau">➕</span>
                         <span>Nouveau Client</span>
                     </span>
-                </Link>
+                </button>
             </div>
         </template>
 
