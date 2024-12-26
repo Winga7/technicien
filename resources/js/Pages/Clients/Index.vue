@@ -40,7 +40,7 @@ const submit = () => {
         <template #header>
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-3">
-                    <span class="text-2xl" role="img" aria-label="clients">��</span>
+                    <span class="text-2xl" role="img" aria-label="clients">👥</span>
                     <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                         Gestion des Clients
                     </h2>
