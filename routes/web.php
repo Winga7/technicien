@@ -32,4 +32,6 @@ Route::middleware([
     Route::resource('clients', ClientController::class);
     Route::resource('tickets', TicketController::class);
     Route::resource('interventions', InterventionController::class);
+    Route::get('/clients', [ClientController::class, 'index'])->name('clients.index');
+    Route::post('/clients', [ClientController::class, 'store'])->name('clients.store');
 });

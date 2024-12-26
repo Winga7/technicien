@@ -103,6 +103,13 @@ const userInitials = computed(() => {
                                 Utilisateurs
                             </NavLink>
                             <NavLink
+                                :href="route('clients.index')"
+                                :active="route().current('clients.index')"
+                                class="dark:text-gray-200"
+                            >
+                                Clients
+                            </NavLink>
+                            <NavLink
                                 :href="route('tickets.index')"
                                 :active="route().current('tickets.index')"
                                 class="dark:text-gray-200"

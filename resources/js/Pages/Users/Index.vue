@@ -26,17 +26,20 @@ const deleteUser = (id) => {
     <AppLayout title="Gestion des Utilisateurs">
         <template #header>
             <div class="flex justify-between items-center">
-                <h2
-                    class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
-                >
-                    Gestion des Utilisateurs
-                </h2>
+                <div class="flex items-center space-x-3">
+                    <span class="text-2xl" role="img" aria-label="utilisateurs">👨‍💻</span>
+                    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                        Gestion des Utilisateurs
+                    </h2>
+                </div>
                 <Link
-                    v-if="$page.props.auth.user.role === 'admin'"
                     :href="route('users.create')"
-                    class="bg-blue-500 dark:bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-600 dark:hover:bg-blue-700 transition"
+                    class="px-4 py-2 bg-green-600 dark:bg-green-500 text-white rounded-md hover:bg-green-700 dark:hover:bg-green-600 transition"
                 >
-                    Créer un utilisateur
+                    <span class="flex items-center space-x-2">
+                        <span class="text-lg" role="img" aria-label="nouveau">➕</span>
+                        <span>Nouvel Utilisateur</span>
+                    </span>
                 </Link>
             </div>
         </template>

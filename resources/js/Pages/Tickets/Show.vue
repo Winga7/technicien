@@ -63,23 +63,30 @@ const getStatusColor = (statut) => {
     <AppLayout :title="'Ticket #' + ticket.id">
         <template #header>
             <div class="flex justify-between items-center">
-                <h2
-                    class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
-                >
-                    Ticket #{{ ticket.id }} - {{ ticket.titre }}
-                </h2>
+                <div class="flex items-center space-x-3">
+                    <span class="text-2xl" role="img" aria-label="ticket">🎫</span>
+                    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                        Ticket #{{ ticket.id }} - {{ ticket.titre }}
+                    </h2>
+                </div>
                 <div class="flex space-x-4">
                     <Link
                         :href="route('tickets.edit', ticket.id)"
                         class="px-4 py-2 bg-yellow-600 dark:bg-yellow-500 text-white rounded-md hover:bg-yellow-700 dark:hover:bg-yellow-600 transition"
                     >
-                        Modifier
+                        <span class="flex items-center space-x-2">
+                            <span class="text-lg" role="img" aria-label="modifier">✏️</span>
+                            <span>Modifier</span>
+                        </span>
                     </Link>
                     <Link
                         :href="route('tickets.index')"
                         class="px-4 py-2 bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900 rounded-md hover:bg-gray-700 dark:hover:bg-gray-300 transition"
                     >
-                        Retour aux tickets
+                        <span class="flex items-center space-x-2">
+                            <span class="text-lg" role="img" aria-label="retour">↩️</span>
+                            <span>Retour aux tickets</span>
+                        </span>
                     </Link>
                 </div>
             </div>
