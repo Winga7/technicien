@@ -2,6 +2,7 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from "@inertiajs/vue3";
 import { router } from "@inertiajs/vue3";
+import { ref } from 'vue';
 
 const props = defineProps({
     users: {
@@ -20,6 +21,12 @@ const deleteUser = (id) => {
         });
     }
 };
+
+const showPhone = ref({});
+
+const togglePhone = (userId) => {
+    showPhone.value[userId] = !showPhone.value[userId];
+};
 </script>
 
 <template>
@@ -32,15 +39,16 @@ const deleteUser = (id) => {
                         Gestion des Utilisateurs
                     </h2>
                 </div>
-                <Link
-                    :href="route('users.create')"
+                <button
+                    v-if="$page.props.auth.user.role === 'admin'"
+                    @click="showCreateForm = true"
                     class="px-4 py-2 bg-green-600 dark:bg-green-500 text-white rounded-md hover:bg-green-700 dark:hover:bg-green-600 transition"
                 >
                     <span class="flex items-center space-x-2">
                         <span class="text-lg" role="img" aria-label="nouveau">➕</span>
                         <span>Nouvel Utilisateur</span>
                     </span>
-                </Link>
+                </button>
             </div>
         </template>
 
@@ -98,7 +106,26 @@ const deleteUser = (id) => {
                                 <td
                                     class="px-4 py-2 text-gray-800 dark:text-gray-200"
                                 >
-                                    {{ user.telephone }}
+                                    <div class="flex items-center space-x-2">
+                                        <span v-if="$page.props.auth.user.role === 'admin'">
+                                            {{ user.telephone }}
+                                        </span>
+                                        <span v-else>
+                                            <span v-if="!showPhone[user.id]">
+                                                {{ '•'.repeat(10) }}
+                                            </span>
+                                            <span v-else>
+                                                {{ user.telephone }}
+                                            </span>
+                                            <button
+                                                @click="togglePhone(user.id)"
+                                                class="ml-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                            >
+                                                <span v-if="!showPhone[user.id]">👁️</span>
+                                                <span v-else>👁️‍🗨️</span>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td
                                     class="px-4 py-2 text-gray-800 dark:text-gray-200"

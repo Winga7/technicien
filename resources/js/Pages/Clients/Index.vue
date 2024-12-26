@@ -145,27 +145,26 @@ const submit = () => {
                                 <td class="px-4 py-3 text-gray-800 dark:text-gray-200">{{ client.prenom }}</td>
                                 <td class="px-4 py-3 text-gray-800 dark:text-gray-200">{{ client.email }}</td>
                                 <td class="px-4 py-3 text-gray-800 dark:text-gray-200">{{ client.telephone }}</td>
-                                <td class="px-4 py-3">
-                                    <div class="flex space-x-3">
-                                        <Link
-                                            :href="route('clients.show', client.id)"
-                                            class="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300"
-                                        >
-                                            Voir
-                                        </Link>
-                                        <Link
-                                            :href="route('clients.edit', client.id)"
-                                            class="text-yellow-600 hover:text-yellow-800 dark:text-yellow-400 dark:hover:text-yellow-300"
-                                        >
-                                            Modifier
-                                        </Link>
-                                        <button
-                                            @click="deleteClient(client.id)"
-                                            class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
-                                        >
-                                            Supprimer
-                                        </button>
-                                    </div>
+                                <td class="px-4 py-3 text-right">
+                                    <Link
+                                        :href="route('clients.show', client.id)"
+                                        class="text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300"
+                                    >
+                                        Voir
+                                    </Link>
+                                    <Link
+                                        :href="route('clients.edit', client.id)"
+                                        class="ml-4 text-yellow-600 hover:text-yellow-800 dark:text-yellow-400 dark:hover:text-yellow-300"
+                                    >
+                                        Modifier
+                                    </Link>
+                                    <button
+                                        v-if="$page.props.auth.user.role === 'admin'"
+                                        @click.prevent="deleteClient(client.id)"
+                                        class="ml-4 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                                    >
+                                        Supprimer
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
