@@ -124,7 +124,7 @@ const togglePhone = (userId) => {
                                                 <span v-if="!showPhone[user.id]">👁️</span>
                                                 <span v-else>👁️‍🗨️</span>
                                             </button>
-                                        </div>
+                                        </span>
                                     </div>
                                 </td>
                                 <td
