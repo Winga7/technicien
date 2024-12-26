@@ -104,37 +104,36 @@ class TicketController extends Controller
             $validated = $request->validate([
                 'titre' => 'required|string|max:255',
                 'description' => 'required|string',
-                'client_id' => 'required_without:client|nullable|exists:clients,id',
-                'client' => 'required_without:client_id|array',
-                'client.name' => 'required_with:client|string',
-                'client.prenom' => 'required_with:client|string',
+                'statut' => 'required|string|in:en attente,en cours,terminé',
+                'client_id' => 'required_without:client',
+                'client' => 'required_without:client_id',
+                'technicien_id' => 'nullable|exists:users,id',
+                'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+                // Validation conditionnelle pour les champs du client
+                'client.name' => 'required_with:client',
+                'client.prenom' => 'required_with:client',
                 'client.email' => 'required_with:client|email|unique:clients,email',
                 'client.telephone' => 'nullable|string',
                 'client.addresse' => 'nullable|string',
-                'technicien_id' => 'nullable|exists:users,id',
-                'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             ]);
 
-            Log::info('Données validées :', $validated);
-
             // Créer un nouveau client si nécessaire
-            if (!isset($validated['client_id']) && isset($validated['client'])) {
-                Log::info('Création d\'un nouveau client');
+            if (!$request->client_id && $request->client) {
                 $client = Client::create([
-                    'name' => $validated['client']['name'],
-                    'prenom' => $validated['client']['prenom'], // Assurez-vous que le prénom est inclus
-                    'email' => $validated['client']['email'],
-                    'telephone' => $validated['client']['telephone'],
-                    'addresse' => $validated['client']['addresse'],
+                    'name' => $request->client['name'],
+                    'prenom' => $request->client['prenom'],
+                    'email' => $request->client['email'],
+                    'telephone' => $request->client['telephone'] ?? null,
+                    'addresse' => $request->client['addresse'] ?? null,
                 ]);
-                $validated['client_id'] = $client->id;
-                unset($validated['client']);
+                $clientId = $client->id;
+            } else {
+                $clientId = $request->client_id;
             }
 
             // Gérer les images
             $imagePaths = [];
             if ($request->hasFile('images')) {
-                Log::info('Traitement des images');
                 foreach ($request->file('images') as $image) {
                     $path = $image->store('tickets', 'public');
                     $imagePaths[] = $path;
@@ -145,26 +144,16 @@ class TicketController extends Controller
             $ticket = Ticket::create([
                 'titre' => $validated['titre'],
                 'description' => $validated['description'],
-                'statut' => 'en attente',
-                'client_id' => $validated['client_id'],
+                'statut' => $validated['statut'],
+                'client_id' => $clientId,
                 'technicien_id' => $validated['technicien_id'] ?? null,
                 'images' => !empty($imagePaths) ? json_encode($imagePaths) : null
             ]);
-
-            Log::info('Ticket créé avec succès', ['ticket_id' => $ticket->id]);
 
             return redirect()->route('tickets.index')
                 ->with('message', 'Ticket créé avec succès');
         } catch (\Exception $e) {
             Log::error('Erreur lors de la création du ticket: ' . $e->getMessage());
-
-            // Nettoyer les images en cas d'erreur
-            if (isset($imagePaths)) {
-                foreach ($imagePaths as $path) {
-                    Storage::disk('public')->delete($path);
-                }
-            }
-
             return back()->withErrors([
                 'error' => 'Une erreur est survenue lors de la création du ticket: ' . $e->getMessage()
             ])->withInput();
