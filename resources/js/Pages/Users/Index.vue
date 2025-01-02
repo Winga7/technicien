@@ -1,8 +1,12 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import { Link } from "@inertiajs/vue3";
+import { Link, useForm } from "@inertiajs/vue3";
 import { router } from "@inertiajs/vue3";
 import { ref, computed } from "vue";
+import InputLabel from '@/Components/InputLabel.vue';
+import TextInput from '@/Components/TextInput.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
 
 const props = defineProps({
     users: {
@@ -14,6 +18,29 @@ const props = defineProps({
 const search = ref('');
 const showPhone = ref({});
 const showUserForm = ref(false);
+
+const form = useForm({
+    name: '',
+    email: '',
+    telephone: '',
+    role: 'technicien',
+    password: '',
+    password_confirmation: '',
+});
+
+const resetUserForm = () => {
+    showUserForm.value = false;
+    form.reset();
+};
+
+const submit = () => {
+    form.post(route('users.store'), {
+        onSuccess: () => {
+            showUserForm.value = false;
+            form.reset();
+        },
+    });
+};
 
 const togglePhone = (userId) => {
     showPhone.value[userId] = !showPhone.value[userId];
@@ -184,6 +211,104 @@ const filteredUsers = computed(() => {
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Modal Formulaire Utilisateur -->
+        <div v-if="showUserForm"
+            class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50"
+            @click.self="resetUserForm"
+        >
+            <div class="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-2xl w-full mx-4 relative">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Nouvel Utilisateur</h3>
+                    <button
+                        @click="resetUserForm"
+                        class="text-gray-400 hover:text-gray-500 text-xl font-medium px-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded"
+                    >
+                        ×
+                    </button>
+                </div>
+
+                <form @submit.prevent="submit" class="space-y-4">
+                    <div>
+                        <InputLabel class="dark:text-gray-200" value="Nom" />
+                        <TextInput
+                            v-model="form.name"
+                            type="text"
+                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <InputLabel class="dark:text-gray-200" value="Email" />
+                        <TextInput
+                            v-model="form.email"
+                            type="email"
+                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <InputLabel class="dark:text-gray-200" value="Téléphone" />
+                        <TextInput
+                            v-model="form.telephone"
+                            type="tel"
+                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <InputLabel class="dark:text-gray-200" value="Rôle" />
+                        <select
+                            v-model="form.role"
+                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            required
+                        >
+                            <option value="technicien">Technicien</option>
+                            <option value="admin">Administrateur</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <InputLabel class="dark:text-gray-200" value="Mot de passe" />
+                        <TextInput
+                            v-model="form.password"
+                            type="password"
+                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <InputLabel class="dark:text-gray-200" value="Confirmation du mot de passe" />
+                        <TextInput
+                            v-model="form.password_confirmation"
+                            type="password"
+                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            required
+                        />
+                    </div>
+
+                    <div class="flex justify-end space-x-3">
+                        <SecondaryButton
+                            @click.prevent="resetUserForm"
+                            class="dark:bg-zinc-700 dark:text-gray-300 dark:hover:bg-zinc-600"
+                        >
+                            Annuler
+                        </SecondaryButton>
+                        <PrimaryButton
+                            type="submit"
+                            :disabled="form.processing"
+                            class="bg-indigo-600 dark:bg-indigo-500 hover:bg-indigo-700 dark:hover:bg-indigo-600"
+                        >
+                            Créer l'utilisateur
+                        </PrimaryButton>
+                    </div>
+                </form>
             </div>
         </div>
     </AppLayout>

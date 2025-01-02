@@ -36,7 +36,6 @@ const filteredTickets = computed(() => {
     const searchPhone = search.value.replace(/\s/g, '');
     return props.tickets.filter(ticket =>
         ticket.titre.toLowerCase().includes(searchLower) ||
-        ticket.description?.toLowerCase().includes(searchLower) ||
         ticket.client?.name.toLowerCase().includes(searchLower) ||
         ticket.client?.telephone?.replace(/\s/g, '').includes(searchPhone) ||
         ticket.statut.toLowerCase().includes(searchLower)
