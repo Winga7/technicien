@@ -139,7 +139,7 @@
                             <TextInput
                                 v-model="clientForm.name"
                                 type="text"
-                                class="mt-1 block w-full"
+                                class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 required
                             />
                         </div>
@@ -148,7 +148,7 @@
                             <TextInput
                                 v-model="clientForm.prenom"
                                 type="text"
-                                class="mt-1 block w-full"
+                                class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 required
                             />
                         </div>
@@ -157,7 +157,7 @@
                             <TextInput
                                 v-model="clientForm.email"
                                 type="email"
-                                class="mt-1 block w-full"
+                                class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 required
                             />
                         </div>
@@ -166,7 +166,7 @@
                             <TextInput
                                 v-model="clientForm.telephone"
                                 type="tel"
-                                class="mt-1 block w-full"
+                                class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 required
                             />
                         </div>
@@ -174,7 +174,7 @@
                             <InputLabel class="dark:text-gray-200" value="Adresse" />
                             <textarea
                                 v-model="clientForm.addresse"
-                                class="mt-1 block w-full rounded-md border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100"
+                                class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 rows="3"
                             ></textarea>
                         </div>
@@ -190,7 +190,7 @@
                         </button>
                         <button
                             type="submit"
-                            class="px-4 py-2 bg-green-600 dark:bg-green-500 text-white rounded-md hover:bg-green-700 dark:hover:bg-green-600 transition"
+                            class="px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-600 transition"
                         >
                             Créer le client
                         </button>
