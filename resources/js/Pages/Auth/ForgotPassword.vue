@@ -5,7 +5,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import ThemeToggle from '@/Components/ThemeToggle.vue';
+import ThemeSwitch from '@/Components/ThemeSwitch.vue';
 
 defineProps({
     status: String,
@@ -26,7 +26,7 @@ const submit = () => {
     <div class="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-zinc-900">
         <div class="w-full max-w-md p-6">
             <div class="absolute top-4 right-4">
-                <ThemeToggle />
+                <ThemeSwitch />
             </div>
 
             <div class="bg-white dark:bg-zinc-800 shadow-md overflow-hidden sm:rounded-lg p-6">

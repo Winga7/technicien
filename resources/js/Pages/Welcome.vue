@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { Head, Link } from "@inertiajs/vue3";
-import ThemeToggle from "@/Components/ThemeToggle.vue";
+import ThemeSwitch from "@/Components/ThemeSwitch.vue";
 
 const isDark = ref(localStorage.getItem("theme") === "dark");
 
@@ -32,12 +32,14 @@ defineProps({
 <template>
     <Head title="Bienvenue" />
 
-    <div
-        class="min-h-screen bg-white dark:bg-zinc-900 text-gray-800 dark:text-white flex flex-col justify-between"
-    >
+    <div class="min-h-screen bg-gray-100 dark:bg-zinc-900">
+        <div class="fixed top-2 right-2 md:top-4 md:right-4 z-50">
+            <ThemeSwitch />
+        </div>
+
         <!-- Navbar -->
-        <div class="relative sm:flex sm:justify-center sm:items-center">
-            <div class="p-6 flex justify-end items-center gap-4">
+        <div class="relative px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-end items-center py-4">
                 <template v-if="canLogin">
                     <Link
                         v-if="$page.props.auth.user"
@@ -55,34 +57,18 @@ defineProps({
                         </Link>
                     </template>
                 </template>
-
-                <ThemeToggle />
             </div>
         </div>
 
-        <!-- Hero Section -->
-        <div
-            class="flex-grow flex flex-col justify-center items-center px-6 py-16"
-        >
-            <h1 class="text-4xl font-bold mb-8 text-center">
-                Bienvenue sur l'Intranet Technicien
-            </h1>
-
-            <div class="text-center max-w-2xl mx-auto">
-                <p class="text-xl text-gray-400 mb-8">
-                    Plateforme de gestion des interventions techniques.
+        <!-- Contenu principal -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="text-center">
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-8">
+                    Bienvenue sur <span class="text-indigo-600 dark:text-indigo-400">Help Desk</span>
+                </h1>
+                <p class="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-12">
+                    Gérez vos tickets et suivez leur progression en temps réel
                 </p>
-                <p class="text-lg text-gray-500 mb-8">
-                    Veuillez vous connecter pour accéder à votre espace de
-                    travail.
-                </p>
-                <div class="flex justify-center max-w-xs mx-auto">
-                    <img
-                        src="/images/accueil.jpg"
-                        alt="Accueil"
-                        class="rounded-lg shadow-lg max-w-full h-auto"
-                    />
-                </div>
             </div>
         </div>
     </div>
