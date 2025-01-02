@@ -43,7 +43,7 @@
                         <table class="min-w-full divide-y divide-gray-200 dark:divide-zinc-700">
                             <thead>
                                 <tr class="text-left">
-                                    <th class="p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300">ID</th>
+                                    <!-- <th class="p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300">ID</th> -->
                                     <th class="p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300">Nom</th>
                                     <th class="hidden sm:table-cell p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300">Email</th>
                                     <th class="hidden md:table-cell p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300">Téléphone</th>
@@ -52,9 +52,9 @@
                             </thead>
                             <tbody class="divide-y divide-gray-200 dark:divide-zinc-700">
                                 <tr v-for="client in filteredClients" :key="client.id" class="hover:bg-gray-50 dark:hover:bg-zinc-700">
-                                    <td class="p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100">
+                                    <!-- <td class="p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100">
                                         #{{ client.id }}
-                                    </td>
+                                    </td> -->
                                     <td class="p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100">
                                         {{ client.name }} {{ client.prenom }}
                                         <!-- Info mobile -->

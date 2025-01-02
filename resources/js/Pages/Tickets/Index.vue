@@ -113,7 +113,7 @@ const canDeleteTickets = computed(() => {
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200 dark:divide-zinc-700">
                             <thead>
-                                <tr class="text-center">
+                                <tr class="text-left">
                                     <th class="p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300">Titre</th>
                                     <th class="hidden sm:table-cell p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300">Client</th>
                                     <th class="hidden md:table-cell p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300">Statut</th>
@@ -125,22 +125,22 @@ const canDeleteTickets = computed(() => {
                                     <td class="p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100 text-justify">
                                         {{ ticket.titre }}
                                         <!-- Info mobile pour client et statut -->
-                                        <div class="sm:hidden mt-1 text-xs text-gray-500 dark:text-gray-400 text-center">
+                                        <div class="sm:hidden mt-1 text-xs text-gray-500 dark:text-gray-400 text-left">
                                             {{ ticket.client?.name }} -
                                             <span :class="getStatusColor(ticket.statut)">{{ ticket.statut }}</span>
                                         </div>
                                     </td>
-                                    <td class="hidden sm:table-cell p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100 text-center">
+                                    <td class="hidden sm:table-cell p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100 text-left">
                                         {{ ticket.client?.name }}
                                     </td>
-                                    <td class="hidden md:table-cell p-3 sm:p-4 text-xs sm:text-sm text-center">
+                                    <td class="hidden md:table-cell p-3 sm:p-4 text-xs sm:text-sm text-left">
                                         <span :class="getStatusColor(ticket.statut)">
                                             {{ ticket.statut }}
                                         </span>
                                     </td>
-                                    <td class="p-3 sm:p-4 text-xs sm:text-sm text-center">
+                                    <td class="p-3 sm:p-4 text-xs sm:text-sm text-left">
                                         <!-- Version Desktop -->
-                                        <div class="hidden sm:flex space-x-2 justify-center">
+                                        <div class="hidden sm:flex space-x-2 justify">
                                             <Link
                                                 :href="route('tickets.show', ticket.id)"
                                                 class="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-md hover:bg-blue-200 dark:hover:bg-blue-800 transition"
