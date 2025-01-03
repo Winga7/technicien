@@ -66,12 +66,6 @@ const submit = () => {
         return;
     }
 
-    // Validation du format du téléphone uniquement s'il est rempli
-    if (form.telephone && form.telephone.trim() && !form.telephone.match(/^[0-9+\s()-]*$/)) {
-        form.errors.telephone = "Le format du numéro de téléphone n'est pas valide";
-        return;
-    }
-
     form.post(route('users.store'), {
         onSuccess: () => {
             resetUserForm();
@@ -132,7 +126,7 @@ const resetEditForm = () => {
 const filteredUsers = computed(() => {
     let users = props.users;
 
-    // Filtrage par recherche
+    // Recherche
     if (search.value) {
         const searchLower = search.value.toLowerCase();
         const searchPhone = search.value.replace(/\s/g, "");
@@ -142,18 +136,22 @@ const filteredUsers = computed(() => {
                 user.firstname.toLowerCase().includes(searchLower) ||
                 user.email.toLowerCase().includes(searchLower) ||
                 user.role.toLowerCase().includes(searchLower) ||
-                user.telephone.replace(/\s/g, "").includes(searchPhone)
+                (user.telephone && user.telephone.replace(/\s/g, "").includes(searchPhone))
         );
     }
 
     // Tri
     return users.sort((a, b) => {
         const modifier = sort.value.direction === "asc" ? 1 : -1;
-        const aValue = a[sort.value.column].toLowerCase();
-        const bValue = b[sort.value.column].toLowerCase();
+        const aValue = (a[sort.value.column] || '').toLowerCase();
+        const bValue = (b[sort.value.column] || '').toLowerCase();
         return aValue > bValue ? modifier : -modifier;
     });
 });
+
+const displayTelephone = (telephone) => {
+    return telephone || 'N/A';
+};
 </script>
 
 <template>
@@ -335,7 +333,7 @@ const filteredUsers = computed(() => {
                                             {{ user.email }}<br />
                                             <div class="flex items-center space-x-2">
                                                 <span v-if="!showPhone[user.id]">{{ "•".repeat(10) }}</span>
-                                                <span v-else>{{ user.telephone }}</span>
+                                                <span v-else>{{ displayTelephone(user.telephone) }}</span>
                                                 <button
                                                     @click="togglePhone(user.id)"
                                                     class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
@@ -360,39 +358,25 @@ const filteredUsers = computed(() => {
                                     <td
                                         class="hidden sm:table-cell p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100"
                                     >
-                                        <div
-                                            class="flex items-center space-x-2"
-                                        >
-                                            <span
-                                                v-if="
-                                                    $page.props.auth.user
-                                                        .role === 'admin'
-                                                "
-                                            >
-                                                {{ user.telephone }}
+                                        <div class="flex items-center space-x-2">
+                                            <span v-if="$page.props.auth.user.role === 'admin'">
+                                                {{ displayTelephone(user.telephone) }}
                                             </span>
                                             <span v-else>
-                                                <span
-                                                    v-if="!showPhone[user.id]"
-                                                    >{{ "•".repeat(10) }}</span
-                                                >
-                                                <span v-else>{{
-                                                    user.telephone
-                                                }}</span>
-                                                <button
-                                                    @click="
-                                                        togglePhone(user.id)
-                                                    "
-                                                    class="ml-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                                                >
-                                                    <span
-                                                        v-if="
-                                                            !showPhone[user.id]
-                                                        "
-                                                        >👁️</span
+                                                <template v-if="user.role === 'admin'">
+                                                    Non autorisé
+                                                </template>
+                                                <template v-else>
+                                                    <span v-if="!showPhone[user.id]">{{ "•".repeat(10) }}</span>
+                                                    <span v-else>{{ displayTelephone(user.telephone) }}</span>
+                                                    <button
+                                                        @click="togglePhone(user.id)"
+                                                        class="ml-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                                                     >
-                                                    <span v-else>👁️‍🗨️</span>
-                                                </button>
+                                                        <span v-if="!showPhone[user.id]">👁️</span>
+                                                        <span v-else>👁️‍🗨️</span>
+                                                    </button>
+                                                </template>
                                             </span>
                                         </div>
                                     </td>
@@ -546,7 +530,6 @@ const filteredUsers = computed(() => {
                             v-model="form.telephone"
                             type="tel"
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                            required
                         />
                     </div>
 
@@ -672,7 +655,6 @@ const filteredUsers = computed(() => {
                             v-model="editForm.telephone"
                             type="tel"
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                            required
                         />
                     </div>
 
