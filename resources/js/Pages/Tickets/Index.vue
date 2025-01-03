@@ -78,7 +78,7 @@ const filteredTickets = computed(() => {
 
     // Tri
     return tickets.sort((a, b) => {
-        const modifier = sort.value.direction === "asc" ? 1 : -1;
+        const modifier = sort.value.direction === "desc" ? 1 : -1;
         let aValue, bValue;
 
         if (sort.value.column === "client") {
@@ -185,11 +185,11 @@ watch(isNewClient, (newValue) => {
 
 const showEditForm = ref(false);
 const editForm = useForm({
-    id: '',
-    titre: '',
-    description: '',
-    statut: '',
-    client_id: '',
+    id: "",
+    titre: "",
+    description: "",
+    statut: "",
+    client_id: "",
     images: [],
 });
 
@@ -205,15 +205,15 @@ const editTicket = (ticket) => {
 
 const submitEdit = () => {
     const formData = new FormData();
-    formData.append('_method', 'PUT');
-    formData.append('titre', editForm.titre);
-    formData.append('description', editForm.description);
-    formData.append('statut', editForm.statut);
-    formData.append('client_id', editForm.client_id);
+    formData.append("_method", "PUT");
+    formData.append("titre", editForm.titre);
+    formData.append("description", editForm.description);
+    formData.append("statut", editForm.statut);
+    formData.append("client_id", editForm.client_id);
 
     if (editForm.images.length > 0) {
         editForm.images.forEach((image) => {
-            formData.append('images[]', image);
+            formData.append("images[]", image);
         });
     }
 

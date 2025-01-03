@@ -59,25 +59,25 @@ const getTechniciens = computed(() => {
 
 const submitIntervention = () => {
     const formData = new FormData();
-    formData.append('titre', interventionForm.titre);
-    formData.append('description', interventionForm.description);
-    formData.append('ticket_id', props.ticket.id);
-    formData.append('client_id', props.ticket.client_id);
-    formData.append('statut', interventionForm.statut || 'en cours');
+    formData.append("titre", interventionForm.titre);
+    formData.append("description", interventionForm.description);
+    formData.append("ticket_id", props.ticket.id);
+    formData.append("client_id", props.ticket.client_id);
+    formData.append("statut", interventionForm.statut || "en cours");
 
     if (interventionForm.techniciens) {
-        interventionForm.techniciens.forEach(techId => {
-            formData.append('techniciens[]', techId);
+        interventionForm.techniciens.forEach((techId) => {
+            formData.append("techniciens[]", techId);
         });
     }
 
     if (interventionForm.images && interventionForm.images.length > 0) {
         interventionForm.images.forEach((image) => {
-            formData.append('images[]', image);
+            formData.append("images[]", image);
         });
     }
 
-    router.post(route('interventions.store'), formData, {
+    router.post(route("interventions.store"), formData, {
         preserveScroll: true,
         onSuccess: () => {
             showInterventionForm.value = false;
@@ -177,7 +177,7 @@ const updateIntervention = (intervention) => {
     editForm.titre = intervention.titre;
     editForm.description = intervention.description;
     editForm.statut = intervention.statut;
-    editForm.techniciens = intervention.techniciens.map(tech => tech.id);
+    editForm.techniciens = intervention.techniciens.map((tech) => tech.id);
     editForm.images = [];
     interventionPreview.value = [];
     activeMenu.value = null;
@@ -185,25 +185,29 @@ const updateIntervention = (intervention) => {
 
 const submitEdit = () => {
     const formData = new FormData();
-    formData.append('_method', 'PUT');
-    formData.append('titre', editForm.titre);
-    formData.append('description', editForm.description);
-    formData.append('technicien_id', editForm.technicien_id);
+    formData.append("_method", "PUT");
+    formData.append("titre", editForm.titre);
+    formData.append("description", editForm.description);
+    formData.append("technicien_id", editForm.technicien_id);
 
     if (editForm.images && editForm.images.length > 0) {
         editForm.images.forEach((image) => {
-            formData.append('images[]', image);
+            formData.append("images[]", image);
         });
     }
 
-    router.post(route('interventions.update', editingIntervention.value.id), formData, {
-        preserveScroll: true,
-        onSuccess: () => {
-            editingIntervention.value = null;
-            editForm.reset();
-            interventionPreview.value = [];
-        },
-    });
+    router.post(
+        route("interventions.update", editingIntervention.value.id),
+        formData,
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                editingIntervention.value = null;
+                editForm.reset();
+                interventionPreview.value = [];
+            },
+        }
+    );
 };
 
 const resetEditForm = () => {
@@ -245,35 +249,39 @@ onUnmounted(() => {
 
 const submitInterventionEdit = () => {
     const formData = new FormData();
-    formData.append('_method', 'PUT');
-    formData.append('titre', editForm.titre);
-    formData.append('description', editForm.description);
-    formData.append('statut', editForm.statut);
+    formData.append("_method", "PUT");
+    formData.append("titre", editForm.titre);
+    formData.append("description", editForm.description);
+    formData.append("statut", editForm.statut);
 
     if (editForm.techniciens) {
-        editForm.techniciens.forEach(techId => {
-            formData.append('techniciens[]', techId);
+        editForm.techniciens.forEach((techId) => {
+            formData.append("techniciens[]", techId);
         });
     }
 
     if (editForm.images && editForm.images.length > 0) {
         editForm.images.forEach((image) => {
-            formData.append('images[]', image);
+            formData.append("images[]", image);
         });
     }
 
-    router.post(route('interventions.update', editingIntervention.value.id), formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-        preserveScroll: true,
-        onSuccess: () => {
-            editingIntervention.value = null;
-            editForm.reset();
-            interventionPreview.value = [];
-            activeMenu.value = null;
-        },
-    });
+    router.post(
+        route("interventions.update", editingIntervention.value.id),
+        formData,
+        {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+            preserveScroll: true,
+            onSuccess: () => {
+                editingIntervention.value = null;
+                editForm.reset();
+                interventionPreview.value = [];
+                activeMenu.value = null;
+            },
+        }
+    );
 };
 </script>
 
@@ -517,7 +525,10 @@ const submitInterventionEdit = () => {
                         v-if="editingIntervention"
                         class="mb-6 p-4 border border-gray-200 dark:border-zinc-700 rounded-lg"
                     >
-                        <form @submit.prevent="submitInterventionEdit" class="space-y-4">
+                        <form
+                            @submit.prevent="submitInterventionEdit"
+                            class="space-y-4"
+                        >
                             <div>
                                 <InputLabel
                                     value="Titre"
@@ -526,7 +537,7 @@ const submitInterventionEdit = () => {
                                 <TextInput
                                     v-model="editForm.titre"
                                     type="text"
-                                    class="mt-1 block w-full border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                    class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                     required
                                 />
                             </div>
@@ -539,7 +550,7 @@ const submitInterventionEdit = () => {
                                 <textarea
                                     v-model="editForm.description"
                                     rows="3"
-                                    class="mt-1 block w-full border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                    class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                     required
                                 ></textarea>
                             </div>
@@ -565,7 +576,10 @@ const submitInterventionEdit = () => {
                             </div>
 
                             <div>
-                                <InputLabel value="Images" class="dark:text-gray-200" />
+                                <InputLabel
+                                    value="Images"
+                                    class="dark:text-gray-200"
+                                />
                                 <input
                                     type="file"
                                     @change="handleEditImageUpload"

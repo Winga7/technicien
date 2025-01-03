@@ -39,9 +39,9 @@ const submit = () => {
 const getStatusColor = (statut) => {
     switch (statut) {
         case "en attente":
-            return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
-        case "en cours":
             return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300";
+        case "en cours":
+            return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
         case "terminé":
             return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300";
         default:
