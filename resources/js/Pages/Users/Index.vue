@@ -397,22 +397,10 @@ const filteredUsers = computed(() => {
 
                                             <button
                                                 @click="editUser(user)"
-
-                                            <Link
-                                                :href="
-                                                    route('users.edit', user.id)
-                                                "
                                                 class="px-3 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-400 rounded-md hover:bg-yellow-200 dark:hover:bg-yellow-800 transition"
                                             >
-                                                <span
-                                                    class="flex items-center space-x-1"
-                                                >
-                                                    <span
-                                                        class="text-lg"
-                                                        role="img"
-                                                        aria-label="modifier"
-                                                        >✏️</span
-                                                    >
+                                                <span class="flex items-center space-x-1">
+                                                    <span class="text-lg" role="img" aria-label="modifier">✏️</span>
                                                     <span>Modifier</span>
                                                 </span>
                                             </button>
@@ -441,7 +429,6 @@ const filteredUsers = computed(() => {
 
                                             <button
                                                 @click="editUser(user)"
-
                                                 class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-300"
                                             >
                                                 <span
