@@ -152,19 +152,21 @@ const deleteClient = (id) => {
                                         @click="toggleSort('name')"
                                         class="p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-700"
                                     >
-                                        <div
-                                            class="flex items-center space-x-1"
-                                        >
+                                        <div class="flex items-center space-x-1">
                                             <span>Nom</span>
-                                            <span
-                                                v-if="sort.column === 'name'"
-                                                class="text-xs"
-                                            >
-                                                {{
-                                                    sort.direction === "asc"
-                                                        ? "▲"
-                                                        : "▼"
-                                                }}
+                                            <span v-if="sort.column === 'name'" class="text-xs">
+                                                {{ sort.direction === "asc" ? "▲" : "▼" }}
+                                            </span>
+                                        </div>
+                                    </th>
+                                    <th
+                                        @click="toggleSort('prenom')"
+                                        class="p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-700"
+                                    >
+                                        <div class="flex items-center space-x-1">
+                                            <span>Prénom</span>
+                                            <span v-if="sort.column === 'prenom'" class="text-xs">
+                                                {{ sort.direction === "asc" ? "▲" : "▼" }}
                                             </span>
                                         </div>
                                     </th>
@@ -228,14 +230,13 @@ const deleteClient = (id) => {
                                     <!-- <td class="p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100">
                                         #{{ client.id }}
                                     </td> -->
-                                    <td
-                                        class="p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100"
-                                    >
-                                        {{ client.name }} {{ client.prenom }}
+                                    <td class="p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100">
+                                        {{ client.name }}
+                                    </td>
+                                    <td class="p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100">
+                                        {{ client.prenom }}
                                         <!-- Info mobile -->
-                                        <div
-                                            class="sm:hidden mt-1 text-xs text-gray-500 dark:text-gray-400"
-                                        >
+                                        <div class="sm:hidden mt-1 text-xs text-gray-500 dark:text-gray-400">
                                             {{ client.email }}<br />
                                             {{ client.telephone }}
                                         </div>

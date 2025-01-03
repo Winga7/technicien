@@ -7,6 +7,10 @@ defineProps({
         type: Object,
         required: true,
     },
+    clients: {
+        type: Array,
+        required: true,
+    },
 });
 </script>
 
@@ -247,7 +251,7 @@ defineProps({
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="overflow-hidden shadow-xl sm:rounded-lg">
-                    <Welcome />
+                    <Welcome :clients="clients" />
                 </div>
             </div>
         </div>

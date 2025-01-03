@@ -363,21 +363,18 @@ watch(showTicketForm, (newValue) => {
                                         <div
                                             class="sm:hidden mt-1 text-xs text-gray-500 dark:text-gray-400 text-left"
                                         >
-                                            {{ ticket.client?.name }} -
+                                            {{ ticket.client?.name }} {{ ticket.client?.prenom }} -
                                             <span
-                                                :class="
-                                                    getStatusColor(
-                                                        ticket.statut
-                                                    )
-                                                "
-                                                >{{ ticket.statut }}</span
+                                                :class="getStatusColor(ticket.statut)"
                                             >
+                                                {{ ticket.statut }}
+                                            </span>
                                         </div>
                                     </td>
                                     <td
                                         class="hidden sm:table-cell p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100 text-left"
                                     >
-                                        {{ ticket.client?.name }}
+                                        {{ ticket.client?.name }} {{ ticket.client?.prenom }}
                                     </td>
                                     <td
                                         class="hidden md:table-cell p-3 sm:p-4 text-xs sm:text-sm text-left"

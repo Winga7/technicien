@@ -16,26 +16,27 @@ class DashboardController extends Controller
                 'enAttente' => Ticket::where('statut', 'en attente')->count(),
                 'enCours' => Ticket::where('statut', 'en cours')->count(),
                 'termines' => Ticket::where('statut', 'terminé')->count(),
-                'actifs' => Ticket::where('statut', '!=', 'terminé')->count(),
+                'actifs' => Ticket::whereIn('statut', ['en attente', 'en cours'])->count(),
                 'nouveauxCeMois' => Ticket::whereMonth('created_at', now()->month)->count(),
                 'total' => Ticket::count()
             ],
             'users' => [
-                'total' => User::count(),
                 'techniciens' => User::where('role', 'technicien')->count(),
-                'admins' => User::where('role', 'admin')->count()
+                'admins' => User::where('role', 'admin')->count(),
+                'total' => User::count()
             ],
             'clients' => [
-                'total' => Client::count(),
                 'nouveauxCeMois' => Client::whereMonth('created_at', now()->month)->count(),
-                'actifs' => Client::whereHas('tickets', function ($query) {
-                    $query->where('statut', '!=', 'terminé');
-                })->count()
+                'actifs' => Client::has('tickets')->count(),
+                'total' => Client::count()
             ]
         ];
 
+        $clients = Client::all();
+
         return Inertia::render('Dashboard', [
-            'statistics' => $statistics
+            'statistics' => $statistics,
+            'clients' => $clients
         ]);
     }
 }
