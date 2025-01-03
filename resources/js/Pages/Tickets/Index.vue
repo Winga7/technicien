@@ -185,10 +185,12 @@ watch(isNewClient, (newValue) => {
 
 const showEditForm = ref(false);
 const editForm = useForm({
-    id: "",
-    titre: "",
-    description: "",
-    statut: "",
+    id: '',
+    titre: '',
+    description: '',
+    statut: '',
+    client_id: '',
+    images: [],
 });
 
 const editTicket = (ticket) => {
@@ -196,14 +198,32 @@ const editTicket = (ticket) => {
     editForm.titre = ticket.titre;
     editForm.description = ticket.description;
     editForm.statut = ticket.statut;
+    editForm.client_id = ticket.client_id;
+    editForm.technicien_id = ticket.technicien_id;
     showEditForm.value = true;
 };
 
 const submitEdit = () => {
-    editForm.put(route("tickets.update", editForm.id), {
+    const formData = new FormData();
+    formData.append('_method', 'PUT');
+    formData.append('titre', editForm.titre);
+    formData.append('description', editForm.description);
+    formData.append('statut', editForm.statut);
+    formData.append('client_id', editForm.client_id);
+
+    if (editForm.images.length > 0) {
+        editForm.images.forEach((image) => {
+            formData.append('images[]', image);
+        });
+    }
+
+    router.post(route("tickets.update", editForm.id), formData, {
+        preserveScroll: true,
         onSuccess: () => {
             showEditForm.value = false;
             editForm.reset();
+            imagePreview.value = [];
+            router.visit(route("tickets.index"));
         },
     });
 };
@@ -219,6 +239,20 @@ watch(showTicketForm, (newValue) => {
         resetTicketForm();
     }
 });
+
+const handleEditImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    editForm.images = files;
+    imagePreview.value = [];
+
+    files.forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            imagePreview.value.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
+    });
+};
 </script>
 
 <template>
@@ -695,7 +729,7 @@ watch(showTicketForm, (newValue) => {
                         <InputLabel class="dark:text-gray-200" value="Images" />
                         <input
                             type="file"
-                            @change="handleImageUpload"
+                            @change="handleEditImageUpload"
                             multiple
                             accept="image/*"
                             class="mt-1 block w-full text-gray-700 dark:text-gray-200"

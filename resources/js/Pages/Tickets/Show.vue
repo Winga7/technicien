@@ -26,6 +26,8 @@ const editingIntervention = ref(null);
 const processing = ref(false);
 const imagePreview = ref([]);
 const showEditForm = ref(false);
+const interventionPreview = ref([]);
+const ticketImagePreview = ref([]);
 
 const interventionForm = useForm({
     titre: "",
@@ -41,7 +43,7 @@ const editForm = useForm({
     titre: props.ticket.titre,
     description: props.ticket.description,
     statut: props.ticket.statut,
-    techniciens: props.ticket.techniciens?.map((t) => t.id) || [],
+    client_id: props.ticket.client_id,
     images: [],
 });
 
@@ -55,15 +57,32 @@ const getTechniciens = computed(() => {
     return [...new Map(techniciens.map((tech) => [tech.id, tech])).values()];
 });
 
-const submitIntervention = async () => {
-    processing.value = true;
-    interventionForm.post(route("interventions.store"), {
+const submitIntervention = () => {
+    const formData = new FormData();
+    formData.append('titre', interventionForm.titre);
+    formData.append('description', interventionForm.description);
+    formData.append('ticket_id', props.ticket.id);
+    formData.append('client_id', props.ticket.client_id);
+    formData.append('statut', interventionForm.statut || 'en cours');
+
+    if (interventionForm.techniciens) {
+        interventionForm.techniciens.forEach(techId => {
+            formData.append('techniciens[]', techId);
+        });
+    }
+
+    if (interventionForm.images && interventionForm.images.length > 0) {
+        interventionForm.images.forEach((image) => {
+            formData.append('images[]', image);
+        });
+    }
+
+    router.post(route('interventions.store'), formData, {
+        preserveScroll: true,
         onSuccess: () => {
             showInterventionForm.value = false;
             interventionForm.reset();
-        },
-        onFinish: () => {
-            processing.value = false;
+            interventionPreview.value = [];
         },
     });
 };
@@ -102,6 +121,50 @@ const removeImage = (index) => {
     imagePreview.value.splice(index, 1);
     interventionForm.images.splice(index, 1);
 };
+
+// Pour les interventions
+const handleInterventionImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    interventionForm.images = [];
+    interventionPreview.value = []; // Nouveau ref pour les previews d'intervention
+
+    files.forEach((file) => {
+        interventionForm.images.push(file);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            interventionPreview.value.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
+    });
+};
+
+const removeInterventionImage = (index) => {
+    interventionPreview.value.splice(index, 1);
+    interventionForm.images.splice(index, 1);
+};
+
+// Pour le ticket
+const handleEditImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    editForm.images = files;
+    ticketImagePreview.value = []; // Nouveau ref pour les previews de ticket
+
+    files.forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            ticketImagePreview.value.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
+    });
+};
+
+const removeTicketImage = (index) => {
+    ticketImagePreview.value.splice(index, 1);
+    const newImages = [...editForm.images];
+    newImages.splice(index, 1);
+    editForm.images = newImages;
+};
+
 const activeMenu = ref(null);
 
 const toggleMenu = (interventionId) => {
@@ -113,16 +176,31 @@ const updateIntervention = (intervention) => {
     editingIntervention.value = intervention;
     editForm.titre = intervention.titre;
     editForm.description = intervention.description;
-    editForm.techniciens = intervention.techniciens?.map((t) => t.id) || [];
+    editForm.statut = intervention.statut;
+    editForm.techniciens = intervention.techniciens.map(tech => tech.id);
+    editForm.images = [];
     activeMenu.value = null;
 };
 
 const submitEdit = () => {
-    editForm.put(route("tickets.update", props.ticket.id), {
+    const formData = new FormData();
+    formData.append('_method', 'PUT');
+    formData.append('titre', editForm.titre);
+    formData.append('description', editForm.description);
+    formData.append('technicien_id', editForm.technicien_id);
+
+    if (editForm.images && editForm.images.length > 0) {
+        editForm.images.forEach((image) => {
+            formData.append('images[]', image);
+        });
+    }
+
+    router.post(route('interventions.update', editingIntervention.value.id), formData, {
+        preserveScroll: true,
         onSuccess: () => {
-            showEditForm.value = false;
+            editingIntervention.value = null;
             editForm.reset();
-            imagePreview.value = [];
+            interventionPreview.value = [];
         },
     });
 };
@@ -405,7 +483,7 @@ onUnmounted(() => {
                         v-if="editingIntervention"
                         class="mb-6 p-4 border border-gray-200 dark:border-zinc-700 rounded-lg"
                     >
-                        <form @submit.prevent="submitEdit" class="space-y-4">
+                        <form @submit.prevent="submitInterventionEdit" class="space-y-4">
                             <div>
                                 <InputLabel
                                     value="Titre"
@@ -452,6 +530,38 @@ onUnmounted(() => {
                                         {{ tech.name }}
                                     </option>
                                 </select>
+                            </div>
+
+                            <div>
+                                <InputLabel value="Images" class="dark:text-gray-200" />
+                                <input
+                                    type="file"
+                                    @change="handleEditImageUpload"
+                                    multiple
+                                    accept="image/*"
+                                    class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                />
+                                <div
+                                    v-if="imagePreview.length"
+                                    class="mt-2 grid grid-cols-3 gap-4"
+                                >
+                                    <div
+                                        v-for="(preview, index) in imagePreview"
+                                        :key="index"
+                                        class="relative"
+                                    >
+                                        <img
+                                            :src="preview"
+                                            class="w-full h-32 object-cover rounded-lg"
+                                        />
+                                        <button
+                                            @click.prevent="removeImage(index)"
+                                            class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="flex justify-end space-x-3">
@@ -789,10 +899,10 @@ onUnmounted(() => {
                         <InputLabel class="dark:text-gray-200" value="Images" />
                         <input
                             type="file"
-                            @change="handleImageUpload"
+                            @change="handleEditImageUpload"
                             multiple
                             accept="image/*"
-                            class="mt-1 block w-full text-gray-700 dark:text-gray-200"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100"
                         />
                         <div
                             v-if="imagePreview.length"

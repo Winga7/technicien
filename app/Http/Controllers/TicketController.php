@@ -44,7 +44,7 @@ class TicketController extends Controller
 
         // Traiter les images des interventions
         $ticket->interventions->each(function ($intervention) {
-            if ($intervention->images) {
+            if ($intervention->images && is_string($intervention->images)) {
                 $intervention->images = json_decode($intervention->images);
             }
         });
@@ -110,7 +110,7 @@ class TicketController extends Controller
             'statut' => $validated['statut'],
             'client_id' => $validated['client_id'],
             'technicien_id' => $validated['technicien_id'] ?? null,
-            'images' => !empty($imagePaths) ? json_encode($imagePaths) : null
+            'images' => !empty($imagePaths) ? json_encode($imagePaths) : $ticket->images
         ]);
 
         return redirect(url()->current())
