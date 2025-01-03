@@ -20,7 +20,7 @@ const selectedImages = ref([]);
 // Form pour client
 const clientForm = useForm({
     name: "",
-    prenom: "",
+    firstname: "",
     email: "",
     telephone: "",
     addresse: "",
@@ -41,7 +41,7 @@ const handleImageUpload = (e) => {
     selectedImages.value = files;
     imagePreview.value = [];
 
-    files.forEach(file => {
+    files.forEach((file) => {
         const reader = new FileReader();
         reader.onload = (e) => {
             imagePreview.value.push(e.target.result);
@@ -87,7 +87,7 @@ const submitTicket = () => {
         ticketForm.client = null;
     }
 
-    ticketForm.post(route('tickets.store'), {
+    ticketForm.post(route("tickets.store"), {
         onSuccess: () => {
             showTicketForm.value = false;
             ticketForm.reset();
@@ -98,7 +98,7 @@ const submitTicket = () => {
         preserveScroll: true,
         onError: (errors) => {
             console.error(errors);
-        }
+        },
     });
 };
 
@@ -106,7 +106,7 @@ watch(isNewClient, (newValue) => {
     if (newValue) {
         ticketForm.client = {
             name: "",
-            prenom: "",
+            firstname: "",
             email: "",
             telephone: "",
             addresse: "",
@@ -237,7 +237,7 @@ onMounted(() => {
                                 value="Prénom"
                             />
                             <TextInput
-                                v-model="clientForm.prenom"
+                                v-model="clientForm.firstname"
                                 type="text"
                                 class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 required
@@ -306,9 +306,15 @@ onMounted(() => {
             class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 p-4 overflow-y-auto"
             @click.self="resetTicketForm"
         >
-            <div class="bg-white dark:bg-zinc-800 rounded-lg p-6 w-full max-w-2xl my-8 relative">
-                <div class="flex justify-between items-center mb-4 sticky top-0 bg-white dark:bg-zinc-800 z-10">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+            <div
+                class="bg-white dark:bg-zinc-800 rounded-lg p-6 w-full max-w-2xl my-8 relative"
+            >
+                <div
+                    class="flex justify-between items-center mb-4 sticky top-0 bg-white dark:bg-zinc-800 z-10"
+                >
+                    <h3
+                        class="text-lg font-medium text-gray-900 dark:text-gray-100"
+                    >
                         Nouveau Ticket
                     </h3>
                     <button
@@ -324,7 +330,10 @@ onMounted(() => {
                     <form @submit.prevent="submitTicket" class="space-y-4">
                         <!-- Type de client -->
                         <div>
-                            <InputLabel class="dark:text-gray-200" value="Type de client" />
+                            <InputLabel
+                                class="dark:text-gray-200"
+                                value="Type de client"
+                            />
                             <div class="flex space-x-4 mt-2">
                                 <label class="inline-flex items-center">
                                     <input
@@ -333,7 +342,10 @@ onMounted(() => {
                                         :value="false"
                                         class="form-radio border-gray-200 dark:border-zinc-700 text-indigo-600 dark:bg-zinc-900 focus:ring-indigo-500"
                                     />
-                                    <span class="ml-2 text-gray-700 dark:text-gray-200">Client existant</span>
+                                    <span
+                                        class="ml-2 text-gray-700 dark:text-gray-200"
+                                        >Client existant</span
+                                    >
                                 </label>
                                 <label class="inline-flex items-center">
                                     <input
@@ -342,22 +354,32 @@ onMounted(() => {
                                         :value="true"
                                         class="form-radio border-gray-200 dark:border-zinc-700 text-indigo-600 dark:bg-zinc-900 focus:ring-indigo-500"
                                     />
-                                    <span class="ml-2 text-gray-700 dark:text-gray-200">Nouveau client</span>
+                                    <span
+                                        class="ml-2 text-gray-700 dark:text-gray-200"
+                                        >Nouveau client</span
+                                    >
                                 </label>
                             </div>
                         </div>
 
                         <!-- Sélection du client existant -->
                         <div v-if="!isNewClient">
-                            <InputLabel class="dark:text-gray-200" value="Client" />
+                            <InputLabel
+                                class="dark:text-gray-200"
+                                value="Client"
+                            />
                             <select
                                 v-model="ticketForm.client_id"
                                 class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 required
                             >
                                 <option value="">Sélectionner un client</option>
-                                <option v-for="client in clients" :key="client.id" :value="client.id">
-                                    {{ client.name }} {{ client.prenom }}
+                                <option
+                                    v-for="client in clients"
+                                    :key="client.id"
+                                    :value="client.id"
+                                >
+                                    {{ client.name }} {{ client.firstname }}
                                 </option>
                             </select>
                         </div>
@@ -366,7 +388,10 @@ onMounted(() => {
                         <div v-else class="space-y-4">
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
-                                    <InputLabel class="dark:text-gray-200" value="Nom" />
+                                    <InputLabel
+                                        class="dark:text-gray-200"
+                                        value="Nom"
+                                    />
                                     <TextInput
                                         v-model="ticketForm.client.name"
                                         type="text"
@@ -375,9 +400,12 @@ onMounted(() => {
                                     />
                                 </div>
                                 <div>
-                                    <InputLabel class="dark:text-gray-200" value="Prénom" />
+                                    <InputLabel
+                                        class="dark:text-gray-200"
+                                        value="Prénom"
+                                    />
                                     <TextInput
-                                        v-model="ticketForm.client.prenom"
+                                        v-model="ticketForm.client.firstname"
                                         type="text"
                                         class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                         required
@@ -386,7 +414,10 @@ onMounted(() => {
                             </div>
 
                             <div>
-                                <InputLabel class="dark:text-gray-200" value="Email" />
+                                <InputLabel
+                                    class="dark:text-gray-200"
+                                    value="Email"
+                                />
                                 <TextInput
                                     v-model="ticketForm.client.email"
                                     type="email"
@@ -396,7 +427,10 @@ onMounted(() => {
                             </div>
 
                             <div>
-                                <InputLabel class="dark:text-gray-200" value="Téléphone" />
+                                <InputLabel
+                                    class="dark:text-gray-200"
+                                    value="Téléphone"
+                                />
                                 <TextInput
                                     v-model="ticketForm.client.telephone"
                                     type="tel"
@@ -406,7 +440,10 @@ onMounted(() => {
                             </div>
 
                             <div>
-                                <InputLabel class="dark:text-gray-200" value="Adresse" />
+                                <InputLabel
+                                    class="dark:text-gray-200"
+                                    value="Adresse"
+                                />
                                 <TextInput
                                     v-model="ticketForm.client.addresse"
                                     type="text"
@@ -418,7 +455,10 @@ onMounted(() => {
 
                         <!-- Détails du ticket -->
                         <div>
-                            <InputLabel class="dark:text-gray-200" value="Titre du ticket" />
+                            <InputLabel
+                                class="dark:text-gray-200"
+                                value="Titre du ticket"
+                            />
                             <TextInput
                                 v-model="ticketForm.titre"
                                 type="text"
@@ -428,7 +468,10 @@ onMounted(() => {
                         </div>
 
                         <div>
-                            <InputLabel class="dark:text-gray-200" value="Description" />
+                            <InputLabel
+                                class="dark:text-gray-200"
+                                value="Description"
+                            />
                             <textarea
                                 v-model="ticketForm.description"
                                 class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
@@ -439,7 +482,10 @@ onMounted(() => {
 
                         <!-- Images -->
                         <div>
-                            <InputLabel class="dark:text-gray-200" value="Images" />
+                            <InputLabel
+                                class="dark:text-gray-200"
+                                value="Images"
+                            />
                             <input
                                 type="file"
                                 @change="handleImageUpload"
@@ -447,9 +493,19 @@ onMounted(() => {
                                 accept="image/*"
                                 class="mt-1 block w-full text-gray-700 dark:text-gray-200"
                             />
-                            <div v-if="imagePreview.length" class="mt-2 grid grid-cols-3 gap-4">
-                                <div v-for="(preview, index) in imagePreview" :key="index" class="relative">
-                                    <img :src="preview" class="w-full h-32 object-cover rounded-lg" />
+                            <div
+                                v-if="imagePreview.length"
+                                class="mt-2 grid grid-cols-3 gap-4"
+                            >
+                                <div
+                                    v-for="(preview, index) in imagePreview"
+                                    :key="index"
+                                    class="relative"
+                                >
+                                    <img
+                                        :src="preview"
+                                        class="w-full h-32 object-cover rounded-lg"
+                                    />
                                     <button
                                         @click.prevent="removeImage(index)"
                                         class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"

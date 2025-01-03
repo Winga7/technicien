@@ -13,8 +13,9 @@ class UserController extends Controller
 
     public function index()
     {
+        $users = User::all();
         return Inertia::render('Users/Index', [
-            'users' => User::select('id', 'name', 'email', 'telephone', 'role')->get()
+            'users' => $users
         ]);
     }
 
@@ -24,6 +25,7 @@ class UserController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'firstname' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'telephone' => 'nullable|string|max:20',
             'role' => 'required|string|in:admin,technicien',
@@ -44,6 +46,7 @@ class UserController extends Controller
 
         $rules = [
             'name' => 'required|string|max:255',
+            'firstname' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'telephone' => 'nullable|string|max:20',
             'role' => 'required|string|in:admin,technicien',

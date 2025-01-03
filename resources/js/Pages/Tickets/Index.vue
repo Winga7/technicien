@@ -20,7 +20,7 @@ const props = defineProps({
     },
 });
 
-console.log('Clients reçus:', props.clients); // Ajoutez cette ligne temporairement
+console.log("Clients reçus:", props.clients); // Ajoutez cette ligne temporairement
 
 const search = ref("");
 
@@ -48,8 +48,13 @@ const deleteTicket = (id) => {
                 router.visit(route("tickets.index"));
             },
             onError: (error) => {
-                console.error("Erreur lors de la suppression du ticket:", error);
-                alert("Une erreur est survenue lors de la suppression du ticket");
+                console.error(
+                    "Erreur lors de la suppression du ticket:",
+                    error
+                );
+                alert(
+                    "Une erreur est survenue lors de la suppression du ticket"
+                );
             },
         });
     }
@@ -119,16 +124,16 @@ const isNewClient = ref(false);
 const imagePreview = ref([]);
 
 const form = useForm({
-    titre: '',
-    description: '',
-    client_id: '',
-    statut: 'en attente',
+    titre: "",
+    description: "",
+    client_id: "",
+    statut: "en attente",
     images: [],
     client: null,
 });
 
 const submitTicket = () => {
-    form.post(route('tickets.store'), {
+    form.post(route("tickets.store"), {
         onSuccess: () => {
             showTicketForm.value = false;
             form.reset();
@@ -167,7 +172,7 @@ watch(isNewClient, (newValue) => {
     if (newValue) {
         form.client = {
             name: "",
-            prenom: "",
+            firstname: "",
             email: "",
             telephone: "",
             addresse: "",
@@ -180,10 +185,10 @@ watch(isNewClient, (newValue) => {
 
 const showEditForm = ref(false);
 const editForm = useForm({
-    id: '',
-    titre: '',
-    description: '',
-    statut: '',
+    id: "",
+    titre: "",
+    description: "",
+    statut: "",
 });
 
 const editTicket = (ticket) => {
@@ -195,7 +200,7 @@ const editTicket = (ticket) => {
 };
 
 const submitEdit = () => {
-    editForm.put(route('tickets.update', editForm.id), {
+    editForm.put(route("tickets.update", editForm.id), {
         onSuccess: () => {
             showEditForm.value = false;
             editForm.reset();
@@ -363,9 +368,14 @@ watch(showTicketForm, (newValue) => {
                                         <div
                                             class="sm:hidden mt-1 text-xs text-gray-500 dark:text-gray-400 text-left"
                                         >
-                                            {{ ticket.client?.name }} {{ ticket.client?.prenom }} -
+                                            {{ ticket.client?.name }}
+                                            {{ ticket.client?.firstname }} -
                                             <span
-                                                :class="getStatusColor(ticket.statut)"
+                                                :class="
+                                                    getStatusColor(
+                                                        ticket.statut
+                                                    )
+                                                "
                                             >
                                                 {{ ticket.statut }}
                                             </span>
@@ -374,7 +384,8 @@ watch(showTicketForm, (newValue) => {
                                     <td
                                         class="hidden sm:table-cell p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100 text-left"
                                     >
-                                        {{ ticket.client?.name }} {{ ticket.client?.prenom }}
+                                        {{ ticket.client?.name }}
+                                        {{ ticket.client?.firstname }}
                                     </td>
                                     <td
                                         class="hidden md:table-cell p-3 sm:p-4 text-xs sm:text-sm text-left"
@@ -420,8 +431,15 @@ watch(showTicketForm, (newValue) => {
                                                 @click="editTicket(ticket)"
                                                 class="px-3 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-400 rounded-md hover:bg-yellow-200 dark:hover:bg-yellow-800 transition"
                                             >
-                                                <span class="flex items-center space-x-1">
-                                                    <span class="text-lg" role="img" aria-label="modifier">✏️</span>
+                                                <span
+                                                    class="flex items-center space-x-1"
+                                                >
+                                                    <span
+                                                        class="text-lg"
+                                                        role="img"
+                                                        aria-label="modifier"
+                                                        >✏️</span
+                                                    >
                                                     <span>Modifier</span>
                                                 </span>
                                             </button>
@@ -504,10 +522,16 @@ watch(showTicketForm, (newValue) => {
         class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50 p-4 overflow-y-auto"
         @click.self="resetTicketForm"
     >
-        <div class="bg-white dark:bg-zinc-800 rounded-lg p-6 w-full max-w-2xl my-8 relative">
+        <div
+            class="bg-white dark:bg-zinc-800 rounded-lg p-6 w-full max-w-2xl my-8 relative"
+        >
             <!-- En-tête du modal -->
-            <div class="flex justify-between items-center mb-4 sticky top-0 bg-white dark:bg-zinc-800 z-10">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+            <div
+                class="flex justify-between items-center mb-4 sticky top-0 bg-white dark:bg-zinc-800 z-10"
+            >
+                <h3
+                    class="text-lg font-medium text-gray-900 dark:text-gray-100"
+                >
                     Nouveau Ticket
                 </h3>
                 <button
@@ -523,7 +547,10 @@ watch(showTicketForm, (newValue) => {
                 <form @submit.prevent="submitTicket" class="space-y-4">
                     <!-- Type de client -->
                     <div>
-                        <InputLabel class="dark:text-gray-200" value="Type de client" />
+                        <InputLabel
+                            class="dark:text-gray-200"
+                            value="Type de client"
+                        />
                         <div class="flex space-x-4 mt-2">
                             <label class="inline-flex items-center">
                                 <input
@@ -532,7 +559,10 @@ watch(showTicketForm, (newValue) => {
                                     :value="false"
                                     class="form-radio border-gray-200 dark:border-zinc-700 text-indigo-600 dark:bg-zinc-900 focus:ring-indigo-500"
                                 />
-                                <span class="ml-2 text-gray-700 dark:text-gray-200">Client existant</span>
+                                <span
+                                    class="ml-2 text-gray-700 dark:text-gray-200"
+                                    >Client existant</span
+                                >
                             </label>
                             <label class="inline-flex items-center">
                                 <input
@@ -541,7 +571,10 @@ watch(showTicketForm, (newValue) => {
                                     :value="true"
                                     class="form-radio border-gray-200 dark:border-zinc-700 text-indigo-600 dark:bg-zinc-900 focus:ring-indigo-500"
                                 />
-                                <span class="ml-2 text-gray-700 dark:text-gray-200">Nouveau client</span>
+                                <span
+                                    class="ml-2 text-gray-700 dark:text-gray-200"
+                                    >Nouveau client</span
+                                >
                             </label>
                         </div>
                     </div>
@@ -553,8 +586,12 @@ watch(showTicketForm, (newValue) => {
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                         >
                             <option value="">Sélectionner un client</option>
-                            <option v-for="client in clients" :key="client.id" :value="client.id">
-                                {{ client.name }} {{ client.prenom }}
+                            <option
+                                v-for="client in clients"
+                                :key="client.id"
+                                :value="client.id"
+                            >
+                                {{ client.name }} {{ client.firstname }}
                             </option>
                         </select>
                     </div>
@@ -564,7 +601,10 @@ watch(showTicketForm, (newValue) => {
                         <div class="grid grid-cols-2 gap-4">
                             <!-- Nom et prénom -->
                             <div>
-                                <InputLabel class="dark:text-gray-200" value="Nom" />
+                                <InputLabel
+                                    class="dark:text-gray-200"
+                                    value="Nom"
+                                />
                                 <TextInput
                                     v-model="form.client.name"
                                     type="text"
@@ -573,9 +613,12 @@ watch(showTicketForm, (newValue) => {
                                 />
                             </div>
                             <div>
-                                <InputLabel class="dark:text-gray-200" value="Prénom" />
+                                <InputLabel
+                                    class="dark:text-gray-200"
+                                    value="Prénom"
+                                />
                                 <TextInput
-                                    v-model="form.client.prenom"
+                                    v-model="form.client.firstname"
                                     type="text"
                                     class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                     required
@@ -583,7 +626,10 @@ watch(showTicketForm, (newValue) => {
                             </div>
                             <!-- Email et téléphone -->
                             <div>
-                                <InputLabel class="dark:text-gray-200" value="Email" />
+                                <InputLabel
+                                    class="dark:text-gray-200"
+                                    value="Email"
+                                />
                                 <TextInput
                                     v-model="form.client.email"
                                     type="email"
@@ -592,7 +638,10 @@ watch(showTicketForm, (newValue) => {
                                 />
                             </div>
                             <div>
-                                <InputLabel class="dark:text-gray-200" value="Téléphone" />
+                                <InputLabel
+                                    class="dark:text-gray-200"
+                                    value="Téléphone"
+                                />
                                 <TextInput
                                     v-model="form.client.telephone"
                                     type="tel"
@@ -602,7 +651,10 @@ watch(showTicketForm, (newValue) => {
                         </div>
                         <!-- Adresse -->
                         <div>
-                            <InputLabel class="dark:text-gray-200" value="Adresse" />
+                            <InputLabel
+                                class="dark:text-gray-200"
+                                value="Adresse"
+                            />
                             <textarea
                                 v-model="form.client.addresse"
                                 class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
@@ -613,7 +665,10 @@ watch(showTicketForm, (newValue) => {
 
                     <!-- Détails du ticket -->
                     <div>
-                        <InputLabel class="dark:text-gray-200" value="Titre du ticket" />
+                        <InputLabel
+                            class="dark:text-gray-200"
+                            value="Titre du ticket"
+                        />
                         <TextInput
                             v-model="form.titre"
                             type="text"
@@ -623,7 +678,10 @@ watch(showTicketForm, (newValue) => {
                     </div>
 
                     <div>
-                        <InputLabel class="dark:text-gray-200" value="Description" />
+                        <InputLabel
+                            class="dark:text-gray-200"
+                            value="Description"
+                        />
                         <textarea
                             v-model="form.description"
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
@@ -643,9 +701,19 @@ watch(showTicketForm, (newValue) => {
                             class="mt-1 block w-full text-gray-700 dark:text-gray-200"
                         />
                         <!-- Prévisualisation des images -->
-                        <div v-if="imagePreview.length" class="mt-2 grid grid-cols-3 gap-4">
-                            <div v-for="(preview, index) in imagePreview" :key="index" class="relative">
-                                <img :src="preview" class="w-full h-32 object-cover rounded-lg" />
+                        <div
+                            v-if="imagePreview.length"
+                            class="mt-2 grid grid-cols-3 gap-4"
+                        >
+                            <div
+                                v-for="(preview, index) in imagePreview"
+                                :key="index"
+                                class="relative"
+                            >
+                                <img
+                                    :src="preview"
+                                    class="w-full h-32 object-cover rounded-lg"
+                                />
                                 <button
                                     @click.prevent="removeImage(index)"
                                     class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
@@ -682,9 +750,13 @@ watch(showTicketForm, (newValue) => {
         class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50"
         @click.self="resetEditForm"
     >
-        <div class="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-2xl w-full mx-4 relative">
+        <div
+            class="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-2xl w-full mx-4 relative"
+        >
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                <h3
+                    class="text-lg font-medium text-gray-900 dark:text-gray-100"
+                >
                     Modifier le Ticket
                 </h3>
                 <button
@@ -697,7 +769,10 @@ watch(showTicketForm, (newValue) => {
 
             <form @submit.prevent="submitEdit" class="space-y-4">
                 <div>
-                    <InputLabel class="dark:text-gray-200" value="Titre du ticket" />
+                    <InputLabel
+                        class="dark:text-gray-200"
+                        value="Titre du ticket"
+                    />
                     <TextInput
                         v-model="editForm.titre"
                         type="text"
@@ -707,7 +782,10 @@ watch(showTicketForm, (newValue) => {
                 </div>
 
                 <div>
-                    <InputLabel class="dark:text-gray-200" value="Description" />
+                    <InputLabel
+                        class="dark:text-gray-200"
+                        value="Description"
+                    />
                     <textarea
                         v-model="editForm.description"
                         class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"

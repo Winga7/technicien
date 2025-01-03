@@ -13,6 +13,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
     {
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
+            'firstname' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'telephone' => ['nullable', 'string', 'max:20'],
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:2048'],
@@ -30,9 +31,23 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
         } else {
             $user->forceFill([
                 'name' => $input['name'],
+                'firstname' => $input['firstname'],
                 'email' => $input['email'],
                 'telephone' => $input['telephone'] ?? null,
             ])->save();
         }
+    }
+
+    protected function updateVerifiedUser($user, array $input)
+    {
+        $user->forceFill([
+            'name' => $input['name'],
+            'firstname' => $input['firstname'],
+            'email' => $input['email'],
+            'telephone' => $input['telephone'] ?? null,
+            'email_verified_at' => null,
+        ])->save();
+
+        $user->sendEmailVerificationNotification();
     }
 }

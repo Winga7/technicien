@@ -28,7 +28,7 @@ const toggleSort = (column) => {
 
 const clientForm = useForm({
     name: "",
-    prenom: "",
+    firstname: "",
     email: "",
     telephone: "",
     addresse: "",
@@ -43,7 +43,7 @@ const filteredClients = computed(() => {
         clients = clients.filter(
             (client) =>
                 client.name.toLowerCase().includes(searchLower) ||
-                client.prenom.toLowerCase().includes(searchLower) ||
+                client.firstname.toLowerCase().includes(searchLower) ||
                 client.email.toLowerCase().includes(searchLower) ||
                 client.telephone.replace(/\s/g, "").includes(searchPhone)
         );
@@ -76,8 +76,13 @@ const deleteClient = (id) => {
                 // La page sera automatiquement mise à jour
             },
             onError: (error) => {
-                console.error("Erreur lors de la suppression du client:", error);
-                alert("Une erreur est survenue lors de la suppression du client");
+                console.error(
+                    "Erreur lors de la suppression du client:",
+                    error
+                );
+                alert(
+                    "Une erreur est survenue lors de la suppression du client"
+                );
             },
         });
     }
@@ -152,21 +157,41 @@ const deleteClient = (id) => {
                                         @click="toggleSort('name')"
                                         class="p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-700"
                                     >
-                                        <div class="flex items-center space-x-1">
+                                        <div
+                                            class="flex items-center space-x-1"
+                                        >
                                             <span>Nom</span>
-                                            <span v-if="sort.column === 'name'" class="text-xs">
-                                                {{ sort.direction === "asc" ? "▲" : "▼" }}
+                                            <span
+                                                v-if="sort.column === 'name'"
+                                                class="text-xs"
+                                            >
+                                                {{
+                                                    sort.direction === "asc"
+                                                        ? "▲"
+                                                        : "▼"
+                                                }}
                                             </span>
                                         </div>
                                     </th>
                                     <th
-                                        @click="toggleSort('prenom')"
+                                        @click="toggleSort('firstname')"
                                         class="p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-700"
                                     >
-                                        <div class="flex items-center space-x-1">
+                                        <div
+                                            class="flex items-center space-x-1"
+                                        >
                                             <span>Prénom</span>
-                                            <span v-if="sort.column === 'prenom'" class="text-xs">
-                                                {{ sort.direction === "asc" ? "▲" : "▼" }}
+                                            <span
+                                                v-if="
+                                                    sort.column === 'firstname'
+                                                "
+                                                class="text-xs"
+                                            >
+                                                {{
+                                                    sort.direction === "asc"
+                                                        ? "▲"
+                                                        : "▼"
+                                                }}
                                             </span>
                                         </div>
                                     </th>
@@ -230,13 +255,19 @@ const deleteClient = (id) => {
                                     <!-- <td class="p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100">
                                         #{{ client.id }}
                                     </td> -->
-                                    <td class="p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100">
+                                    <td
+                                        class="p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100"
+                                    >
                                         {{ client.name }}
                                     </td>
-                                    <td class="p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100">
-                                        {{ client.prenom }}
+                                    <td
+                                        class="p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100"
+                                    >
+                                        {{ client.firstname }}
                                         <!-- Info mobile -->
-                                        <div class="sm:hidden mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                        <div
+                                            class="sm:hidden mt-1 text-xs text-gray-500 dark:text-gray-400"
+                                        >
                                             {{ client.email }}<br />
                                             {{ client.telephone }}
                                         </div>
@@ -377,7 +408,7 @@ const deleteClient = (id) => {
                                 value="Prénom"
                             />
                             <TextInput
-                                v-model="clientForm.prenom"
+                                v-model="clientForm.firstname"
                                 type="text"
                                 class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 required

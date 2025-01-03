@@ -27,6 +27,7 @@ const sort = ref({
 
 const form = useForm({
     name: "",
+    firstname: "",
     email: "",
     telephone: "",
     role: "technicien",
@@ -36,6 +37,7 @@ const form = useForm({
 
 const editForm = useForm({
     name: "",
+    firstname: "",
     email: "",
     telephone: "",
     role: "",
@@ -84,6 +86,7 @@ const deleteUser = (id) => {
 const editUser = (user) => {
     editingUser.value = user;
     editForm.name = user.name;
+    editForm.firstname = user.firstname;
     editForm.email = user.email;
     editForm.telephone = user.telephone;
     editForm.role = user.role;
@@ -116,6 +119,7 @@ const filteredUsers = computed(() => {
         users = users.filter(
             (user) =>
                 user.name.toLowerCase().includes(searchLower) ||
+                user.firstname.toLowerCase().includes(searchLower) ||
                 user.email.toLowerCase().includes(searchLower) ||
                 user.role.toLowerCase().includes(searchLower) ||
                 user.telephone.replace(/\s/g, "").includes(searchPhone)
@@ -200,19 +204,21 @@ const filteredUsers = computed(() => {
                                         @click="toggleSort('name')"
                                         class="p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-700"
                                     >
-                                        <div
-                                            class="flex items-center space-x-1"
-                                        >
+                                        <div class="flex items-center space-x-1">
                                             <span>Nom</span>
-                                            <span
-                                                v-if="sort.column === 'name'"
-                                                class="text-xs"
-                                            >
-                                                {{
-                                                    sort.direction === "asc"
-                                                        ? "▲"
-                                                        : "▼"
-                                                }}
+                                            <span v-if="sort.column === 'name'" class="text-xs">
+                                                {{ sort.direction === "asc" ? "▲" : "▼" }}
+                                            </span>
+                                        </div>
+                                    </th>
+                                    <th
+                                        @click="toggleSort('firstname')"
+                                        class="p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-700"
+                                    >
+                                        <div class="flex items-center space-x-1">
+                                            <span>Prénom</span>
+                                            <span v-if="sort.column === 'firstname'" class="text-xs">
+                                                {{ sort.direction === "asc" ? "▲" : "▼" }}
                                             </span>
                                         </div>
                                     </th>
@@ -305,34 +311,26 @@ const filteredUsers = computed(() => {
                                         <div
                                             class="sm:hidden mt-1 text-xs text-gray-500 dark:text-gray-400"
                                         >
+                                            {{ user.firstname }}<br />
                                             {{ user.email }}<br />
-                                            <div
-                                                class="flex items-center space-x-2"
-                                            >
-                                                <span
-                                                    v-if="!showPhone[user.id]"
-                                                    >{{ "•".repeat(10) }}</span
-                                                >
-                                                <span v-else>{{
-                                                    user.telephone
-                                                }}</span>
+                                            <div class="flex items-center space-x-2">
+                                                <span v-if="!showPhone[user.id]">{{ "•".repeat(10) }}</span>
+                                                <span v-else>{{ user.telephone }}</span>
                                                 <button
-                                                    @click="
-                                                        togglePhone(user.id)
-                                                    "
+                                                    @click="togglePhone(user.id)"
                                                     class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                                                 >
-                                                    <span
-                                                        v-if="
-                                                            !showPhone[user.id]
-                                                        "
-                                                        >👁️</span
-                                                    >
+                                                    <span v-if="!showPhone[user.id]">👁️</span>
                                                     <span v-else>👁️‍🗨️</span>
                                                 </button>
                                             </div>
                                             {{ user.role }}
                                         </div>
+                                    </td>
+                                    <td
+                                        class="p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100"
+                                    >
+                                        {{ user.firstname }}
                                     </td>
                                     <td
                                         class="hidden sm:table-cell p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100"
@@ -498,6 +496,16 @@ const filteredUsers = computed(() => {
                     </div>
 
                     <div>
+                        <InputLabel class="dark:text-gray-200" value="Prénom" />
+                        <TextInput
+                            v-model="form.firstname"
+                            type="text"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            required
+                        />
+                    </div>
+
+                    <div>
                         <InputLabel class="dark:text-gray-200" value="Email" />
                         <TextInput
                             v-model="form.email"
@@ -612,6 +620,16 @@ const filteredUsers = computed(() => {
                     </div>
 
                     <div>
+                        <InputLabel class="dark:text-gray-200" value="Prénom" />
+                        <TextInput
+                            v-model="editForm.firstname"
+                            type="text"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            required
+                        />
+                    </div>
+
+                    <div>
                         <InputLabel class="dark:text-gray-200" value="Email" />
                         <TextInput
                             v-model="editForm.email"
@@ -669,6 +687,7 @@ const filteredUsers = computed(() => {
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                         />
                     </div>
+
 
                     <div class="flex justify-end space-x-3">
                         <SecondaryButton

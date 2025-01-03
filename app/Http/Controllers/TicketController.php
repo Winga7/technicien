@@ -17,7 +17,7 @@ class TicketController extends Controller
     {
         return Inertia::render('Tickets/Index', [
             'tickets' => Ticket::with(['client'])->get(),
-            'clients' => Client::select('id', 'name', 'prenom')->get(),
+            'clients' => Client::select('id', 'name', 'firstname')->get(),
             'auth' => [
                 'user' => auth()->user(),
             ],
@@ -73,7 +73,7 @@ class TicketController extends Controller
             'client_id' => 'required_without:client|nullable|exists:clients,id',
             'client' => 'required_without:client_id|array',
             'client.name' => 'required_with:client|string',
-            'client.prenom' => 'required_with:client|string',
+            'client.firstname' => 'required_with:client|string',
             'client.email' => 'required_with:client|email|unique:clients,email,' . $ticket->client_id,
             'client.telephone' => 'nullable|string',
             'client.addresse' => 'nullable|string',
@@ -85,7 +85,7 @@ class TicketController extends Controller
         if (!isset($validated['client_id']) && isset($validated['client'])) {
             $client = Client::create([
                 'name' => $validated['client']['name'],
-                'prenom' => $validated['client']['prenom'],
+                'firstname' => $validated['client']['firstname'],
                 'email' => $validated['client']['email'],
                 'telephone' => $validated['client']['telephone'],
                 'addresse' => $validated['client']['addresse'],
@@ -130,7 +130,7 @@ class TicketController extends Controller
                 'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
                 // Validation conditionnelle pour les champs du client
                 'client.name' => 'required_with:client',
-                'client.prenom' => 'required_with:client',
+                'client.firstname' => 'required_with:client',
                 'client.email' => 'required_with:client|email|unique:clients,email',
                 'client.telephone' => 'nullable|string',
                 'client.addresse' => 'nullable|string',
@@ -140,7 +140,7 @@ class TicketController extends Controller
             if (!$request->client_id && $request->client) {
                 $client = Client::create([
                     'name' => $request->client['name'],
-                    'prenom' => $request->client['prenom'],
+                    'firstname' => $request->client['firstname'],
                     'email' => $request->client['email'],
                     'telephone' => $request->client['telephone'] ?? null,
                     'addresse' => $request->client['addresse'] ?? null,

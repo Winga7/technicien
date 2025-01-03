@@ -11,7 +11,8 @@ class DatabaseSeeder extends Seeder
     {
         // Création de l'administrateur
         User::factory()->create([
-            'name' => 'Admin User',
+            'name' => 'Admin',
+            'firstname' => 'User',
             'email' => 'admin@example.com',
             'password' => bcrypt('password'),
             'role' => 'admin',
@@ -19,7 +20,8 @@ class DatabaseSeeder extends Seeder
 
         // Création du technicien
         User::factory()->create([
-            'name' => 'Tech User',
+            'name' => 'Tech',
+            'firstname' => 'User',
             'email' => 'tech@example.com',
             'password' => bcrypt('password'),
             'role' => 'technicien',
@@ -27,7 +29,8 @@ class DatabaseSeeder extends Seeder
 
         // Création d'un technicien de secours
         User::factory()->create([
-            'name' => 'Backup Tech User',
+            'name' => 'Backup',
+            'firstname' => 'Tech',
             'email' => 'back@example.com',
             'password' => bcrypt('password'),
             'role' => 'technicien',

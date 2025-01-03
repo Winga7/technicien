@@ -22,7 +22,7 @@ const isEditing = ref(false);
 
 const form = useForm({
     name: props.client.name,
-    prenom: props.client.prenom,
+    firstname: props.client.firstname,
     email: props.client.email,
     telephone: props.client.telephone || "",
     addresse: props.client.addresse || "",
@@ -97,7 +97,7 @@ const resetTicketForm = () => {
 </script>
 
 <template>
-    <AppLayout :title="'Client - ' + client.name + ' ' + client.prenom">
+    <AppLayout :title="'Client - ' + client.name + ' ' + client.firstname">
         <template #header>
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-3">
@@ -107,7 +107,7 @@ const resetTicketForm = () => {
                     <h2
                         class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
                     >
-                        {{ client.name }} {{ client.prenom }}
+                        {{ client.name }} {{ client.firstname }}
                     </h2>
                 </div>
                 <div class="space-x-4">
@@ -168,7 +168,7 @@ const resetTicketForm = () => {
                                         <span
                                             class="ml-2 text-gray-900 dark:text-gray-100"
                                             >{{ client.name }}
-                                            {{ client.prenom }}</span
+                                            {{ client.firstname }}</span
                                         >
                                     </div>
                                     <div>
@@ -295,7 +295,7 @@ const resetTicketForm = () => {
                                     value="Prénom"
                                 />
                                 <TextInput
-                                    v-model="form.prenom"
+                                    v-model="form.firstname"
                                     type="text"
                                     class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                     required
