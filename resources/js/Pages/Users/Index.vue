@@ -114,29 +114,59 @@ const deleteUser = (id) => {
 };
 
 const editUser = (user) => {
-    editingUser.value = user;
+    editForm.id = user.id;
     editForm.name = user.name;
     editForm.firstname = user.firstname;
     editForm.email = user.email;
     editForm.telephone = user.telephone;
     editForm.role = user.role;
+    editForm.password = '';
+    editForm.password_confirmation = '';
     showEditForm.value = true;
-};
-
-const submitEdit = () => {
-    editForm.put(route("users.update", editingUser.value.id), {
-        onSuccess: () => {
-            showEditForm.value = false;
-            editingUser.value = null;
-            editForm.reset();
-        },
-    });
 };
 
 const resetEditForm = () => {
     showEditForm.value = false;
-    editingUser.value = null;
     editForm.reset();
+};
+
+const submitEdit = () => {
+    editForm.clearErrors();
+
+    if (!editForm.name?.trim()) {
+        editForm.setError('name', 'Le nom ne peut pas être vide');
+        return;
+    }
+    if (!editForm.firstname?.trim()) {
+        editForm.setError('firstname', 'Le prénom ne peut pas être vide');
+        return;
+    }
+
+    // Validation du mot de passe uniquement s'il est renseigné
+    if (editForm.password) {
+        if (editForm.password.length < 8) {
+            editForm.setError('password', 'Le mot de passe doit contenir au moins 8 caractères');
+            return;
+        }
+        if (editForm.password !== editForm.password_confirmation) {
+            editForm.setError('password', 'Les mots de passe ne correspondent pas');
+            editForm.setError('password_confirmation', 'Les mots de passe ne correspondent pas');
+            return;
+        }
+    }
+
+    router.put(route('users.update', editForm.id), editForm, {
+        preserveScroll: true,
+        onSuccess: () => {
+            showEditForm.value = false;
+            editForm.reset();
+        },
+        onError: (errors) => {
+            Object.keys(errors).forEach(key => {
+                editForm.setError(key, errors[key]);
+            });
+        }
+    });
 };
 
 const filteredUsers = computed(() => {
@@ -711,6 +741,7 @@ const displayTelephone = (telephone) => {
                             type="password"
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                         />
+                        <InputError :message="editForm.errors.password" class="mt-2" />
                     </div>
 
                     <div>
@@ -723,6 +754,7 @@ const displayTelephone = (telephone) => {
                             type="password"
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                         />
+                        <InputError :message="editForm.errors.password_confirmation" class="mt-2" />
                     </div>
 
 
