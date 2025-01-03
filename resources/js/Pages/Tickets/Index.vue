@@ -64,6 +64,11 @@ const deleteTicket = (id) => {
 const filteredTickets = computed(() => {
     let tickets = props.tickets;
 
+    // Filtrer les tickets terminés si nécessaire
+    if (!showCompletedTickets.value) {
+        tickets = tickets.filter(ticket => ticket.statut !== 'terminé');
+    }
+
     // Filtrage par recherche
     if (search.value) {
         const searchLower = search.value.toLowerCase();
@@ -253,6 +258,8 @@ const handleEditImageUpload = (e) => {
         reader.readAsDataURL(file);
     });
 };
+
+const showCompletedTickets = ref(false);
 </script>
 
 <template>
@@ -307,6 +314,31 @@ const handleEditImageUpload = (e) => {
                             class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
                         />
                     </div>
+                </div>
+
+                <div class="flex items-center justify-between mb-4">
+                    <label class="inline-flex items-center cursor-pointer">
+                        <input
+                            type="checkbox"
+                            v-model="showCompletedTickets"
+                            class="hidden"
+                        />
+                        <div
+                            class="relative w-12 h-6 rounded-full transition-colors duration-300"
+                            :class="{
+                                'bg-green-500': showCompletedTickets,
+                                'bg-gray-300 dark:bg-zinc-600': !showCompletedTickets
+                            }"
+                        >
+                            <div
+                                class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-300"
+                                :class="{ 'translate-x-6': showCompletedTickets }"
+                            ></div>
+                        </div>
+                        <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                            Afficher les tickets terminés
+                        </span>
+                    </label>
                 </div>
 
                 <div
