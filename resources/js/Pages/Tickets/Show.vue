@@ -762,23 +762,6 @@ onUnmounted(() => {
                         </div>
                     </div>
 
-                    <div>
-                        <InputLabel value="Techniciens" class="dark:text-gray-200" />
-                        <select
-                            v-model="editForm.techniciens"
-                            multiple
-                            class="mt-1 block w-full border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                        >
-                            <option
-                                v-for="tech in techniciens"
-                                :key="tech.id"
-                                :value="tech.id"
-                            >
-                                {{ tech.name }}
-                            </option>
-                        </select>
-                    </div>
-
                     <div class="flex justify-end space-x-3">
                         <button
                             type="button"
