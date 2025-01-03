@@ -53,10 +53,10 @@ const showTicketForm = ref(false);
 const imagePreview = ref([]);
 
 const ticketForm = useForm({
-    titre: '',
-    description: '',
+    titre: "",
+    description: "",
     client_id: props.client.id,
-    statut: 'en attente',
+    statut: "en attente",
     images: [],
 });
 
@@ -82,7 +82,7 @@ const removeImage = (index) => {
 };
 
 const submitTicket = () => {
-    ticketForm.post(route('tickets.store'), {
+    ticketForm.post(route("tickets.store"), {
         onSuccess: () => {
             resetTicketForm();
         },
@@ -101,8 +101,12 @@ const resetTicketForm = () => {
         <template #header>
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-3">
-                    <span class="text-2xl" role="img" aria-label="client">👤</span>
-                    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                    <span class="text-2xl" role="img" aria-label="client"
+                        >👤</span
+                    >
+                    <h2
+                        class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight"
+                    >
                         {{ client.name }} {{ client.prenom }}
                     </h2>
                 </div>
@@ -112,7 +116,12 @@ const resetTicketForm = () => {
                         class="px-4 py-2 bg-green-600 dark:bg-green-500 text-white rounded-md hover:bg-green-700 dark:hover:bg-green-600 transition"
                     >
                         <span class="flex items-center space-x-2">
-                            <span class="text-lg" role="img" aria-label="nouveau ticket">🎫</span>
+                            <span
+                                class="text-lg"
+                                role="img"
+                                aria-label="nouveau ticket"
+                                >🎫</span
+                            >
                             <span>Nouveau Ticket</span>
                         </span>
                     </button>
@@ -121,8 +130,15 @@ const resetTicketForm = () => {
                         class="px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-600 transition"
                     >
                         <span class="flex items-center space-x-2">
-                            <span class="text-lg" role="img" aria-label="modifier">✏️</span>
-                            <span>{{ isEditing ? 'Annuler' : 'Modifier' }}</span>
+                            <span
+                                class="text-lg"
+                                role="img"
+                                aria-label="modifier"
+                                >✏️</span
+                            >
+                            <span>{{
+                                isEditing ? "Annuler" : "Modifier"
+                            }}</span>
                         </span>
                     </button>
                 </div>
@@ -132,42 +148,126 @@ const resetTicketForm = () => {
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
                 <!-- Informations du client -->
-                <div class="bg-white dark:bg-zinc-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
+                <div
+                    class="bg-white dark:bg-zinc-800 overflow-hidden shadow-xl sm:rounded-lg p-6"
+                >
                     <div v-if="!isEditing">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Informations personnelles</h3>
+                                <h3
+                                    class="text-lg font-medium text-gray-900 dark:text-gray-100"
+                                >
+                                    Informations personnelles
+                                </h3>
                                 <div class="mt-4 space-y-4">
                                     <div>
-                                        <span class="text-gray-500 dark:text-gray-400">Nom complet:</span>
-                                        <span class="ml-2 text-gray-900 dark:text-gray-100">{{ client.name }} {{ client.prenom }}</span>
+                                        <span
+                                            class="text-gray-500 dark:text-gray-400"
+                                            >Nom complet:</span
+                                        >
+                                        <span
+                                            class="ml-2 text-gray-900 dark:text-gray-100"
+                                            >{{ client.name }}
+                                            {{ client.prenom }}</span
+                                        >
                                     </div>
                                     <div>
-                                        <span class="text-gray-500 dark:text-gray-400">Email:</span>
-                                        <span class="ml-2 text-gray-900 dark:text-gray-100">{{ client.email }}</span>
+                                        <span
+                                            class="text-gray-500 dark:text-gray-400"
+                                            >Email:</span
+                                        >
+                                        <span
+                                            class="ml-2 text-gray-900 dark:text-gray-100"
+                                            >{{ client.email }}</span
+                                        >
                                     </div>
                                     <div>
-                                        <span class="text-gray-500 dark:text-gray-400">Téléphone:</span>
-                                        <span class="ml-2 text-gray-900 dark:text-gray-100">{{ client.telephone }}</span>
+                                        <span
+                                            class="text-gray-500 dark:text-gray-400"
+                                            >Téléphone:</span
+                                        >
+                                        <span
+                                            class="ml-2 text-gray-900 dark:text-gray-100"
+                                            >{{ client.telephone }}</span
+                                        >
                                     </div>
                                     <div>
-                                        <span class="text-gray-500 dark:text-gray-400">Adresse:</span>
-                                        <span class="ml-2 text-gray-900 dark:text-gray-100">{{ client.addresse }}</span>
+                                        <span
+                                            class="text-gray-500 dark:text-gray-400"
+                                            >Adresse:</span
+                                        >
+                                        <span
+                                            class="ml-2 text-gray-900 dark:text-gray-100"
+                                            >{{ client.addresse }}</span
+                                        >
                                     </div>
                                 </div>
                             </div>
                             <div>
-                                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Statistiques</h3>
+                                <h3
+                                    class="text-lg font-medium text-gray-900 dark:text-gray-100"
+                                >
+                                    Statistiques
+                                </h3>
                                 <div class="mt-4 space-y-4">
                                     <div>
-                                        <span class="text-gray-500 dark:text-gray-400">Nombre total de tickets:</span>
-                                        <span class="ml-2 text-gray-900 dark:text-gray-100">{{ tickets.length }}</span>
+                                        <span
+                                            class="text-gray-500 dark:text-gray-400"
+                                            >Tickets en cours:</span
+                                        >
+                                        <span
+                                            class="ml-2 text-gray-900 dark:text-gray-100"
+                                        >
+                                            {{
+                                                tickets.filter(
+                                                    (t) =>
+                                                        t.statut === "en cours"
+                                                ).length
+                                            }}
+                                        </span>
                                     </div>
                                     <div>
-                                        <span class="text-gray-500 dark:text-gray-400">Tickets en cours:</span>
-                                        <span class="ml-2 text-gray-900 dark:text-gray-100">
-                                            {{ tickets.filter(t => t.statut === 'en cours').length }}
+                                        <span
+                                            class="text-gray-500 dark:text-gray-400"
+                                            >Tickets en attente:</span
+                                        >
+                                        <span
+                                            class="ml-2 text-gray-900 dark:text-gray-100"
+                                        >
+                                            {{
+                                                tickets.filter(
+                                                    (t) =>
+                                                        t.statut ===
+                                                        "en attente"
+                                                ).length
+                                            }}
                                         </span>
+                                    </div>
+                                    <div>
+                                        <span
+                                            class="text-gray-500 dark:text-gray-400"
+                                            >Tickets terminé:</span
+                                        >
+                                        <span
+                                            class="ml-2 text-gray-900 dark:text-gray-100"
+                                        >
+                                            {{
+                                                tickets.filter(
+                                                    (t) =>
+                                                        t.statut === "terminé"
+                                                ).length
+                                            }}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span
+                                            class="text-gray-500 dark:text-gray-400"
+                                            >Nombre total de tickets:</span
+                                        >
+                                        <span
+                                            class="ml-2 text-gray-900 dark:text-gray-100"
+                                            >{{ tickets.length }}</span
+                                        >
                                     </div>
                                 </div>
                             </div>
@@ -178,7 +278,10 @@ const resetTicketForm = () => {
                     <form v-else @submit.prevent="submit" class="space-y-4">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <InputLabel class="dark:text-gray-200" value="Nom" />
+                                <InputLabel
+                                    class="dark:text-gray-200"
+                                    value="Nom"
+                                />
                                 <TextInput
                                     v-model="form.name"
                                     type="text"
@@ -187,7 +290,10 @@ const resetTicketForm = () => {
                                 />
                             </div>
                             <div>
-                                <InputLabel class="dark:text-gray-200" value="Prénom" />
+                                <InputLabel
+                                    class="dark:text-gray-200"
+                                    value="Prénom"
+                                />
                                 <TextInput
                                     v-model="form.prenom"
                                     type="text"
@@ -196,7 +302,10 @@ const resetTicketForm = () => {
                                 />
                             </div>
                             <div>
-                                <InputLabel class="dark:text-gray-200" value="Email" />
+                                <InputLabel
+                                    class="dark:text-gray-200"
+                                    value="Email"
+                                />
                                 <TextInput
                                     v-model="form.email"
                                     type="email"
@@ -205,7 +314,10 @@ const resetTicketForm = () => {
                                 />
                             </div>
                             <div>
-                                <InputLabel class="dark:text-gray-200" value="Téléphone" />
+                                <InputLabel
+                                    class="dark:text-gray-200"
+                                    value="Téléphone"
+                                />
                                 <TextInput
                                     v-model="form.telephone"
                                     type="tel"
@@ -214,7 +326,10 @@ const resetTicketForm = () => {
                             </div>
                         </div>
                         <div>
-                            <InputLabel class="dark:text-gray-200" value="Adresse" />
+                            <InputLabel
+                                class="dark:text-gray-200"
+                                value="Adresse"
+                            />
                             <textarea
                                 v-model="form.addresse"
                                 class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
@@ -222,7 +337,10 @@ const resetTicketForm = () => {
                             />
                         </div>
                         <div class="flex justify-end space-x-3">
-                            <PrimaryButton type="submit" :disabled="form.processing">
+                            <PrimaryButton
+                                type="submit"
+                                :disabled="form.processing"
+                            >
                                 Enregistrer les modifications
                             </PrimaryButton>
                         </div>
@@ -230,50 +348,108 @@ const resetTicketForm = () => {
                 </div>
 
                 <!-- Historique des tickets -->
-                <div class="bg-white dark:bg-zinc-800 overflow-hidden shadow-xl sm:rounded-lg p-6">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Historique des tickets</h3>
+                <div
+                    class="bg-white dark:bg-zinc-800 overflow-hidden shadow-xl sm:rounded-lg p-6"
+                >
+                    <h3
+                        class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4"
+                    >
+                        Historique des tickets
+                    </h3>
                     <div class="space-y-4">
-                        <div v-for="ticket in tickets" :key="ticket.id"
+                        <div
+                            v-for="ticket in tickets"
+                            :key="ticket.id"
                             class="border dark:border-zinc-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-zinc-700 transition cursor-pointer"
-                            @click="$inertia.visit(route('tickets.show', ticket.id))"
+                            @click="
+                                $inertia.visit(route('tickets.show', ticket.id))
+                            "
                         >
                             <div class="flex justify-between items-start">
                                 <div class="flex-grow">
-                                    <h4 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                                    <h4
+                                        class="text-lg font-medium text-gray-900 dark:text-gray-100"
+                                    >
                                         {{ ticket.titre }}
                                     </h4>
-                                    <p class="text-gray-500 dark:text-gray-400 mt-1">{{ ticket.description }}</p>
-                                    <div class="mt-2 flex items-center space-x-2">
-                                        <span class="text-sm text-gray-500 dark:text-gray-400">
-                                            Créé le {{ new Date(ticket.created_at).toLocaleDateString('fr-FR') }}
+                                    <p
+                                        class="text-gray-500 dark:text-gray-400 mt-1"
+                                    >
+                                        {{ ticket.description }}
+                                    </p>
+                                    <div
+                                        class="mt-2 flex items-center space-x-2"
+                                    >
+                                        <span
+                                            class="text-sm text-gray-500 dark:text-gray-400"
+                                        >
+                                            Créé le
+                                            {{
+                                                new Date(
+                                                    ticket.created_at
+                                                ).toLocaleDateString("fr-FR")
+                                            }}
                                         </span>
-                                        <span :class="getStatusColor(ticket.statut)" class="px-2 py-1 rounded-full text-xs font-medium">
+                                        <span
+                                            :class="
+                                                getStatusColor(ticket.statut)
+                                            "
+                                            class="px-2 py-1 rounded-full text-xs font-medium"
+                                        >
                                             {{ ticket.statut }}
                                         </span>
                                     </div>
 
                                     <!-- Interventions liées au ticket -->
-                                    <div v-if="ticket.interventions && ticket.interventions.length > 0"
+                                    <div
+                                        v-if="
+                                            ticket.interventions &&
+                                            ticket.interventions.length > 0
+                                        "
                                         class="mt-4 ml-4 border-l-2 border-gray-200 dark:border-gray-700 pl-4"
                                     >
-                                        <h5 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            Interventions ({{ ticket.interventions.length }})
+                                        <h5
+                                            class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                                        >
+                                            Interventions ({{
+                                                ticket.interventions.length
+                                            }})
                                         </h5>
                                         <div class="space-y-2">
-                                            <div v-for="intervention in ticket.interventions"
+                                            <div
+                                                v-for="intervention in ticket.interventions"
                                                 :key="intervention.id"
                                                 class="bg-white dark:bg-zinc-800 p-3 rounded-md"
                                                 @click.stop
                                             >
-                                                <div class="font-medium text-gray-900 dark:text-gray-100">
+                                                <div
+                                                    class="font-medium text-gray-900 dark:text-gray-100"
+                                                >
                                                     {{ intervention.titre }}
                                                 </div>
-                                                <div class="text-sm text-gray-500 dark:text-gray-400">
-                                                    {{ intervention.description }}
+                                                <div
+                                                    class="text-sm text-gray-500 dark:text-gray-400"
+                                                >
+                                                    {{
+                                                        intervention.description
+                                                    }}
                                                 </div>
-                                                <div class="text-xs text-gray-400 dark:text-gray-500 mt-1">
-                                                    Par {{ intervention.technicien?.name }} -
-                                                    {{ new Date(intervention.created_at).toLocaleDateString('fr-FR') }}
+                                                <div
+                                                    class="text-xs text-gray-400 dark:text-gray-500 mt-1"
+                                                >
+                                                    Par
+                                                    {{
+                                                        intervention.technicien
+                                                            ?.name
+                                                    }}
+                                                    -
+                                                    {{
+                                                        new Date(
+                                                            intervention.created_at
+                                                        ).toLocaleDateString(
+                                                            "fr-FR"
+                                                        )
+                                                    }}
                                                 </div>
                                             </div>
                                         </div>
@@ -296,13 +472,20 @@ const resetTicketForm = () => {
     </AppLayout>
 
     <!-- Formulaire de création de ticket -->
-    <div v-if="showTicketForm"
+    <div
+        v-if="showTicketForm"
         class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50"
         @click.self="resetTicketForm"
     >
-        <div class="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-2xl w-full mx-4 relative">
+        <div
+            class="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-2xl w-full mx-4 relative"
+        >
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Nouveau Ticket</h3>
+                <h3
+                    class="text-lg font-medium text-gray-900 dark:text-gray-100"
+                >
+                    Nouveau Ticket
+                </h3>
                 <button
                     @click="resetTicketForm"
                     class="text-gray-400 hover:text-gray-500 text-xl font-medium px-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded"
@@ -323,7 +506,10 @@ const resetTicketForm = () => {
                 </div>
 
                 <div>
-                    <InputLabel class="dark:text-gray-200" value="Description" />
+                    <InputLabel
+                        class="dark:text-gray-200"
+                        value="Description"
+                    />
                     <textarea
                         v-model="ticketForm.description"
                         class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
@@ -335,15 +521,37 @@ const resetTicketForm = () => {
                 <!-- Section images -->
                 <div>
                     <InputLabel class="dark:text-gray-200" value="Images" />
-                    <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-700 border-dashed rounded-md">
+                    <div
+                        class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-700 border-dashed rounded-md"
+                    >
                         <div class="space-y-1 text-center">
-                            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            <svg
+                                class="mx-auto h-12 w-12 text-gray-400"
+                                stroke="currentColor"
+                                fill="none"
+                                viewBox="0 0 48 48"
+                            >
+                                <path
+                                    d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
                             </svg>
-                            <div class="flex text-sm text-gray-600 dark:text-gray-400">
-                                <label class="relative cursor-pointer rounded-md font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 focus-within:outline-none">
+                            <div
+                                class="flex text-sm text-gray-600 dark:text-gray-400"
+                            >
+                                <label
+                                    class="relative cursor-pointer rounded-md font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 focus-within:outline-none"
+                                >
                                     <span>Télécharger des fichiers</span>
-                                    <input type="file" class="sr-only" multiple @change="handleImageUpload" accept="image/*">
+                                    <input
+                                        type="file"
+                                        class="sr-only"
+                                        multiple
+                                        @change="handleImageUpload"
+                                        accept="image/*"
+                                    />
                                 </label>
                                 <p class="pl-1">ou glisser-déposer</p>
                             </div>
@@ -354,9 +562,19 @@ const resetTicketForm = () => {
                     </div>
 
                     <!-- Aperçu des images -->
-                    <div v-if="imagePreview.length > 0" class="mt-4 grid grid-cols-3 gap-4">
-                        <div v-for="(image, index) in imagePreview" :key="index" class="relative">
-                            <img :src="image" class="h-24 w-full object-cover rounded-lg">
+                    <div
+                        v-if="imagePreview.length > 0"
+                        class="mt-4 grid grid-cols-3 gap-4"
+                    >
+                        <div
+                            v-for="(image, index) in imagePreview"
+                            :key="index"
+                            class="relative"
+                        >
+                            <img
+                                :src="image"
+                                class="h-24 w-full object-cover rounded-lg"
+                            />
                             <button
                                 @click.prevent="removeImage(index)"
                                 class="absolute top-0 right-0 -mt-2 -mr-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"

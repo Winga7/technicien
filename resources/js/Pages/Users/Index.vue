@@ -20,6 +20,10 @@ const showPhone = ref({});
 const showUserForm = ref(false);
 const showEditForm = ref(false);
 const editingUser = ref(null);
+const sort = ref({
+    column: "name",
+    direction: "asc",
+});
 
 const form = useForm({
     name: "",
@@ -28,6 +32,7 @@ const form = useForm({
     role: "technicien",
     password: "",
     password_confirmation: "",
+
 });
 
 const editForm = useForm({
@@ -37,6 +42,7 @@ const editForm = useForm({
     role: "",
     password: "",
     password_confirmation: "",
+
 });
 
 const resetUserForm = () => {
@@ -55,6 +61,15 @@ const submit = () => {
 
 const togglePhone = (userId) => {
     showPhone.value[userId] = !showPhone.value[userId];
+};
+
+const toggleSort = (column) => {
+    if (sort.value.column === column) {
+        sort.value.direction = sort.value.direction === "asc" ? "desc" : "asc";
+    } else {
+        sort.value.column = column;
+        sort.value.direction = "asc";
+    }
 };
 
 const deleteUser = (id) => {
@@ -94,16 +109,28 @@ const resetEditForm = () => {
 };
 
 const filteredUsers = computed(() => {
-    if (!search.value) return props.users;
-    const searchLower = search.value.toLowerCase();
-    const searchPhone = search.value.replace(/\s/g, "");
-    return props.users.filter(
-        (user) =>
-            user.name.toLowerCase().includes(searchLower) ||
-            user.email.toLowerCase().includes(searchLower) ||
-            user.role.toLowerCase().includes(searchLower) ||
-            user.telephone.replace(/\s/g, "").includes(searchPhone)
-    );
+    let users = props.users;
+
+    // Filtrage par recherche
+    if (search.value) {
+        const searchLower = search.value.toLowerCase();
+        const searchPhone = search.value.replace(/\s/g, "");
+        users = users.filter(
+            (user) =>
+                user.name.toLowerCase().includes(searchLower) ||
+                user.email.toLowerCase().includes(searchLower) ||
+                user.role.toLowerCase().includes(searchLower) ||
+                user.telephone.replace(/\s/g, "").includes(searchPhone)
+        );
+    }
+
+    // Tri
+    return users.sort((a, b) => {
+        const modifier = sort.value.direction === "asc" ? 1 : -1;
+        const aValue = a[sort.value.column].toLowerCase();
+        const bValue = b[sort.value.column].toLowerCase();
+        return aValue > bValue ? modifier : -modifier;
+    });
 });
 </script>
 
@@ -172,24 +199,86 @@ const filteredUsers = computed(() => {
                             <thead>
                                 <tr class="text-left">
                                     <th
-                                        class="p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300"
+                                        @click="toggleSort('name')"
+                                        class="p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-700"
                                     >
-                                        Nom
+                                        <div
+                                            class="flex items-center space-x-1"
+                                        >
+                                            <span>Nom</span>
+                                            <span
+                                                v-if="sort.column === 'name'"
+                                                class="text-xs"
+                                            >
+                                                {{
+                                                    sort.direction === "asc"
+                                                        ? "▲"
+                                                        : "▼"
+                                                }}
+                                            </span>
+                                        </div>
                                     </th>
                                     <th
-                                        class="hidden sm:table-cell p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300"
+                                        @click="toggleSort('email')"
+                                        class="hidden sm:table-cell p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-700"
                                     >
-                                        Email
+                                        <div
+                                            class="flex items-center space-x-1"
+                                        >
+                                            <span>Email</span>
+                                            <span
+                                                v-if="sort.column === 'email'"
+                                                class="text-xs"
+                                            >
+                                                {{
+                                                    sort.direction === "asc"
+                                                        ? "▲"
+                                                        : "▼"
+                                                }}
+                                            </span>
+                                        </div>
                                     </th>
                                     <th
-                                        class="hidden sm:table-cell p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300"
+                                        @click="toggleSort('telephone')"
+                                        class="hidden sm:table-cell p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-700"
                                     >
-                                        Téléphone
+                                        <div
+                                            class="flex items-center space-x-1"
+                                        >
+                                            <span>Téléphone</span>
+                                            <span
+                                                v-if="
+                                                    sort.column === 'telephone'
+                                                "
+                                                class="text-xs"
+                                            >
+                                                {{
+                                                    sort.direction === "asc"
+                                                        ? "▲"
+                                                        : "▼"
+                                                }}
+                                            </span>
+                                        </div>
                                     </th>
                                     <th
-                                        class="hidden md:table-cell p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300"
+                                        @click="toggleSort('role')"
+                                        class="hidden md:table-cell p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-700"
                                     >
-                                        Rôle
+                                        <div
+                                            class="flex items-center space-x-1"
+                                        >
+                                            <span>Rôle</span>
+                                            <span
+                                                v-if="sort.column === 'role'"
+                                                class="text-xs"
+                                            >
+                                                {{
+                                                    sort.direction === "asc"
+                                                        ? "▲"
+                                                        : "▼"
+                                                }}
+                                            </span>
+                                        </div>
                                     </th>
                                     <th
                                         v-if="
@@ -305,8 +394,14 @@ const filteredUsers = computed(() => {
                                     >
                                         <!-- Version Desktop -->
                                         <div class="hidden sm:flex space-x-2">
+
                                             <button
                                                 @click="editUser(user)"
+
+                                            <Link
+                                                :href="
+                                                    route('users.edit', user.id)
+                                                "
                                                 class="px-3 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-400 rounded-md hover:bg-yellow-200 dark:hover:bg-yellow-800 transition"
                                             >
                                                 <span
@@ -343,8 +438,10 @@ const filteredUsers = computed(() => {
                                         <div
                                             class="flex sm:hidden space-x-2 justify-end"
                                         >
+
                                             <button
                                                 @click="editUser(user)"
+
                                                 class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-300"
                                             >
                                                 <span
@@ -354,6 +451,7 @@ const filteredUsers = computed(() => {
                                                     >✏️</span
                                                 >
                                             </button>
+
                                             <button
                                                 @click="deleteUser(user.id)"
                                                 class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
