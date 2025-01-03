@@ -35,8 +35,9 @@ class User extends Authenticatable
         'name',
         'firstname',
         'email',
-        'password',
         'telephone',
+        'show_phone',
+        'password',
         'role',
     ];
 
@@ -68,6 +69,8 @@ class User extends Authenticatable
      */
     protected $casts = [
         'must_reset_password' => 'boolean',
+        'email_verified_at' => 'datetime',
+        'show_phone' => 'boolean',
     ];
 
     public function isAdmin()

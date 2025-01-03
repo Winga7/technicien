@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -50,6 +51,7 @@ class UserController extends Controller
             'email' => ['required', 'email', 'unique:users,email,' . ($user->id ?? '')],
             'telephone' => ['nullable', 'string', 'max:20', 'regex:/^[0-9+\s()-]*$/'],
             'role' => ['required', 'string', 'in:admin,technicien'],
+            'show_phone' => ['boolean'],
         ];
 
         // Ajoute les règles de validation du mot de passe uniquement si fourni

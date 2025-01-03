@@ -364,7 +364,20 @@ const displayTelephone = (telephone) => {
                                             </span>
                                             <span v-else>
                                                 <template v-if="user.role === 'admin'">
-                                                    Non autorisé
+                                                    <span v-if="!user.show_phone">
+                                                        Non autorisé
+                                                    </span>
+                                                    <template v-else>
+                                                        <span v-if="!showPhone[user.id]">{{ "•".repeat(10) }}</span>
+                                                        <span v-else>{{ displayTelephone(user.telephone) }}</span>
+                                                        <button
+                                                            @click="togglePhone(user.id)"
+                                                            class="ml-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                                        >
+                                                            <span v-if="!showPhone[user.id]">👁️</span>
+                                                            <span v-else>👁️‍🗨️</span>
+                                                        </button>
+                                                    </template>
                                                 </template>
                                                 <template v-else>
                                                     <span v-if="!showPhone[user.id]">{{ "•".repeat(10) }}</span>

@@ -19,6 +19,7 @@ const form = useForm({
     firstname: props.user.firstname,
     email: props.user.email,
     telephone: props.user.telephone,
+    show_phone: props.user.show_phone ?? false,
     photo: null,
 });
 
@@ -253,6 +254,21 @@ const clearPhotoFileInput = () => {
                     autocomplete="telephone"
                 />
                 <InputError :message="form.errors.telephone" class="mt-2" />
+            </div>
+
+            <!-- Show Phone -->
+            <div v-if="$page.props.auth.user.role === 'admin'" class="col-span-6 sm:col-span-4">
+                <div class="flex items-center">
+                    <input
+                        type="checkbox"
+                        id="show_phone"
+                        v-model="form.show_phone"
+                        class="rounded border-gray-300 dark:border-zinc-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:bg-zinc-900"
+                    />
+                    <label for="show_phone" class="ml-2 text-gray-700 dark:text-gray-300">
+                        Autoriser l'affichage de mon numéro dans la liste des utilisateurs
+                    </label>
+                </div>
             </div>
         </template>
 
