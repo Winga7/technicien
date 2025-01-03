@@ -1,3 +1,89 @@
+<script setup>
+import { ref, computed } from "vue";
+import { Link, useForm, router } from "@inertiajs/vue3";
+import AppLayout from "@/Layouts/AppLayout.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/TextInput.vue";
+
+const props = defineProps({
+    clients: Array,
+});
+
+const search = ref("");
+const showClientForm = ref(false);
+
+const sort = ref({
+    column: "name",
+    direction: "asc",
+});
+
+const toggleSort = (column) => {
+    if (sort.value.column === column) {
+        sort.value.direction = sort.value.direction === "asc" ? "desc" : "asc";
+    } else {
+        sort.value.column = column;
+        sort.value.direction = "asc";
+    }
+};
+
+const clientForm = useForm({
+    name: "",
+    prenom: "",
+    email: "",
+    telephone: "",
+    addresse: "",
+});
+
+const filteredClients = computed(() => {
+    let clients = props.clients;
+
+    if (search.value) {
+        const searchLower = search.value.toLowerCase();
+        const searchPhone = search.value.replace(/\s/g, "");
+        clients = clients.filter(
+            (client) =>
+                client.name.toLowerCase().includes(searchLower) ||
+                client.prenom.toLowerCase().includes(searchLower) ||
+                client.email.toLowerCase().includes(searchLower) ||
+                client.telephone.replace(/\s/g, "").includes(searchPhone)
+        );
+    }
+
+    return clients.sort((a, b) => {
+        const modifier = sort.value.direction === "asc" ? 1 : -1;
+        const aValue = a[sort.value.column].toLowerCase();
+        const bValue = b[sort.value.column].toLowerCase();
+        return aValue > bValue ? modifier : -modifier;
+    });
+});
+
+const submitClient = () => {
+    clientForm.post(route("clients.store"), {
+        onSuccess: () => resetClientForm(),
+    });
+};
+
+const resetClientForm = () => {
+    showClientForm.value = false;
+    clientForm.reset();
+};
+
+const deleteClient = (id) => {
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce client ?")) {
+        router.delete(route("clients.destroy", id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                // La page sera automatiquement mise à jour
+            },
+            onError: (error) => {
+                console.error("Erreur lors de la suppression du client:", error);
+                alert("Une erreur est survenue lors de la suppression du client");
+            },
+        });
+    }
+};
+</script>
+
 <template>
     <AppLayout title="Clients">
         <template #header>
@@ -353,82 +439,3 @@
         </div>
     </AppLayout>
 </template>
-
-<script setup>
-import { ref, computed } from "vue";
-import { Link, useForm } from "@inertiajs/vue3";
-import AppLayout from "@/Layouts/AppLayout.vue";
-import InputLabel from "@/Components/InputLabel.vue";
-import TextInput from "@/Components/TextInput.vue";
-
-const props = defineProps({
-    clients: Array,
-});
-
-const search = ref("");
-const showClientForm = ref(false);
-
-const sort = ref({
-    column: "name",
-    direction: "asc",
-});
-
-const toggleSort = (column) => {
-    if (sort.value.column === column) {
-        sort.value.direction = sort.value.direction === "asc" ? "desc" : "asc";
-    } else {
-        sort.value.column = column;
-        sort.value.direction = "asc";
-    }
-};
-
-const clientForm = useForm({
-    name: "",
-    prenom: "",
-    email: "",
-    telephone: "",
-    addresse: "",
-});
-
-const filteredClients = computed(() => {
-    let clients = props.clients;
-
-    // Filtrage par recherche
-    if (search.value) {
-        const searchLower = search.value.toLowerCase();
-        const searchPhone = search.value.replace(/\s/g, "");
-        clients = clients.filter(
-            (client) =>
-                client.name.toLowerCase().includes(searchLower) ||
-                client.prenom.toLowerCase().includes(searchLower) ||
-                client.email.toLowerCase().includes(searchLower) ||
-                client.telephone.replace(/\s/g, "").includes(searchPhone)
-        );
-    }
-
-    // Tri
-    return clients.sort((a, b) => {
-        const modifier = sort.value.direction === "asc" ? 1 : -1;
-        const aValue = a[sort.value.column].toLowerCase();
-        const bValue = b[sort.value.column].toLowerCase();
-        return aValue > bValue ? modifier : -modifier;
-    });
-});
-
-const submitClient = () => {
-    clientForm.post(route("clients.store"), {
-        onSuccess: () => resetClientForm(),
-    });
-};
-
-const resetClientForm = () => {
-    showClientForm.value = false;
-    clientForm.reset();
-};
-
-const deleteClient = (id) => {
-    if (confirm("Êtes-vous sûr de vouloir supprimer ce client ?")) {
-        router.delete(route("clients.destroy", id));
-    }
-};
-</script>

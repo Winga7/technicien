@@ -45,17 +45,11 @@ const deleteTicket = (id) => {
         router.delete(route("tickets.destroy", id), {
             preserveScroll: true,
             onSuccess: () => {
-                // Au lieu de recharger la page, laissez Inertia gérer la redirection
                 router.visit(route("tickets.index"));
             },
             onError: (error) => {
-                console.error(
-                    "Erreur lors de la suppression du ticket:",
-                    error
-                );
-                alert(
-                    "Une erreur est survenue lors de la suppression du ticket"
-                );
+                console.error("Erreur lors de la suppression du ticket:", error);
+                alert("Une erreur est survenue lors de la suppression du ticket");
             },
         });
     }
