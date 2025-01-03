@@ -18,12 +18,6 @@ class UserController extends Controller
         ]);
     }
 
-    public function create()
-    {
-        $this->authorize('create', User::class);
-        return Inertia::render('Users/Create');
-    }
-
     public function store(Request $request)
     {
         $this->authorize('create', User::class);
@@ -44,25 +38,28 @@ class UserController extends Controller
             ->with('message', 'Utilisateur créé avec succès.');
     }
 
-    public function edit(User $user)
-    {
-        $this->authorize('update', $user);
-
-        return Inertia::render('Users/Edit', [
-            'user' => $user->only('id', 'name', 'email', 'telephone', 'role')
-        ]);
-    }
-
     public function update(Request $request, User $user)
     {
         $this->authorize('update', $user);
 
-        $validated = $request->validate([
+        $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'telephone' => 'nullable|string|max:20',
             'role' => 'required|string|in:admin,technicien',
-        ]);
+        ];
+
+        // Ajoute les règles de validation du mot de passe uniquement si fourni
+        if ($request->filled('password')) {
+            $rules['password'] = 'required|string|min:8|confirmed';
+        }
+
+        $validated = $request->validate($rules);
+
+        // Hash le nouveau mot de passe s'il est fourni
+        if ($request->filled('password')) {
+            $validated['password'] = bcrypt($validated['password']);
+        }
 
         $user->update($validated);
 

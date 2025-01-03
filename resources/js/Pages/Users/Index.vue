@@ -18,6 +18,8 @@ const props = defineProps({
 const search = ref("");
 const showPhone = ref({});
 const showUserForm = ref(false);
+const showEditForm = ref(false);
+const editingUser = ref(null);
 const sort = ref({
     column: "name",
     direction: "asc",
@@ -30,6 +32,17 @@ const form = useForm({
     role: "technicien",
     password: "",
     password_confirmation: "",
+
+});
+
+const editForm = useForm({
+    name: "",
+    email: "",
+    telephone: "",
+    role: "",
+    password: "",
+    password_confirmation: "",
+
 });
 
 const resetUserForm = () => {
@@ -68,6 +81,31 @@ const deleteUser = (id) => {
             },
         });
     }
+};
+
+const editUser = (user) => {
+    editingUser.value = user;
+    editForm.name = user.name;
+    editForm.email = user.email;
+    editForm.telephone = user.telephone;
+    editForm.role = user.role;
+    showEditForm.value = true;
+};
+
+const submitEdit = () => {
+    editForm.put(route("users.update", editingUser.value.id), {
+        onSuccess: () => {
+            showEditForm.value = false;
+            editingUser.value = null;
+            editForm.reset();
+        },
+    });
+};
+
+const resetEditForm = () => {
+    showEditForm.value = false;
+    editingUser.value = null;
+    editForm.reset();
 };
 
 const filteredUsers = computed(() => {
@@ -356,6 +394,10 @@ const filteredUsers = computed(() => {
                                     >
                                         <!-- Version Desktop -->
                                         <div class="hidden sm:flex space-x-2">
+
+                                            <button
+                                                @click="editUser(user)"
+
                                             <Link
                                                 :href="
                                                     route('users.edit', user.id)
@@ -373,7 +415,7 @@ const filteredUsers = computed(() => {
                                                     >
                                                     <span>Modifier</span>
                                                 </span>
-                                            </Link>
+                                            </button>
                                             <button
                                                 @click="deleteUser(user.id)"
                                                 class="px-3 py-1 bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400 rounded-md hover:bg-red-200 dark:hover:bg-red-800 transition"
@@ -396,10 +438,10 @@ const filteredUsers = computed(() => {
                                         <div
                                             class="flex sm:hidden space-x-2 justify-end"
                                         >
-                                            <Link
-                                                :href="
-                                                    route('users.edit', user.id)
-                                                "
+
+                                            <button
+                                                @click="editUser(user)"
+
                                                 class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-300"
                                             >
                                                 <span
@@ -408,7 +450,8 @@ const filteredUsers = computed(() => {
                                                     aria-label="modifier"
                                                     >✏️</span
                                                 >
-                                            </Link>
+                                            </button>
+
                                             <button
                                                 @click="deleteUser(user.id)"
                                                 class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
@@ -538,6 +581,118 @@ const filteredUsers = computed(() => {
                             class="bg-indigo-600 dark:bg-indigo-500 hover:bg-indigo-700 dark:hover:bg-indigo-600"
                         >
                             Créer l'utilisateur
+                        </PrimaryButton>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal d'édition. -->
+        <div
+            v-if="showEditForm"
+            class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50"
+            @click.self="resetEditForm"
+        >
+            <div
+                class="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-2xl w-full mx-4 relative"
+            >
+                <div class="flex justify-between items-center mb-4">
+                    <h3
+                        class="text-lg font-medium text-gray-900 dark:text-gray-100"
+                    >
+                        Modifier l'utilisateur
+                    </h3>
+                    <button
+                        @click="resetEditForm"
+                        class="text-gray-400 hover:text-gray-500 text-xl font-medium px-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded"
+                    >
+                        ×
+                    </button>
+                </div>
+
+                <form @submit.prevent="submitEdit" class="space-y-4">
+                    <div>
+                        <InputLabel class="dark:text-gray-200" value="Nom" />
+                        <TextInput
+                            v-model="editForm.name"
+                            type="text"
+                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <InputLabel class="dark:text-gray-200" value="Email" />
+                        <TextInput
+                            v-model="editForm.email"
+                            type="email"
+                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <InputLabel
+                            class="dark:text-gray-200"
+                            value="Téléphone"
+                        />
+                        <TextInput
+                            v-model="editForm.telephone"
+                            type="tel"
+                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <InputLabel class="dark:text-gray-200" value="Rôle" />
+                        <select
+                            v-model="editForm.role"
+                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            required
+                        >
+                            <option value="technicien">Technicien</option>
+                            <option value="admin">Administrateur</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <InputLabel
+                            class="dark:text-gray-200"
+                            value="Nouveau mot de passe (optionnel)"
+                        />
+                        <TextInput
+                            v-model="editForm.password"
+                            type="password"
+                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                        />
+                    </div>
+
+                    <div>
+                        <InputLabel
+                            class="dark:text-gray-200"
+                            value="Confirmation du nouveau mot de passe"
+                        />
+                        <TextInput
+                            v-model="editForm.password_confirmation"
+                            type="password"
+                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                        />
+                    </div>
+
+                    <div class="flex justify-end space-x-3">
+                        <SecondaryButton
+                            @click.prevent="resetEditForm"
+                            class="dark:bg-zinc-700 dark:text-gray-300 dark:hover:bg-zinc-600"
+                        >
+                            Annuler
+                        </SecondaryButton>
+                        <PrimaryButton
+                            type="submit"
+                            :disabled="editForm.processing"
+                            class="bg-indigo-600 dark:bg-indigo-500 hover:bg-indigo-700 dark:hover:bg-indigo-600"
+                        >
+                            Mettre à jour
                         </PrimaryButton>
                     </div>
                 </form>
