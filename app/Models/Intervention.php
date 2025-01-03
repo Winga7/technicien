@@ -14,7 +14,6 @@ class Intervention extends Model
         'description',
         'statut',
         'client_id',
-        'technicien_id',
         'ticket_id',
         'images'
     ];
@@ -23,18 +22,33 @@ class Intervention extends Model
         'images' => 'array',
     ];
 
+    // Mutator pour les images
+    public function setImagesAttribute($value)
+    {
+        $this->attributes['images'] = is_array($value) ? json_encode($value) : $value;
+    }
+
+    // Accessor pour les images
+    public function getImagesAttribute($value)
+    {
+        if (is_string($value)) {
+            return json_decode($value, true) ?? [];
+        }
+        return $value ?? [];
+    }
+
     public function client()
     {
         return $this->belongsTo(Client::class);
     }
 
-    public function technicien() // 'technician' devient 'technicien'
-    {
-        return $this->belongsTo(User::class, 'technicien_id');
-    }
-
     public function ticket()
     {
         return $this->belongsTo(Ticket::class);
+    }
+
+    public function techniciens()
+    {
+        return $this->belongsToMany(User::class, 'intervention_technicien', 'intervention_id', 'technicien_id');
     }
 }

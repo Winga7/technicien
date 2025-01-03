@@ -83,4 +83,9 @@ class User extends Authenticatable
     {
         return $this->must_reset_password;
     }
+
+    public function interventions()
+    {
+        return $this->belongsToMany(Intervention::class, 'intervention_technicien', 'technicien_id', 'intervention_id');
+    }
 }
