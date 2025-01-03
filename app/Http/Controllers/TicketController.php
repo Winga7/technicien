@@ -9,13 +9,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class TicketController extends Controller
 {
     public function index()
     {
         return Inertia::render('Tickets/Index', [
-            'tickets' => Ticket::with(['client', 'technicien'])->latest()->get()
+            'tickets' => Ticket::with(['client'])->get(),
+            'clients' => Client::select('id', 'name', 'prenom')->get(),
+            'auth' => [
+                'user' => auth()->user(),
+            ],
         ]);
     }
 
@@ -29,10 +34,24 @@ class TicketController extends Controller
 
     public function show(Ticket $ticket)
     {
+        // Charger les relations
+        $ticket->load(['client', 'technicien', 'interventions.techniciens']);
+
+        // Traiter les images du ticket
+        if ($ticket->images) {
+            $ticket->images = json_decode($ticket->images);
+        }
+
+        // Traiter les images des interventions
+        $ticket->interventions->each(function ($intervention) {
+            if ($intervention->images) {
+                $intervention->images = json_decode($intervention->images);
+            }
+        });
 
         return Inertia::render('Tickets/Show', [
-            'ticket' => $ticket->load(['client', 'technicien', 'interventions.technicien']),
-            'techniciens' => User::where('role', 'technicien')->get(),
+            'ticket' => $ticket,
+            'techniciens' => User::where('role', 'technicien')->get()
         ]);
     }
 

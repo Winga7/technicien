@@ -577,7 +577,7 @@ const filteredUsers = computed(() => {
             </div>
         </div>
 
-        <!-- Modal d'édition. -->
+        <!-- Modal d'édition.. -->
         <div
             v-if="showEditForm"
             class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50"

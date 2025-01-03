@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from "@inertiajs/vue3";
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
@@ -25,22 +25,34 @@ const showInterventionForm = ref(false);
 const editingIntervention = ref(null);
 const processing = ref(false);
 const imagePreview = ref([]);
+const showEditForm = ref(false);
 
 const interventionForm = useForm({
     titre: "",
     description: "",
     ticket_id: props.ticket.id,
     client_id: props.ticket.client_id,
-    technicien_id: "",
+    techniciens: [],
     statut: "en attente",
     images: [],
 });
 
 const editForm = useForm({
-    titre: "",
-    description: "",
-    technicien_id: "",
+    titre: props.ticket.titre,
+    description: props.ticket.description,
+    statut: props.ticket.statut,
+    techniciens: props.ticket.techniciens?.map(t => t.id) || [],
     images: [],
+});
+
+const getTechniciens = computed(() => {
+    // Récupérer tous les techniciens des interventions
+    const techniciens = props.ticket.interventions
+        .flatMap(intervention => intervention.techniciens)
+        .filter(technicien => technicien !== null);
+
+    // Supprimer les doublons en utilisant les IDs
+    return [...new Map(techniciens.map(tech => [tech.id, tech])).values()];
 });
 
 const submitIntervention = async () => {
@@ -101,18 +113,24 @@ const updateIntervention = (intervention) => {
     editingIntervention.value = intervention;
     editForm.titre = intervention.titre;
     editForm.description = intervention.description;
-    editForm.technicien_id = intervention.technicien_id;
+    editForm.techniciens = intervention.techniciens?.map(t => t.id) || [];
     activeMenu.value = null;
 };
 
 const submitEdit = () => {
-    editForm.put(route("interventions.update", editingIntervention.value.id), {
-        preserveScroll: true,
+    editForm.put(route('tickets.update', props.ticket.id), {
         onSuccess: () => {
-            editingIntervention.value = null;
+            showEditForm.value = false;
             editForm.reset();
+            imagePreview.value = [];
         },
     });
+};
+
+const resetEditForm = () => {
+    showEditForm.value = false;
+    editForm.reset();
+    imagePreview.value = [];
 };
 
 const cancelEdit = () => {
@@ -162,20 +180,15 @@ onUnmounted(() => {
                     </h2>
                 </div>
                 <div class="flex space-x-4">
-                    <Link
-                        :href="route('tickets.edit', ticket.id)"
+                    <button
+                        @click="showEditForm = true"
                         class="px-4 py-2 bg-yellow-600 dark:bg-yellow-500 text-white rounded-md hover:bg-yellow-700 dark:hover:bg-yellow-600 transition"
                     >
                         <span class="flex items-center space-x-2">
-                            <span
-                                class="text-lg"
-                                role="img"
-                                aria-label="modifier"
-                                >✏️</span
-                            >
+                            <span class="text-lg" role="img" aria-label="modifier">✏️</span>
                             <span>Modifier</span>
                         </span>
-                    </Link>
+                    </button>
                     <Link
                         :href="route('tickets.index')"
                         class="px-4 py-2 bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900 rounded-md hover:bg-gray-700 dark:hover:bg-gray-300 transition"
@@ -259,9 +272,7 @@ onUnmounted(() => {
                                 </h3>
                                 <div class="grid grid-cols-2 gap-4">
                                     <img
-                                        v-for="(image, index) in JSON.parse(
-                                            ticket.images
-                                        )"
+                                        v-for="(image, index) in ticket.images"
                                         :key="index"
                                         :src="`/storage/${image}`"
                                         :alt="'Image ' + (index + 1)"
@@ -328,18 +339,21 @@ onUnmounted(() => {
                                 </div>
                             </div>
 
-                            <div v-if="ticket.technicien">
-                                <h3
-                                    class="text-lg font-medium text-gray-900 dark:text-gray-100"
-                                >
-                                    Technicien assigné
+                            <div>
+                                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                                    Techniciens assignés
                                 </h3>
-                                <div class="mt-4">
-                                    <span
-                                        class="text-gray-900 dark:text-gray-100"
-                                    >
-                                        {{ ticket.technicien.name }}
-                                    </span>
+                                <div class="mt-4 space-y-2">
+                                    <div v-if="getTechniciens.length > 0">
+                                        <div v-for="technicien in getTechniciens" :key="technicien.id"
+                                            class="flex items-center space-x-2 text-gray-900 dark:text-gray-100">
+                                            <span class="text-lg" role="img" aria-label="technicien">👨‍🔧</span>
+                                            <span>{{ technicien.name }}</span>
+                                        </div>
+                                    </div>
+                                    <div v-else class="text-gray-500 dark:text-gray-400">
+                                        Aucun technicien assigné
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -472,25 +486,22 @@ onUnmounted(() => {
                             </div>
 
                             <div>
-                                <InputLabel
-                                    value="Technicien"
-                                    class="dark:text-gray-200"
-                                />
+                                <InputLabel value="Techniciens" class="dark:text-gray-200" />
                                 <select
-                                    v-model="interventionForm.technicien_id"
-                                    class="mt-1 block w-full border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                    v-model="interventionForm.techniciens"
+                                    multiple
+                                    class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 >
-                                    <option value="">
-                                        Sélectionner un technicien
-                                    </option>
-                                    <option
-                                        v-for="tech in techniciens"
-                                        :key="tech.id"
-                                        :value="tech.id"
+                                    <option v-for="technicien in techniciens"
+                                            :key="technicien.id"
+                                            :value="technicien.id"
                                     >
-                                        {{ tech.name }}
+                                        {{ technicien.name }}
                                     </option>
                                 </select>
+                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                    Maintenez Ctrl (Windows) ou Cmd (Mac) pour sélectionner plusieurs techniciens
+                                </p>
                             </div>
 
                             <!-- Ajouter le champ pour l'upload des images -->
@@ -582,18 +593,20 @@ onUnmounted(() => {
                                     <div class="mt-2 text-sm">
                                         <span
                                             class="text-gray-500 dark:text-gray-400"
-                                            >Technicien:
+                                            >Techniciens:
                                         </span>
-                                        <span
-                                            class="text-gray-700 dark:text-gray-300"
-                                        >
-                                            {{
-                                                intervention.technicien
-                                                    ? intervention.technicien
-                                                          .name
-                                                    : "Non assigné"
-                                            }}
-                                        </span>
+                                        <div class="flex flex-wrap gap-2 mt-1">
+                                            <span v-if="intervention.techniciens && intervention.techniciens.length > 0"
+                                                v-for="tech in intervention.techniciens"
+                                                :key="tech.id"
+                                                class="text-gray-700 dark:text-gray-300"
+                                            >
+                                                {{ tech.name }}
+                                            </span>
+                                            <span v-else class="text-gray-700 dark:text-gray-300">
+                                                Non assigné
+                                            </span>
+                                        </div>
                                     </div>
                                     <!-- Ajout de l'affichage des images -->
                                     <div
@@ -602,15 +615,11 @@ onUnmounted(() => {
                                     >
                                         <div class="grid grid-cols-3 gap-4">
                                             <img
-                                                v-for="(
-                                                    image, index
-                                                ) in JSON.parse(
-                                                    intervention.images
-                                                )"
+                                                v-for="(image, index) in intervention.images"
                                                 :key="index"
                                                 :src="`/storage/${image}`"
                                                 :alt="'Image ' + (index + 1)"
-                                                class="w-full h-32 object-cover rounded"
+                                                class="w-full h-32 object-cover rounded-lg"
                                             />
                                         </div>
                                     </div>
@@ -676,6 +685,116 @@ onUnmounted(() => {
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Modal d'édition du ticket -->
+        <div
+            v-if="showEditForm"
+            class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50"
+            @click.self="resetEditForm"
+        >
+            <div class="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-2xl w-full mx-4 relative">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                        Modifier le Ticket #{{ ticket.id }}
+                    </h3>
+                    <button
+                        @click="resetEditForm"
+                        class="text-gray-400 hover:text-gray-500 text-xl font-medium px-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded"
+                    >
+                        ×
+                    </button>
+                </div>
+
+                <form @submit.prevent="submitEdit" class="space-y-4">
+                    <div>
+                        <InputLabel class="dark:text-gray-200" value="Titre du ticket" />
+                        <TextInput
+                            v-model="editForm.titre"
+                            type="text"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <InputLabel class="dark:text-gray-200" value="Description" />
+                        <textarea
+                            v-model="editForm.description"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            rows="4"
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div>
+                        <InputLabel class="dark:text-gray-200" value="Statut" />
+                        <select
+                            v-model="editForm.statut"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                        >
+                            <option value="en attente">En attente</option>
+                            <option value="en cours">En cours</option>
+                            <option value="terminé">Terminé</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <InputLabel class="dark:text-gray-200" value="Images" />
+                        <input
+                            type="file"
+                            @change="handleImageUpload"
+                            multiple
+                            accept="image/*"
+                            class="mt-1 block w-full text-gray-700 dark:text-gray-200"
+                        />
+                        <div v-if="imagePreview.length" class="mt-2 grid grid-cols-3 gap-4">
+                            <div v-for="(preview, index) in imagePreview" :key="index" class="relative">
+                                <img :src="preview" class="w-full h-32 object-cover rounded-lg" />
+                                <button
+                                    @click.prevent="removeImage(index)"
+                                    class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
+                                >
+                                    ×
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <InputLabel value="Techniciens" class="dark:text-gray-200" />
+                        <select
+                            v-model="editForm.techniciens"
+                            multiple
+                            class="mt-1 block w-full border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                        >
+                            <option
+                                v-for="tech in techniciens"
+                                :key="tech.id"
+                                :value="tech.id"
+                            >
+                                {{ tech.name }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="flex justify-end space-x-3">
+                        <button
+                            type="button"
+                            @click="resetEditForm"
+                            class="px-4 py-2 bg-gray-300 dark:bg-zinc-600 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-400 dark:hover:bg-zinc-500 transition"
+                        >
+                            Annuler
+                        </button>
+                        <button
+                            type="submit"
+                            class="px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-600 transition"
+                        >
+                            Mettre à jour
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </AppLayout>

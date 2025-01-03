@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('titre');
             $table->text('description')->nullable();
             $table->foreignId('client_id')->constrained()->onDelete('cascade');
-            $table->foreignId('technicien_id')->nullable()->constrained('users')->onDelete('set null');
-            $table->foreignId('ticket_id')->constrained()->onDelete('cascade'); // Ajout de la relation avec tickets
+            $table->foreignId('ticket_id')->constrained()->onDelete('cascade');
+            $table->string('statut')->default('en attente');
             $table->json('images')->nullable();
             $table->timestamps();
         });

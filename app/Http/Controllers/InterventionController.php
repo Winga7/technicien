@@ -13,7 +13,7 @@ class InterventionController extends Controller
     // Méthode pour lister toutes les interventions
     public function index()
     {
-        $interventions = Intervention::with(['client', 'technicien'])->paginate(10);
+        $interventions = Intervention::with(['client', 'techniciens'])->paginate(10);
         return response()->json($interventions);
     }
 
@@ -22,14 +22,16 @@ class InterventionController extends Controller
     {
         $validated = $request->validate([
             'titre' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'client_id' => 'required|exists:clients,id',
-            'technicien_id' => 'nullable|exists:users,id',
+            'description' => 'required|string',
             'ticket_id' => 'required|exists:tickets,id',
+            'client_id' => 'required|exists:clients,id',
+            'techniciens' => 'required|array',
+            'techniciens.*' => 'exists:users,id',
+            'statut' => 'required|string|in:en attente,en cours,terminé',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // Gérer les images
+        // Gérer les images d'abord
         $imagePaths = [];
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
@@ -38,15 +40,18 @@ class InterventionController extends Controller
             }
         }
 
-        // Créer l'intervention avec les chemins d'images
+        // Créer l'intervention avec les images
         $intervention = Intervention::create([
             'titre' => $validated['titre'],
             'description' => $validated['description'],
-            'client_id' => $validated['client_id'],
-            'technicien_id' => $validated['technicien_id'],
             'ticket_id' => $validated['ticket_id'],
+            'client_id' => $validated['client_id'],
+            'statut' => $validated['statut'],
             'images' => !empty($imagePaths) ? json_encode($imagePaths) : null
         ]);
+
+        // Attacher les techniciens à l'intervention
+        $intervention->techniciens()->attach($validated['techniciens']);
 
         return back()->with('message', 'Intervention créée avec succès');
     }
@@ -54,7 +59,7 @@ class InterventionController extends Controller
     // Méthode pour afficher une intervention spécifique
     public function show(Intervention $intervention)
     {
-        $intervention->load(['client', 'technicien']);
+        $intervention->load(['client', 'techniciens']);
         return response()->json($intervention);
     }
 
@@ -64,10 +69,17 @@ class InterventionController extends Controller
         $validated = $request->validate([
             'titre' => 'required|string|max:255',
             'description' => 'required|string',
-            'technicien_id' => 'nullable|exists:users,id',
+            'techniciens' => 'required|array',
+            'techniciens.*' => 'exists:users,id',
         ]);
 
-        $intervention->update($validated);
+        $intervention->update([
+            'titre' => $validated['titre'],
+            'description' => $validated['description'],
+        ]);
+
+        // Mettre à jour les techniciens
+        $intervention->techniciens()->sync($validated['techniciens']);
 
         return back();
     }
