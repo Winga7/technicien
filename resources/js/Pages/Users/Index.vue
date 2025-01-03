@@ -32,7 +32,6 @@ const form = useForm({
     role: "technicien",
     password: "",
     password_confirmation: "",
-
 });
 
 const editForm = useForm({
@@ -42,7 +41,6 @@ const editForm = useForm({
     role: "",
     password: "",
     password_confirmation: "",
-
 });
 
 const resetUserForm = () => {
@@ -394,13 +392,19 @@ const filteredUsers = computed(() => {
                                     >
                                         <!-- Version Desktop -->
                                         <div class="hidden sm:flex space-x-2">
-
                                             <button
                                                 @click="editUser(user)"
                                                 class="px-3 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-400 rounded-md hover:bg-yellow-200 dark:hover:bg-yellow-800 transition"
                                             >
-                                                <span class="flex items-center space-x-1">
-                                                    <span class="text-lg" role="img" aria-label="modifier">✏️</span>
+                                                <span
+                                                    class="flex items-center space-x-1"
+                                                >
+                                                    <span
+                                                        class="text-lg"
+                                                        role="img"
+                                                        aria-label="modifier"
+                                                        >✏️</span
+                                                    >
                                                     <span>Modifier</span>
                                                 </span>
                                             </button>
@@ -426,7 +430,6 @@ const filteredUsers = computed(() => {
                                         <div
                                             class="flex sm:hidden space-x-2 justify-end"
                                         >
-
                                             <button
                                                 @click="editUser(user)"
                                                 class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-300"
@@ -489,7 +492,7 @@ const filteredUsers = computed(() => {
                         <TextInput
                             v-model="form.name"
                             type="text"
-                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         />
                     </div>
@@ -499,7 +502,7 @@ const filteredUsers = computed(() => {
                         <TextInput
                             v-model="form.email"
                             type="email"
-                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         />
                     </div>
@@ -512,7 +515,7 @@ const filteredUsers = computed(() => {
                         <TextInput
                             v-model="form.telephone"
                             type="tel"
-                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         />
                     </div>
@@ -521,7 +524,7 @@ const filteredUsers = computed(() => {
                         <InputLabel class="dark:text-gray-200" value="Rôle" />
                         <select
                             v-model="form.role"
-                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         >
                             <option value="technicien">Technicien</option>
@@ -537,7 +540,7 @@ const filteredUsers = computed(() => {
                         <TextInput
                             v-model="form.password"
                             type="password"
-                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         />
                     </div>
@@ -550,7 +553,7 @@ const filteredUsers = computed(() => {
                         <TextInput
                             v-model="form.password_confirmation"
                             type="password"
-                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         />
                     </div>

@@ -1,10 +1,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { Link, useForm } from "@inertiajs/vue3";
-import InputLabel from '@/Components/InputLabel.vue';
-import TextInput from '@/Components/TextInput.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
+import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/TextInput.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 
 const isDark = ref(localStorage.getItem("theme") === "dark");
 const showClientForm = ref(false);
@@ -13,18 +13,18 @@ const isNewClient = ref(false);
 
 // Form pour client
 const clientForm = useForm({
-    name: '',
-    prenom: '',
-    email: '',
-    telephone: '',
-    addresse: '',
+    name: "",
+    prenom: "",
+    email: "",
+    telephone: "",
+    addresse: "",
 });
 
 // Form pour ticket
 const ticketForm = useForm({
-    titre: '',
-    description: '',
-    client_id: '',
+    titre: "",
+    description: "",
+    client_id: "",
     client: null,
     images: [],
 });
@@ -41,7 +41,7 @@ const resetTicketForm = () => {
 };
 
 const submitClient = () => {
-    clientForm.post(route('clients.store'), {
+    clientForm.post(route("clients.store"), {
         onSuccess: () => {
             showClientForm.value = false;
             clientForm.reset();
@@ -54,7 +54,7 @@ const submitTicket = () => {
         ticketForm.client = null;
     }
 
-    ticketForm.post(route('tickets.store'), {
+    ticketForm.post(route("tickets.store"), {
         onSuccess: () => {
             showTicketForm.value = false;
             ticketForm.reset();
@@ -73,16 +73,27 @@ onMounted(() => {
 <template>
     <div class="bg-white dark:bg-zinc-900 text-gray-800 dark:text-white">
         <!-- Quick Actions -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 p-4 sm:p-6">
+        <div
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 p-4 sm:p-6"
+        >
             <button
                 @click="showTicketForm = true"
                 class="bg-gray-100 dark:bg-zinc-800 p-4 sm:p-6 rounded-lg hover:bg-gray-200 dark:hover:bg-zinc-700 transition text-left"
             >
                 <div class="flex items-center space-x-3 mb-4">
-                    <span class="text-2xl" role="img" aria-label="nouveau ticket">➕</span>
-                    <h3 class="text-lg sm:text-xl font-semibold">Nouveau ticket</h3>
+                    <span
+                        class="text-2xl"
+                        role="img"
+                        aria-label="nouveau ticket"
+                        >➕</span
+                    >
+                    <h3 class="text-lg sm:text-xl font-semibold">
+                        Nouveau ticket
+                    </h3>
                 </div>
-                <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400">
+                <p
+                    class="text-sm sm:text-base text-gray-600 dark:text-gray-400"
+                >
                     Créer un nouveau ticket
                 </p>
             </button>
@@ -92,10 +103,16 @@ onMounted(() => {
                 class="bg-gray-100 dark:bg-zinc-800 p-4 sm:p-6 rounded-lg hover:bg-gray-200 dark:hover:bg-zinc-700 transition"
             >
                 <div class="flex items-center space-x-3 mb-4">
-                    <span class="text-2xl" role="img" aria-label="tickets">🎫</span>
-                    <h3 class="text-lg sm:text-xl font-semibold">Tickets en cours</h3>
+                    <span class="text-2xl" role="img" aria-label="tickets"
+                        >🎫</span
+                    >
+                    <h3 class="text-lg sm:text-xl font-semibold">
+                        Tickets en cours
+                    </h3>
                 </div>
-                <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400">
+                <p
+                    class="text-sm sm:text-base text-gray-600 dark:text-gray-400"
+                >
                     Voir la liste des tickets en cours
                 </p>
             </Link>
@@ -105,23 +122,39 @@ onMounted(() => {
                 class="bg-gray-100 dark:bg-zinc-800 p-4 sm:p-6 rounded-lg hover:bg-gray-200 dark:hover:bg-zinc-700 transition text-left"
             >
                 <div class="flex items-center space-x-3 mb-4">
-                    <span class="text-2xl" role="img" aria-label="nouveau client">👥</span>
-                    <h3 class="text-lg sm:text-xl font-semibold">Nouveau client</h3>
+                    <span
+                        class="text-2xl"
+                        role="img"
+                        aria-label="nouveau client"
+                        >👥</span
+                    >
+                    <h3 class="text-lg sm:text-xl font-semibold">
+                        Nouveau client
+                    </h3>
                 </div>
-                <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400">
+                <p
+                    class="text-sm sm:text-base text-gray-600 dark:text-gray-400"
+                >
                     Créer un nouveau client
                 </p>
             </button>
         </div>
 
         <!-- Modal Formulaire Client -->
-        <div v-if="showClientForm"
+        <div
+            v-if="showClientForm"
             class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50"
             @click.self="resetClientForm"
         >
-            <div class="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-2xl w-full mx-4 relative">
+            <div
+                class="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-2xl w-full mx-4 relative"
+            >
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Nouveau Client</h3>
+                    <h3
+                        class="text-lg font-medium text-gray-900 dark:text-gray-100"
+                    >
+                        Nouveau Client
+                    </h3>
                     <button
                         @click="resetClientForm"
                         class="text-gray-400 hover:text-gray-500 text-xl font-medium px-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded"
@@ -133,20 +166,26 @@ onMounted(() => {
                 <form @submit.prevent="submitClient" class="space-y-4">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <InputLabel class="dark:text-gray-200" value="Nom" />
+                            <InputLabel
+                                class="dark:text-gray-200"
+                                value="Nom"
+                            />
                             <TextInput
                                 v-model="clientForm.name"
                                 type="text"
-                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 required
                             />
                         </div>
                         <div>
-                            <InputLabel class="dark:text-gray-200" value="Prénom" />
+                            <InputLabel
+                                class="dark:text-gray-200"
+                                value="Prénom"
+                            />
                             <TextInput
                                 v-model="clientForm.prenom"
                                 type="text"
-                                class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 required
                             />
                         </div>
@@ -157,27 +196,33 @@ onMounted(() => {
                         <TextInput
                             v-model="clientForm.email"
                             type="email"
-                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         />
                     </div>
 
                     <div>
-                        <InputLabel class="dark:text-gray-200" value="Téléphone" />
+                        <InputLabel
+                            class="dark:text-gray-200"
+                            value="Téléphone"
+                        />
                         <TextInput
                             v-model="clientForm.telephone"
                             type="tel"
-                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         />
                     </div>
 
                     <div>
-                        <InputLabel class="dark:text-gray-200" value="Adresse" />
+                        <InputLabel
+                            class="dark:text-gray-200"
+                            value="Adresse"
+                        />
                         <TextInput
                             v-model="clientForm.addresse"
                             type="text"
-                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         />
                     </div>
@@ -202,13 +247,20 @@ onMounted(() => {
         </div>
 
         <!-- Modal Formulaire Ticket -->
-        <div v-if="showTicketForm"
+        <div
+            v-if="showTicketForm"
             class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50"
             @click.self="resetTicketForm"
         >
-            <div class="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-2xl w-full mx-4 relative">
+            <div
+                class="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-2xl w-full mx-4 relative"
+            >
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">Nouveau Ticket</h3>
+                    <h3
+                        class="text-lg font-medium text-gray-900 dark:text-gray-100"
+                    >
+                        Nouveau Ticket
+                    </h3>
                     <button
                         @click="resetTicketForm"
                         class="text-gray-400 hover:text-gray-500 text-xl font-medium px-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded"
@@ -220,7 +272,10 @@ onMounted(() => {
                 <form @submit.prevent="submitTicket" class="space-y-4">
                     <!-- Type de client -->
                     <div>
-                        <InputLabel class="dark:text-gray-200" value="Type de client" />
+                        <InputLabel
+                            class="dark:text-gray-200"
+                            value="Type de client"
+                        />
                         <div class="flex space-x-4 mt-2">
                             <label class="inline-flex items-center">
                                 <input
@@ -229,7 +284,10 @@ onMounted(() => {
                                     :value="false"
                                     class="form-radio border-gray-200 dark:border-gray-700 text-indigo-600 dark:bg-gray-900 focus:ring-indigo-500"
                                 />
-                                <span class="ml-2 text-gray-700 dark:text-gray-200">Client existant</span>
+                                <span
+                                    class="ml-2 text-gray-700 dark:text-gray-200"
+                                    >Client existant</span
+                                >
                             </label>
                             <label class="inline-flex items-center">
                                 <input
@@ -238,7 +296,10 @@ onMounted(() => {
                                     :value="true"
                                     class="form-radio border-gray-200 dark:border-gray-700 text-indigo-600 dark:bg-gray-900 focus:ring-indigo-500"
                                 />
-                                <span class="ml-2 text-gray-700 dark:text-gray-200">Nouveau client</span>
+                                <span
+                                    class="ml-2 text-gray-700 dark:text-gray-200"
+                                    >Nouveau client</span
+                                >
                             </label>
                         </div>
                     </div>
@@ -248,7 +309,7 @@ onMounted(() => {
                         <InputLabel class="dark:text-gray-200" value="Client" />
                         <select
                             v-model="ticketForm.client_id"
-                            class="mt-1 block w-full border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                         >
                             <option value="">Sélectionner un client</option>
                             <option
@@ -265,51 +326,66 @@ onMounted(() => {
                     <div v-else class="space-y-4">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <InputLabel class="dark:text-gray-200" value="Nom" />
+                                <InputLabel
+                                    class="dark:text-gray-200"
+                                    value="Nom"
+                                />
                                 <TextInput
                                     v-model="ticketForm.client.name"
                                     type="text"
-                                    class="mt-1 block w-full"
+                                    class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                     required
                                 />
                             </div>
                             <div>
-                                <InputLabel class="dark:text-gray-200" value="Prénom" />
+                                <InputLabel
+                                    class="dark:text-gray-200"
+                                    value="Prénom"
+                                />
                                 <TextInput
                                     v-model="ticketForm.client.prenom"
                                     type="text"
-                                    class="mt-1 block w-full"
+                                    class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                     required
                                 />
                             </div>
                         </div>
 
                         <div>
-                            <InputLabel class="dark:text-gray-200" value="Email" />
+                            <InputLabel
+                                class="dark:text-gray-200"
+                                value="Email"
+                            />
                             <TextInput
                                 v-model="ticketForm.client.email"
                                 type="email"
-                                class="mt-1 block w-full"
+                                class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 required
                             />
                         </div>
 
                         <div>
-                            <InputLabel class="dark:text-gray-200" value="Téléphone" />
+                            <InputLabel
+                                class="dark:text-gray-200"
+                                value="Téléphone"
+                            />
                             <TextInput
                                 v-model="ticketForm.client.telephone"
                                 type="tel"
-                                class="mt-1 block w-full"
+                                class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 required
                             />
                         </div>
 
                         <div>
-                            <InputLabel class="dark:text-gray-200" value="Adresse" />
+                            <InputLabel
+                                class="dark:text-gray-200"
+                                value="Adresse"
+                            />
                             <TextInput
                                 v-model="ticketForm.client.addresse"
                                 type="text"
-                                class="mt-1 block w-full"
+                                class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 required
                             />
                         </div>
@@ -321,16 +397,19 @@ onMounted(() => {
                         <TextInput
                             v-model="ticketForm.titre"
                             type="text"
-                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         />
                     </div>
 
                     <div>
-                        <InputLabel class="dark:text-gray-200" value="Description" />
+                        <InputLabel
+                            class="dark:text-gray-200"
+                            value="Description"
+                        />
                         <textarea
                             v-model="ticketForm.description"
-                            class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             rows="4"
                             required
                         />
