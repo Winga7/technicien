@@ -32,7 +32,6 @@ const form = useForm({
     role: "technicien",
     password: "",
     password_confirmation: "",
-
 });
 
 const editForm = useForm({
@@ -42,7 +41,6 @@ const editForm = useForm({
     role: "",
     password: "",
     password_confirmation: "",
-
 });
 
 const resetUserForm = () => {
@@ -394,13 +392,19 @@ const filteredUsers = computed(() => {
                                     >
                                         <!-- Version Desktop -->
                                         <div class="hidden sm:flex space-x-2">
-
                                             <button
                                                 @click="editUser(user)"
                                                 class="px-3 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-400 rounded-md hover:bg-yellow-200 dark:hover:bg-yellow-800 transition"
                                             >
-                                                <span class="flex items-center space-x-1">
-                                                    <span class="text-lg" role="img" aria-label="modifier">✏️</span>
+                                                <span
+                                                    class="flex items-center space-x-1"
+                                                >
+                                                    <span
+                                                        class="text-lg"
+                                                        role="img"
+                                                        aria-label="modifier"
+                                                        >✏️</span
+                                                    >
                                                     <span>Modifier</span>
                                                 </span>
                                             </button>
@@ -426,7 +430,6 @@ const filteredUsers = computed(() => {
                                         <div
                                             class="flex sm:hidden space-x-2 justify-end"
                                         >
-
                                             <button
                                                 @click="editUser(user)"
                                                 class="text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-300"
@@ -574,7 +577,7 @@ const filteredUsers = computed(() => {
             </div>
         </div>
 
-        <!-- Modal d'édition. -->
+        <!-- Modal d'édition.. -->
         <div
             v-if="showEditForm"
             class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50"
