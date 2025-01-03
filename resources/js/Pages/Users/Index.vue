@@ -7,6 +7,7 @@ import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import InputError from "@/Components/InputError.vue";
 
 const props = defineProps({
     users: {
@@ -51,10 +52,29 @@ const resetUserForm = () => {
 };
 
 const submit = () => {
-    form.post(route("users.store"), {
+    // Vérification des champs vides ou contenant uniquement des espaces
+    if (!form.name.trim()) {
+        form.errors.name = "Le nom ne peut pas être vide";
+        return;
+    }
+    if (!form.firstname.trim()) {
+        form.errors.firstname = "Le prénom ne peut pas être vide";
+        return;
+    }
+    if (!form.email.trim()) {
+        form.errors.email = "L'email ne peut pas être vide";
+        return;
+    }
+
+    // Validation du format du téléphone uniquement s'il est rempli
+    if (form.telephone && form.telephone.trim() && !form.telephone.match(/^[0-9+\s()-]*$/)) {
+        form.errors.telephone = "Le format du numéro de téléphone n'est pas valide";
+        return;
+    }
+
+    form.post(route('users.store'), {
         onSuccess: () => {
-            showUserForm.value = false;
-            form.reset();
+            resetUserForm();
         },
     });
 };
@@ -493,6 +513,7 @@ const filteredUsers = computed(() => {
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         />
+                        <InputError :message="form.errors.name" class="mt-2" />
                     </div>
 
                     <div>
@@ -503,6 +524,7 @@ const filteredUsers = computed(() => {
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         />
+                        <InputError :message="form.errors.firstname" class="mt-2" />
                     </div>
 
                     <div>
@@ -617,6 +639,7 @@ const filteredUsers = computed(() => {
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         />
+                        <InputError :message="editForm.errors.name" class="mt-2" />
                     </div>
 
                     <div>
@@ -627,6 +650,7 @@ const filteredUsers = computed(() => {
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         />
+                        <InputError :message="editForm.errors.firstname" class="mt-2" />
                     </div>
 
                     <div>

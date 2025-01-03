@@ -45,11 +45,11 @@ class UserController extends Controller
         $this->authorize('update', $user);
 
         $rules = [
-            'name' => 'required|string|max:255',
-            'firstname' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'telephone' => 'nullable|string|max:20',
-            'role' => 'required|string|in:admin,technicien',
+            'name' => ['required', 'string', 'max:255', 'regex:/^(?!\s*$).+/'],
+            'firstname' => ['required', 'string', 'max:255', 'regex:/^(?!\s*$).+/'],
+            'email' => ['required', 'email', 'unique:users,email,' . ($user->id ?? '')],
+            'telephone' => ['nullable', 'string', 'max:20', 'regex:/^[0-9+\s()-]*$/'],
+            'role' => ['required', 'string', 'in:admin,technicien'],
         ];
 
         // Ajoute les règles de validation du mot de passe uniquement si fourni
