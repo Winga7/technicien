@@ -71,17 +71,28 @@ class InterventionController extends Controller
             'description' => 'required|string',
             'techniciens' => 'required|array',
             'techniciens.*' => 'exists:users,id',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
+
+        // Gérer les nouvelles images
+        $imagePaths = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('interventions', 'public');
+                $imagePaths[] = $path;
+            }
+        }
 
         $intervention->update([
             'titre' => $validated['titre'],
             'description' => $validated['description'],
+            'images' => !empty($imagePaths) ? json_encode($imagePaths) : $intervention->images
         ]);
 
         // Mettre à jour les techniciens
         $intervention->techniciens()->sync($validated['techniciens']);
 
-        return back();
+        return back()->with('message', 'Intervention mise à jour avec succès');
     }
 
     // Méthode pour supprimer une intervention

@@ -179,6 +179,7 @@ const updateIntervention = (intervention) => {
     editForm.statut = intervention.statut;
     editForm.techniciens = intervention.techniciens.map(tech => tech.id);
     editForm.images = [];
+    interventionPreview.value = [];
     activeMenu.value = null;
 };
 
@@ -241,6 +242,39 @@ onMounted(() => {
 onUnmounted(() => {
     document.removeEventListener("click", closeMenu);
 });
+
+const submitInterventionEdit = () => {
+    const formData = new FormData();
+    formData.append('_method', 'PUT');
+    formData.append('titre', editForm.titre);
+    formData.append('description', editForm.description);
+    formData.append('statut', editForm.statut);
+
+    if (editForm.techniciens) {
+        editForm.techniciens.forEach(techId => {
+            formData.append('techniciens[]', techId);
+        });
+    }
+
+    if (editForm.images && editForm.images.length > 0) {
+        editForm.images.forEach((image) => {
+            formData.append('images[]', image);
+        });
+    }
+
+    router.post(route('interventions.update', editingIntervention.value.id), formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+        preserveScroll: true,
+        onSuccess: () => {
+            editingIntervention.value = null;
+            editForm.reset();
+            interventionPreview.value = [];
+            activeMenu.value = null;
+        },
+    });
+};
 </script>
 
 <template>
@@ -516,18 +550,16 @@ onUnmounted(() => {
                                     class="dark:text-gray-200"
                                 />
                                 <select
-                                    v-model="editForm.technicien_id"
-                                    class="mt-1 block w-full border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                    v-model="editForm.techniciens"
+                                    multiple
+                                    class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 >
-                                    <option value="">
-                                        Sélectionner un technicien
-                                    </option>
                                     <option
-                                        v-for="tech in techniciens"
-                                        :key="tech.id"
-                                        :value="tech.id"
+                                        v-for="technicien in techniciens"
+                                        :key="technicien.id"
+                                        :value="technicien.id"
                                     >
-                                        {{ tech.name }}
+                                        {{ technicien.name }}
                                     </option>
                                 </select>
                             </div>
@@ -647,8 +679,8 @@ onUnmounted(() => {
                                 />
                                 <input
                                     type="file"
+                                    @change="handleInterventionImageUpload"
                                     multiple
-                                    @change="handleImageUpload"
                                     accept="image/*"
                                     class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 />
