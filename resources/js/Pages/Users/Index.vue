@@ -52,24 +52,40 @@ const resetUserForm = () => {
 };
 
 const submit = () => {
-    // Vérification des champs vides ou contenant uniquement des espaces
-    if (!form.name.trim()) {
-        form.errors.name = "Le nom ne peut pas être vide";
+    form.clearErrors();
+
+    if (!form.name?.trim()) {
+        form.setError('name', 'Le nom ne peut pas être vide');
         return;
     }
-    if (!form.firstname.trim()) {
-        form.errors.firstname = "Le prénom ne peut pas être vide";
+    if (!form.firstname?.trim()) {
+        form.setError('firstname', 'Le prénom ne peut pas être vide');
         return;
     }
-    if (!form.email.trim()) {
-        form.errors.email = "L'email ne peut pas être vide";
+    if (!form.password) {
+        form.setError('password', 'Le mot de passe est obligatoire');
+        return;
+    }
+    if (form.password.length < 8) {
+        form.setError('password', 'Le mot de passe doit contenir au moins 8 caractères');
+        return;
+    }
+    if (form.password !== form.password_confirmation) {
+        form.setError('password', 'Les mots de passe ne correspondent pas');
+        form.setError('password_confirmation', 'Les mots de passe ne correspondent pas');
         return;
     }
 
-    form.post(route('users.store'), {
+    router.post(route("users.store"), form, {
         onSuccess: () => {
-            resetUserForm();
+            showUserForm.value = false;
+            form.reset();
         },
+        onError: (errors) => {
+            Object.keys(errors).forEach(key => {
+                form.setError(key, errors[key]);
+            });
+        }
     });
 };
 
@@ -569,6 +585,7 @@ const displayTelephone = (telephone) => {
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         />
+                        <InputError :message="form.errors.password" class="mt-2" />
                     </div>
 
                     <div>
@@ -582,6 +599,7 @@ const displayTelephone = (telephone) => {
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         />
+                        <InputError :message="form.errors.password_confirmation" class="mt-2" />
                     </div>
 
                     <div class="flex justify-end space-x-3">

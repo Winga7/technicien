@@ -30,9 +30,16 @@ class UserController extends Controller
             'email' => 'required|email|unique:users',
             'telephone' => 'nullable|string|max:20',
             'role' => 'required|string|in:admin,technicien',
+            'password' => 'required|string|min:8|confirmed',
+            'password_confirmation' => 'required'
+        ], [
+            'password.required' => 'Le mot de passe est obligatoire',
+            'password.min' => 'Le mot de passe doit contenir au moins 8 caractères',
+            'password.confirmed' => 'Les mots de passe ne correspondent pas',
+            'password_confirmation.required' => 'La confirmation du mot de passe est obligatoire'
         ]);
 
-        $validated['password'] = bcrypt('password');
+        $validated['password'] = bcrypt($validated['password']);
         $validated['must_reset_password'] = true;
 
         $user = User::create($validated);
