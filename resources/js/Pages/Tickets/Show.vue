@@ -41,18 +41,18 @@ const editForm = useForm({
     titre: props.ticket.titre,
     description: props.ticket.description,
     statut: props.ticket.statut,
-    techniciens: props.ticket.techniciens?.map(t => t.id) || [],
+    techniciens: props.ticket.techniciens?.map((t) => t.id) || [],
     images: [],
 });
 
 const getTechniciens = computed(() => {
     // Récupérer tous les techniciens des interventions
     const techniciens = props.ticket.interventions
-        .flatMap(intervention => intervention.techniciens)
-        .filter(technicien => technicien !== null);
+        .flatMap((intervention) => intervention.techniciens)
+        .filter((technicien) => technicien !== null);
 
     // Supprimer les doublons en utilisant les IDs
-    return [...new Map(techniciens.map(tech => [tech.id, tech])).values()];
+    return [...new Map(techniciens.map((tech) => [tech.id, tech])).values()];
 });
 
 const submitIntervention = async () => {
@@ -113,12 +113,12 @@ const updateIntervention = (intervention) => {
     editingIntervention.value = intervention;
     editForm.titre = intervention.titre;
     editForm.description = intervention.description;
-    editForm.techniciens = intervention.techniciens?.map(t => t.id) || [];
+    editForm.techniciens = intervention.techniciens?.map((t) => t.id) || [];
     activeMenu.value = null;
 };
 
 const submitEdit = () => {
-    editForm.put(route('tickets.update', props.ticket.id), {
+    editForm.put(route("tickets.update", props.ticket.id), {
         onSuccess: () => {
             showEditForm.value = false;
             editForm.reset();
@@ -185,7 +185,12 @@ onUnmounted(() => {
                         class="px-4 py-2 bg-yellow-600 dark:bg-yellow-500 text-white rounded-md hover:bg-yellow-700 dark:hover:bg-yellow-600 transition"
                     >
                         <span class="flex items-center space-x-2">
-                            <span class="text-lg" role="img" aria-label="modifier">✏️</span>
+                            <span
+                                class="text-lg"
+                                role="img"
+                                aria-label="modifier"
+                                >✏️</span
+                            >
                             <span>Modifier</span>
                         </span>
                     </button>
@@ -340,18 +345,31 @@ onUnmounted(() => {
                             </div>
 
                             <div>
-                                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                                <h3
+                                    class="text-lg font-medium text-gray-900 dark:text-gray-100"
+                                >
                                     Techniciens assignés
                                 </h3>
                                 <div class="mt-4 space-y-2">
                                     <div v-if="getTechniciens.length > 0">
-                                        <div v-for="technicien in getTechniciens" :key="technicien.id"
-                                            class="flex items-center space-x-2 text-gray-900 dark:text-gray-100">
-                                            <span class="text-lg" role="img" aria-label="technicien">👨‍🔧</span>
+                                        <div
+                                            v-for="technicien in getTechniciens"
+                                            :key="technicien.id"
+                                            class="flex items-center space-x-2 text-gray-900 dark:text-gray-100"
+                                        >
+                                            <span
+                                                class="text-lg"
+                                                role="img"
+                                                aria-label="technicien"
+                                                >👨‍🔧</span
+                                            >
                                             <span>{{ technicien.name }}</span>
                                         </div>
                                     </div>
-                                    <div v-else class="text-gray-500 dark:text-gray-400">
+                                    <div
+                                        v-else
+                                        class="text-gray-500 dark:text-gray-400"
+                                    >
                                         Aucun technicien assigné
                                     </div>
                                 </div>
@@ -467,7 +485,7 @@ onUnmounted(() => {
                                 <TextInput
                                     v-model="interventionForm.titre"
                                     type="text"
-                                    class="mt-1 block w-full border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                    class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                     required
                                 />
                             </div>
@@ -480,27 +498,34 @@ onUnmounted(() => {
                                 <textarea
                                     v-model="interventionForm.description"
                                     rows="3"
-                                    class="mt-1 block w-full border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                                    class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                     required
                                 ></textarea>
                             </div>
 
                             <div>
-                                <InputLabel value="Techniciens" class="dark:text-gray-200" />
+                                <InputLabel
+                                    value="Techniciens"
+                                    class="dark:text-gray-200"
+                                />
                                 <select
                                     v-model="interventionForm.techniciens"
                                     multiple
                                     class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 >
-                                    <option v-for="technicien in techniciens"
-                                            :key="technicien.id"
-                                            :value="technicien.id"
+                                    <option
+                                        v-for="technicien in techniciens"
+                                        :key="technicien.id"
+                                        :value="technicien.id"
                                     >
                                         {{ technicien.name }}
                                     </option>
                                 </select>
-                                <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                                    Maintenez Ctrl (Windows) ou Cmd (Mac) pour sélectionner plusieurs techniciens
+                                <p
+                                    class="mt-1 text-sm text-gray-500 dark:text-gray-400"
+                                >
+                                    Maintenez Ctrl (Windows) ou Cmd (Mac) pour
+                                    sélectionner plusieurs techniciens
                                 </p>
                             </div>
 
@@ -515,8 +540,7 @@ onUnmounted(() => {
                                     multiple
                                     @change="handleImageUpload"
                                     accept="image/*"
-                                    class="mt-1 block w-full border-gray-200 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                                />
+class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"                                />
                                 <div
                                     v-if="imagePreview.length"
                                     class="mt-2 grid grid-cols-3 gap-4"
@@ -596,14 +620,22 @@ onUnmounted(() => {
                                             >Techniciens:
                                         </span>
                                         <div class="flex flex-wrap gap-2 mt-1">
-                                            <span v-if="intervention.techniciens && intervention.techniciens.length > 0"
+                                            <span
+                                                v-if="
+                                                    intervention.techniciens &&
+                                                    intervention.techniciens
+                                                        .length > 0
+                                                "
                                                 v-for="tech in intervention.techniciens"
                                                 :key="tech.id"
                                                 class="text-gray-700 dark:text-gray-300"
                                             >
                                                 {{ tech.name }}
                                             </span>
-                                            <span v-else class="text-gray-700 dark:text-gray-300">
+                                            <span
+                                                v-else
+                                                class="text-gray-700 dark:text-gray-300"
+                                            >
                                                 Non assigné
                                             </span>
                                         </div>
@@ -615,7 +647,9 @@ onUnmounted(() => {
                                     >
                                         <div class="grid grid-cols-3 gap-4">
                                             <img
-                                                v-for="(image, index) in intervention.images"
+                                                v-for="(
+                                                    image, index
+                                                ) in intervention.images"
                                                 :key="index"
                                                 :src="`/storage/${image}`"
                                                 :alt="'Image ' + (index + 1)"
@@ -694,9 +728,13 @@ onUnmounted(() => {
             class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50"
             @click.self="resetEditForm"
         >
-            <div class="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-2xl w-full mx-4 relative">
+            <div
+                class="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-2xl w-full mx-4 relative"
+            >
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                    <h3
+                        class="text-lg font-medium text-gray-900 dark:text-gray-100"
+                    >
                         Modifier le Ticket #{{ ticket.id }}
                     </h3>
                     <button
@@ -709,7 +747,10 @@ onUnmounted(() => {
 
                 <form @submit.prevent="submitEdit" class="space-y-4">
                     <div>
-                        <InputLabel class="dark:text-gray-200" value="Titre du ticket" />
+                        <InputLabel
+                            class="dark:text-gray-200"
+                            value="Titre du ticket"
+                        />
                         <TextInput
                             v-model="editForm.titre"
                             type="text"
@@ -719,7 +760,10 @@ onUnmounted(() => {
                     </div>
 
                     <div>
-                        <InputLabel class="dark:text-gray-200" value="Description" />
+                        <InputLabel
+                            class="dark:text-gray-200"
+                            value="Description"
+                        />
                         <textarea
                             v-model="editForm.description"
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
@@ -749,9 +793,19 @@ onUnmounted(() => {
                             accept="image/*"
                             class="mt-1 block w-full text-gray-700 dark:text-gray-200"
                         />
-                        <div v-if="imagePreview.length" class="mt-2 grid grid-cols-3 gap-4">
-                            <div v-for="(preview, index) in imagePreview" :key="index" class="relative">
-                                <img :src="preview" class="w-full h-32 object-cover rounded-lg" />
+                        <div
+                            v-if="imagePreview.length"
+                            class="mt-2 grid grid-cols-3 gap-4"
+                        >
+                            <div
+                                v-for="(preview, index) in imagePreview"
+                                :key="index"
+                                class="relative"
+                            >
+                                <img
+                                    :src="preview"
+                                    class="w-full h-32 object-cover rounded-lg"
+                                />
                                 <button
                                     @click.prevent="removeImage(index)"
                                     class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
