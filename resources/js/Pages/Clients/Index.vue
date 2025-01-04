@@ -1,9 +1,10 @@
 <script setup>
-import { ref, computed } from "vue";
-import { Link, useForm, router } from "@inertiajs/vue3";
 import AppLayout from "@/Layouts/AppLayout.vue";
+import { Link, router, useForm } from "@inertiajs/vue3";
+import { ref, computed } from "vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
+import InputError from "@/Components/InputError.vue";
 
 const props = defineProps({
     clients: Array,
@@ -57,10 +58,70 @@ const filteredClients = computed(() => {
     });
 });
 
+const isValidName = (name) => {
+    return /^[a-zA-ZÀ-ÿ\s'-]{2,50}$/.test(name);
+};
+
+const isValidPhone = (phone) => {
+    // Format belge: +32 XXX XX XX XX ou 0X XXX XX XX
+    return /^(?:\+32|0)(?:\s?\d{1,2}\s?\d{2,3}\s?\d{2}\s?\d{2})$/.test(phone);
+};
+
 const submitClient = () => {
+    clientForm.clearErrors();
+
+    // Validation du nom
+    if (!clientForm.name?.trim()) {
+        clientForm.setError('name', 'Le nom est obligatoire');
+        return;
+    }
+    if (!isValidName(clientForm.name)) {
+        clientForm.setError('name', 'Le nom doit contenir entre 2 et 50 caractères et ne peut contenir que des lettres, espaces, tirets et apostrophes');
+        return;
+    }
+
+    // Validation du prénom
+    if (!clientForm.firstname?.trim()) {
+        clientForm.setError('firstname', 'Le prénom est obligatoire');
+        return;
+    }
+    if (!isValidName(clientForm.firstname)) {
+        clientForm.setError('firstname', 'Le prénom doit contenir entre 2 et 50 caractères et ne peut contenir que des lettres, espaces, tirets et apostrophes');
+        return;
+    }
+
+    // Validation de l'email
+    if (!clientForm.email?.trim()) {
+        clientForm.setError('email', 'L\'email est obligatoire');
+        return;
+    }
+    if (!isValidEmail(clientForm.email)) {
+        clientForm.setError('email', 'L\'email n\'est pas valide');
+        return;
+    }
+
+    // Validation du téléphone
+    if (clientForm.telephone && !isValidPhone(clientForm.telephone)) {
+        clientForm.setError('telephone', 'Le numéro de téléphone doit être au format belge (ex: +32 470 12 34 56 ou 0470 12 34 56)');
+        return;
+    }
+
     clientForm.post(route("clients.store"), {
-        onSuccess: () => resetClientForm(),
+        preserveScroll: true,
+        onSuccess: () => {
+            showClientForm.value = false;
+            clientForm.reset();
+        },
+        onError: (errors) => {
+            Object.keys(errors).forEach(key => {
+                clientForm.setError(key, errors[key]);
+            });
+        }
     });
+};
+
+const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 };
 
 const resetClientForm = () => {
@@ -365,108 +426,91 @@ const deleteClient = (id) => {
             </div>
         </div>
 
-        <!-- Modal Formulaire Client -->
+        <!-- Modal Nouveau Client -->
         <div
             v-if="showClientForm"
             class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50"
-            @click.self="resetClientForm"
         >
-            <div
-                class="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-2xl w-full mx-4 relative"
-            >
+            <div class="bg-white dark:bg-zinc-800 rounded-lg shadow-xl p-6 w-full max-w-md">
                 <div class="flex justify-between items-center mb-4">
-                    <h3
-                        class="text-lg font-medium text-gray-900 dark:text-gray-100"
-                    >
-                        Nouveau Client
-                    </h3>
+                    <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">Nouveau Client</h2>
                     <button
-                        @click="resetClientForm"
-                        class="text-gray-400 hover:text-gray-500 text-xl font-medium px-2 hover:bg-gray-100 dark:hover:bg-zinc-700 rounded"
+                        @click="showClientForm = false"
+                        class="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
                     >
                         ×
                     </button>
                 </div>
 
-                <form @submit.prevent="submitClient" class="space-y-4">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <InputLabel
-                                class="dark:text-gray-200"
-                                value="Nom"
-                            />
-                            <TextInput
-                                v-model="clientForm.name"
-                                type="text"
-                                class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <InputLabel
-                                class="dark:text-gray-200"
-                                value="Prénom"
-                            />
-                            <TextInput
-                                v-model="clientForm.firstname"
-                                type="text"
-                                class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <InputLabel
-                                class="dark:text-gray-200"
-                                value="Email"
-                            />
-                            <TextInput
-                                v-model="clientForm.email"
-                                type="email"
-                                class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <InputLabel
-                                class="dark:text-gray-200"
-                                value="Téléphone"
-                            />
-                            <TextInput
-                                v-model="clientForm.telephone"
-                                type="tel"
-                                class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                                required
-                            />
-                        </div>
-                        <div class="sm:col-span-2">
-                            <InputLabel
-                                class="dark:text-gray-200"
-                                value="Adresse"
-                            />
-                            <textarea
-                                v-model="clientForm.addresse"
-                                class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                                rows="3"
-                            ></textarea>
-                        </div>
+                <div class="space-y-4">
+                    <div>
+                        <InputLabel class="dark:text-gray-200" value="Nom" />
+                        <TextInput
+                            v-model="clientForm.name"
+                            type="text"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            required
+                        />
+                        <InputError :message="clientForm.errors.name" class="mt-2" />
                     </div>
 
-                    <div class="flex justify-end space-x-3 mt-6">
+                    <div>
+                        <InputLabel class="dark:text-gray-200" value="Prénom" />
+                        <TextInput
+                            v-model="clientForm.firstname"
+                            type="text"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            required
+                        />
+                        <InputError :message="clientForm.errors.firstname" class="mt-2" />
+                    </div>
+
+                    <div>
+                        <InputLabel class="dark:text-gray-200" value="Email" />
+                        <TextInput
+                            v-model="clientForm.email"
+                            type="email"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            required
+                        />
+                        <InputError :message="clientForm.errors.email" class="mt-2" />
+                    </div>
+
+                    <div>
+                        <InputLabel class="dark:text-gray-200" value="Téléphone" />
+                        <TextInput
+                            v-model="clientForm.telephone"
+                            type="tel"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                        />
+                        <InputError :message="clientForm.errors.telephone" class="mt-2" />
+                    </div>
+
+                    <div>
+                        <InputLabel class="dark:text-gray-200" value="Adresse" />
+                        <textarea
+                            v-model="clientForm.addresse"
+                            rows="3"
+                            class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                        ></textarea>
+                        <InputError :message="clientForm.errors.addresse" class="mt-2" />
+                    </div>
+
+                    <div class="flex justify-end space-x-3">
                         <button
-                            type="button"
-                            @click="resetClientForm"
-                            class="px-4 py-2 bg-gray-300 dark:bg-zinc-600 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-400 dark:hover:bg-zinc-500 transition"
+                            @click="showClientForm = false"
+                            class="px-4 py-2 bg-gray-300 dark:bg-zinc-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-400 dark:hover:bg-zinc-600"
                         >
                             Annuler
                         </button>
                         <button
-                            type="submit"
-                            class="px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-600 transition"
+                            @click="submitClient"
+                            class="px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-600"
                         >
                             Créer le client
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </AppLayout>

@@ -6,6 +6,7 @@ import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import InputError from "@/Components/InputError.vue";
 
 const props = defineProps({
     client: {
@@ -24,16 +25,67 @@ const form = useForm({
     name: props.client.name,
     firstname: props.client.firstname,
     email: props.client.email,
-    telephone: props.client.telephone || "",
-    addresse: props.client.addresse || "",
+    telephone: props.client.telephone,
+    addresse: props.client.addresse,
 });
 
 const submit = () => {
-    form.put(route("clients.update", props.client.id), {
+    form.clearErrors();
+
+    // Validation du nom
+    if (!form.name?.trim()) {
+        form.setError('name', 'Le nom est obligatoire');
+        return;
+    }
+    if (!isValidName(form.name)) {
+        form.setError('name', 'Le nom doit contenir entre 2 et 50 caractères et ne peut contenir que des lettres, espaces, tirets et apostrophes');
+        return;
+    }
+
+    // Validation du prénom
+    if (!form.firstname?.trim()) {
+        form.setError('firstname', 'Le prénom est obligatoire');
+        return;
+    }
+    if (!isValidName(form.firstname)) {
+        form.setError('firstname', 'Le prénom doit contenir entre 2 et 50 caractères et ne peut contenir que des lettres, espaces, tirets et apostrophes');
+        return;
+    }
+
+    // Validation de l'email
+    if (!form.email?.trim()) {
+        form.setError('email', 'L\'email est obligatoire');
+        return;
+    }
+    if (!isValidEmail(form.email)) {
+        form.setError('email', 'L\'email n\'est pas valide');
+        return;
+    }
+
+    // Validation du téléphone (si renseigné)
+    if (form.telephone && !isValidPhone(form.telephone)) {
+        form.setError('telephone', 'Le numéro de téléphone doit être au format belge (ex: +32 470 12 34 56 ou 0470 12 34 56)');
+        return;
+    }
+
+    form.put(route('clients.update', props.client.id), {
+        preserveScroll: true,
         onSuccess: () => {
             isEditing.value = false;
         },
     });
+};
+
+const isValidName = (name) => {
+    return /^[a-zA-ZÀ-ÿ\s'-]{2,50}$/.test(name);
+};
+
+const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
+
+const isValidPhone = (phone) => {
+    return /^(?:\+32|0)(?:\s?\d{1,2}\s?\d{2,3}\s?\d{2}\s?\d{2})$/.test(phone);
 };
 
 const getStatusColor = (statut) => {
@@ -288,6 +340,7 @@ const resetTicketForm = () => {
                                     class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                     required
                                 />
+                                <InputError :message="form.errors.name" class="mt-2" />
                             </div>
                             <div>
                                 <InputLabel
@@ -300,7 +353,11 @@ const resetTicketForm = () => {
                                     class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                     required
                                 />
+                                <InputError :message="form.errors.firstname" class="mt-2" />
                             </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <InputLabel
                                     class="dark:text-gray-200"
@@ -312,6 +369,7 @@ const resetTicketForm = () => {
                                     class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                     required
                                 />
+                                <InputError :message="form.errors.email" class="mt-2" />
                             </div>
                             <div>
                                 <InputLabel
@@ -323,8 +381,10 @@ const resetTicketForm = () => {
                                     type="tel"
                                     class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 />
+                                <InputError :message="form.errors.telephone" class="mt-2" />
                             </div>
                         </div>
+
                         <div>
                             <InputLabel
                                 class="dark:text-gray-200"
@@ -335,7 +395,9 @@ const resetTicketForm = () => {
                                 class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 rows="3"
                             />
+                            <InputError :message="form.errors.addresse" class="mt-2" />
                         </div>
+
                         <div class="flex justify-end space-x-3">
                             <PrimaryButton
                                 type="submit"

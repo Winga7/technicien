@@ -27,7 +27,50 @@ const verificationLinkSent = ref(null);
 const photoPreview = ref(null);
 const photoInput = ref(null);
 
+const isValidPhone = (phone) => {
+    // Format belge: +32 XXX XX XX XX ou 0X XXX XX XX
+    return /^(?:\+32|0)(?:\s?\d{1,2}\s?\d{2,3}\s?\d{2}\s?\d{2})$/.test(phone);
+};
+
 const updateProfileInformation = () => {
+    form.clearErrors();
+
+    // Validation du nom
+    if (!form.name?.trim()) {
+        form.setError('name', 'Le nom est obligatoire');
+        return;
+    }
+    if (!isValidName(form.name)) {
+        form.setError('name', 'Le nom doit contenir entre 2 et 50 caractères et ne peut contenir que des lettres, espaces, tirets et apostrophes');
+        return;
+    }
+
+    // Validation du prénom
+    if (!form.firstname?.trim()) {
+        form.setError('firstname', 'Le prénom est obligatoire');
+        return;
+    }
+    if (!isValidName(form.firstname)) {
+        form.setError('firstname', 'Le prénom doit contenir entre 2 et 50 caractères et ne peut contenir que des lettres, espaces, tirets et apostrophes');
+        return;
+    }
+
+    // Validation de l'email
+    if (!form.email?.trim()) {
+        form.setError('email', 'L\'email est obligatoire');
+        return;
+    }
+    if (!isValidEmail(form.email)) {
+        form.setError('email', 'L\'email n\'est pas valide');
+        return;
+    }
+
+    // Validation du téléphone (si renseigné)
+    if (form.telephone && !isValidPhone(form.telephone)) {
+        form.setError('telephone', 'Le numéro de téléphone doit être au format belge (ex: +32 470 12 34 56 ou 0470 12 34 56)');
+        return;
+    }
+
     if (photoInput.value) {
         form.photo = photoInput.value.files[0];
     }
@@ -37,6 +80,14 @@ const updateProfileInformation = () => {
         preserveScroll: true,
         onSuccess: () => clearPhotoFileInput(),
     });
+};
+
+const isValidName = (name) => {
+    return /^[a-zA-ZÀ-ÿ\s'-]{2,50}$/.test(name);
+};
+
+const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 };
 
 const sendEmailVerification = () => {
