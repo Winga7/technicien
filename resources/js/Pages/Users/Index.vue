@@ -51,18 +51,47 @@ const resetUserForm = () => {
     form.reset();
 };
 
-const submit = () => {
+const submitUser = () => {
     form.clearErrors();
 
+    // Validation du nom
     if (!form.name?.trim()) {
-        form.setError('name', 'Le nom ne peut pas être vide');
+        form.setError('name', 'Le nom est obligatoire');
         return;
     }
+    if (!isValidName(form.name)) {
+        form.setError('name', 'Le nom doit contenir entre 2 et 50 caractères et ne peut contenir que des lettres, espaces, tirets et apostrophes');
+        return;
+    }
+
+    // Validation du prénom
     if (!form.firstname?.trim()) {
-        form.setError('firstname', 'Le prénom ne peut pas être vide');
+        form.setError('firstname', 'Le prénom est obligatoire');
         return;
     }
-    if (!form.password) {
+    if (!isValidName(form.firstname)) {
+        form.setError('firstname', 'Le prénom doit contenir entre 2 et 50 caractères et ne peut contenir que des lettres, espaces, tirets et apostrophes');
+        return;
+    }
+
+    // Validation de l'email
+    if (!form.email?.trim()) {
+        form.setError('email', 'L\'email est obligatoire');
+        return;
+    }
+    if (!isValidEmail(form.email)) {
+        form.setError('email', 'L\'email n\'est pas valide');
+        return;
+    }
+
+    // Validation du téléphone (si renseigné)
+    if (form.telephone && !isValidPhone(form.telephone)) {
+        form.setError('telephone', 'Le numéro de téléphone doit être au format belge (ex: +32 470 12 34 56 ou 0470 12 34 56)');
+        return;
+    }
+
+    // Validation du mot de passe
+    if (!form.password?.trim()) {
         form.setError('password', 'Le mot de passe est obligatoire');
         return;
     }
@@ -76,16 +105,25 @@ const submit = () => {
         return;
     }
 
-    router.post(route("users.store"), form, {
+    // Fonctions de validation
+    const isValidName = (name) => {
+        return /^[a-zA-ZÀ-ÿ\s'-]{2,50}$/.test(name);
+    };
+
+    const isValidEmail = (email) => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
+
+    const isValidPhone = (phone) => {
+        return /^(?:\+32|0)(?:\s?\d{1,2}\s?\d{2,3}\s?\d{2}\s?\d{2})$/.test(phone);
+    };
+
+    form.post(route('users.store'), {
+        preserveScroll: true,
         onSuccess: () => {
             showUserForm.value = false;
             form.reset();
         },
-        onError: (errors) => {
-            Object.keys(errors).forEach(key => {
-                form.setError(key, errors[key]);
-            });
-        }
     });
 };
 
@@ -547,7 +585,7 @@ const displayTelephone = (telephone) => {
                     </button>
                 </div>
 
-                <form @submit.prevent="submit" class="space-y-4">
+                <form @submit.prevent="submitUser" class="space-y-4">
                     <div>
                         <InputLabel class="dark:text-gray-200" value="Nom" />
                         <TextInput

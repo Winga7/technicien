@@ -58,6 +58,35 @@ const getTechniciens = computed(() => {
 });
 
 const submitIntervention = () => {
+    interventionForm.clearErrors();
+
+    // Validation du titre
+    if (!interventionForm.titre?.trim()) {
+        interventionForm.setError('titre', 'Le titre ne peut pas être vide');
+        return;
+    }
+    if (!isValidTitle(interventionForm.titre)) {
+        interventionForm.setError('titre', 'Le titre doit contenir entre 3 et 100 caractères');
+        return;
+    }
+
+    // Validation de la description
+    if (!interventionForm.description?.trim()) {
+        interventionForm.setError('description', 'La description ne peut pas être vide');
+        return;
+    }
+    if (!isValidDescription(interventionForm.description)) {
+        interventionForm.setError('description', 'La description doit contenir entre 10 et 1000 caractères');
+        return;
+    }
+
+    // Validation des techniciens
+    if (!interventionForm.techniciens.length) {
+        interventionForm.setError('techniciens', 'Veuillez sélectionner au moins un technicien');
+        return;
+    }
+
+    // Soumission du formulaire
     const formData = new FormData();
     formData.append("titre", interventionForm.titre);
     formData.append("description", interventionForm.description);

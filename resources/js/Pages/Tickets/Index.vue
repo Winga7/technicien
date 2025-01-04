@@ -4,6 +4,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import { ref, computed, watch } from "vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
+import InputError from "@/Components/InputError.vue";
 
 const props = defineProps({
     tickets: {
@@ -138,12 +139,69 @@ const form = useForm({
 });
 
 const submitTicket = () => {
+    form.clearErrors();
+
+    // Validation du titre
+    if (!form.titre?.trim()) {
+        form.setError('titre', 'Le titre ne peut pas être vide');
+        return;
+    }
+    if (!isValidTitle(form.titre)) {
+        form.setError('titre', 'Le titre doit contenir entre 3 et 100 caractères');
+        return;
+    }
+
+    // Validation de la description
+    if (!form.description?.trim()) {
+        form.setError('description', 'La description ne peut pas être vide');
+        return;
+    }
+    if (!isValidDescription(form.description)) {
+        form.setError('description', 'La description doit contenir entre 10 et 1000 caractères');
+        return;
+    }
+
+    // Validation du client
+    if (!form.client_id && !form.client?.name) {
+        form.setError('client_id', 'Veuillez sélectionner ou créer un client');
+        return;
+    }
+
+    // Validation du nouveau client si nécessaire
+    if (isNewClient.value) {
+        if (!form.client.name?.trim()) {
+            form.setError('client.name', 'Le nom du client est requis');
+            return;
+        }
+        if (!isValidName(form.client.name)) {
+            form.setError('client.name', 'Le nom doit contenir entre 2 et 50 caractères et ne peut contenir que des lettres');
+            return;
+        }
+        // ... autres validations client
+    }
+
+    // Soumission du formulaire
     form.post(route("tickets.store"), {
+        preserveScroll: true,
         onSuccess: () => {
             showTicketForm.value = false;
             form.reset();
+            imagePreview.value = [];
         },
     });
+};
+
+// Fonctions de validation
+const isValidTitle = (title) => {
+    return title.length >= 3 && title.length <= 100;
+};
+
+const isValidDescription = (description) => {
+    return description.length >= 10 && description.length <= 1000;
+};
+
+const isValidName = (name) => {
+    return /^[a-zA-ZÀ-ÿ\s'-]{2,50}$/.test(name);
 };
 
 const resetTicketForm = () => {
@@ -209,6 +267,21 @@ const editTicket = (ticket) => {
 };
 
 const submitEdit = () => {
+    editForm.clearErrors();
+
+    if (!editForm.titre?.trim()) {
+        editForm.setError('titre', 'Le titre ne peut pas être vide');
+        return;
+    }
+    if (!editForm.description?.trim()) {
+        editForm.setError('description', 'La description ne peut pas être vide');
+        return;
+    }
+    if (!editForm.client_id) {
+        editForm.setError('client_id', 'Le client est requis');
+        return;
+    }
+
     const formData = new FormData();
     formData.append("_method", "PUT");
     formData.append("titre", editForm.titre);
@@ -230,6 +303,11 @@ const submitEdit = () => {
             imagePreview.value = [];
             router.visit(route("tickets.index"));
         },
+        onError: (errors) => {
+            Object.keys(errors).forEach(key => {
+                editForm.setError(key, errors[key]);
+            });
+        }
     });
 };
 
@@ -426,25 +504,15 @@ const showCompletedTickets = ref(false);
                                     :key="ticket.id"
                                     class="hover:bg-gray-50 dark:hover:bg-zinc-700"
                                 >
-                                    <td
-                                        class="p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100 text-justify"
-                                    >
-                                        {{ ticket.titre }}
-                                        <!-- Info mobile pour client et statut -->
-                                        <div
-                                            class="sm:hidden mt-1 text-xs text-gray-500 dark:text-gray-400 text-left"
-                                        >
-                                            {{ ticket.client?.name }}
-                                            {{ ticket.client?.firstname }} -
-                                            <span
-                                                :class="
-                                                    getStatusColor(
-                                                        ticket.statut
-                                                    )
-                                                "
-                                            >
-                                                {{ ticket.statut }}
-                                            </span>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="relative group">
+                                            <div class="text-sm text-gray-900 dark:text-gray-100 truncate max-w-xs">
+                                                {{ ticket.titre }}
+                                            </div>
+                                            <!-- Tooltip -->
+                                            <div class="hidden group-hover:block absolute z-50 w-64 p-2 bg-gray-800 dark:bg-zinc-700 text-white text-sm rounded-lg shadow-lg -top-2 left-full ml-2">
+                                                {{ ticket.titre }}
+                                            </div>
                                         </div>
                                     </td>
                                     <td
@@ -650,6 +718,7 @@ const showCompletedTickets = ref(false);
                         <select
                             v-model="form.client_id"
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                            :required="!isNewClient"
                         >
                             <option value="">Sélectionner un client</option>
                             <option
@@ -660,6 +729,7 @@ const showCompletedTickets = ref(false);
                                 {{ client.name }} {{ client.firstname }}
                             </option>
                         </select>
+                        <InputError :message="form.errors.client_id" class="mt-2" />
                     </div>
 
                     <!-- Formulaire nouveau client -->
@@ -741,6 +811,7 @@ const showCompletedTickets = ref(false);
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         />
+                        <InputError :message="form.errors.titre" class="mt-2" />
                     </div>
 
                     <div>
@@ -754,6 +825,7 @@ const showCompletedTickets = ref(false);
                             rows="4"
                             required
                         ></textarea>
+                        <InputError :message="form.errors.description" class="mt-2" />
                     </div>
 
                     <!-- Images -->
@@ -891,3 +963,21 @@ const showCompletedTickets = ref(false);
         </div>
     </div>
 </template>
+
+<style scoped>
+/* Optionnel : animation du tooltip */
+.group:hover > div:last-child {
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
