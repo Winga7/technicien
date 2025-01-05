@@ -15,7 +15,7 @@ abstract class DuskTestCase extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->artisan('migrate:fresh');
+        static::startChromeDriver();
     }
 
     public static function prepare(): void
@@ -47,10 +47,9 @@ abstract class DuskTestCase extends BaseTestCase
     {
         $options = (new ChromeOptions)->addArguments([
             '--disable-gpu',
+            '--headless', // Mise à jour de l'argument headless
             '--no-sandbox',
-            '--disable-dev-shm-usage',
             '--window-size=1920,1080',
-            '--remote-debugging-port=9222'
         ]);
 
         return RemoteWebDriver::create(

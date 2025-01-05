@@ -2,12 +2,13 @@
 
 namespace Tests\Browser;
 
-use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
+use Tests\DuskTestCase;
 
-class ExampleTest extends DuskTestCase
+class HomepageTest extends DuskTestCase
 {
-    public function test_basic_example()
+    /** @test */
+    public function it_displays_the_laravel_text_on_the_home_page()
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
