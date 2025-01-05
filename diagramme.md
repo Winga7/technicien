@@ -1,7 +1,6 @@
 # Diagramme UML
 
-Voici un diagramme de classe UML en notation **Mermaid**.  
-GitHub va automatiquement générer le diagramme quand tu consulteras ce fichier en ligne.
+Voici le diagramme de classe de notre projet
 
 ```mermaid
 classDiagram
