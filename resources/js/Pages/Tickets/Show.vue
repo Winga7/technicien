@@ -2,12 +2,11 @@
 import AppLayout from "@/Layouts/AppLayout.vue";
 import { Link } from "@inertiajs/vue3";
 import { ref, onMounted, onUnmounted, computed } from "vue";
-import { useForm } from "@inertiajs/vue3";
+import { useForm, router } from "@inertiajs/vue3";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
-import { router } from "@inertiajs/vue3";
 
 // Props existants
 const props = defineProps({
@@ -40,10 +39,12 @@ const interventionForm = useForm({
 });
 
 const editForm = useForm({
-    titre: props.ticket.titre,
-    description: props.ticket.description,
-    statut: props.ticket.statut,
-    client_id: props.ticket.client_id,
+    id: null,
+    titre: '',
+    description: '',
+    statut: '',
+    client_id: '',
+    technicien_id: '',
     images: [],
 });
 
@@ -56,6 +57,14 @@ const getTechniciens = computed(() => {
     // Supprimer les doublons en utilisant les IDs
     return [...new Map(techniciens.map((tech) => [tech.id, tech])).values()];
 });
+
+const isValidTitle = (title) => {
+    return title.length >= 3 && title.length <= 255;
+};
+
+const isValidDescription = (description) => {
+    return description.length >= 10 && description.length <= 1000;
+};
 
 const submitIntervention = () => {
     interventionForm.clearErrors();
@@ -213,30 +222,66 @@ const updateIntervention = (intervention) => {
 };
 
 const submitEdit = () => {
-    const formData = new FormData();
-    formData.append("_method", "PUT");
-    formData.append("titre", editForm.titre);
-    formData.append("description", editForm.description);
-    formData.append("technicien_id", editForm.technicien_id);
+    editForm.clearErrors();
 
-    if (editForm.images && editForm.images.length > 0) {
+    // Validation
+    if (!editForm.titre?.trim()) {
+        editForm.setError('titre', 'Le titre ne peut pas être vide');
+        return;
+    }
+    if (!editForm.description?.trim()) {
+        editForm.setError('description', 'La description ne peut pas être vide');
+        return;
+    }
+
+    // Créer un FormData pour gérer les fichiers
+    const formData = new FormData();
+    formData.append('_method', 'PUT');
+    formData.append('titre', editForm.titre);
+    formData.append('description', editForm.description);
+    formData.append('statut', editForm.statut);
+    formData.append('client_id', props.ticket.client_id);
+
+    // Ajouter les images si présentes
+    if (editForm.images.length > 0) {
         editForm.images.forEach((image) => {
-            formData.append("images[]", image);
+            formData.append('images[]', image);
         });
     }
 
-    router.post(
-        route("interventions.update", editingIntervention.value.id),
-        formData,
-        {
-            preserveScroll: true,
-            onSuccess: () => {
-                editingIntervention.value = null;
-                editForm.reset();
-                interventionPreview.value = [];
-            },
+    // Envoyer la requête
+    router.post(`/tickets/${props.ticket.id}`, formData, {
+        preserveScroll: true,
+        onSuccess: () => {
+            showEditForm.value = false;
+            editForm.reset();
+            ticketImagePreview.value = [];
+        },
+        onError: (errors) => {
+            console.error('Erreurs:', errors);
         }
-    );
+    });
+};
+
+const editTicket = (ticket) => {
+    // Pré-remplir tous les champs avec les données actuelles
+    editForm.titre = ticket.titre;
+    editForm.description = ticket.description;
+    editForm.statut = ticket.statut;
+    editForm.client_id = ticket.client_id;
+    editForm.technicien_id = ticket.technicien_id || '';
+
+    // Si le ticket a des images, les conserver
+    if (ticket.images) {
+        ticketImagePreview.value = Array.isArray(ticket.images)
+            ? ticket.images
+            : JSON.parse(ticket.images);
+    } else {
+        ticketImagePreview.value = [];
+    }
+
+    editForm.images = [];
+    showEditForm.value = true;
 };
 
 const resetEditForm = () => {
@@ -1002,17 +1047,17 @@ const submitInterventionEdit = () => {
                         </div>
                     </div>
 
-                    <div class="flex justify-end space-x-3">
+                    <div class="mt-4 flex justify-end space-x-2">
                         <button
                             type="button"
-                            @click="resetEditForm"
-                            class="px-4 py-2 bg-gray-300 dark:bg-zinc-600 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-400 dark:hover:bg-zinc-500 transition"
+                            @click="showEditForm = false"
+                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
                         >
                             Annuler
                         </button>
                         <button
                             type="submit"
-                            class="px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-md hover:bg-indigo-700 dark:hover:bg-indigo-600 transition"
+                            class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
                         >
                             Mettre à jour
                         </button>
