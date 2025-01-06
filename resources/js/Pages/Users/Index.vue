@@ -51,74 +51,95 @@ const resetUserForm = () => {
     form.reset();
 };
 
+// Fonctions de validation
+const isValidName = (name) => {
+    return /^[a-zA-ZÀ-ÿ\s'-]{2,50}$/.test(name);
+};
+
+const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
+
+const isValidPhone = (phone) => {
+    if (!phone) return true; // Permet les numéros vides puisque le champ est optionnel
+
+    // Nettoyer le numéro en conservant uniquement les chiffres et le +
+    const cleanPhone = phone.replace(/[^\d+]/g, "");
+
+    // Vérifier le format (commence par +32 ou 0, suivi de 9 chiffres)
+    return /^(?:\+32|0)\d{9}$/.test(cleanPhone);
+};
+
 const submitUser = () => {
     form.clearErrors();
 
     // Validation du nom
     if (!form.name?.trim()) {
-        form.setError('name', 'Le nom est obligatoire');
+        form.setError("name", "Le nom est obligatoire");
         return;
     }
     if (!isValidName(form.name)) {
-        form.setError('name', 'Le nom doit contenir entre 2 et 50 caractères et ne peut contenir que des lettres, espaces, tirets et apostrophes');
+        form.setError(
+            "name",
+            "Le nom doit contenir entre 2 et 50 caractères et ne peut contenir que des lettres, espaces, tirets et apostrophes"
+        );
         return;
     }
 
     // Validation du prénom
     if (!form.firstname?.trim()) {
-        form.setError('firstname', 'Le prénom est obligatoire');
+        form.setError("firstname", "Le prénom est obligatoire");
         return;
     }
     if (!isValidName(form.firstname)) {
-        form.setError('firstname', 'Le prénom doit contenir entre 2 et 50 caractères et ne peut contenir que des lettres, espaces, tirets et apostrophes');
+        form.setError(
+            "firstname",
+            "Le prénom doit contenir entre 2 et 50 caractères et ne peut contenir que des lettres, espaces, tirets et apostrophes"
+        );
         return;
     }
 
     // Validation de l'email
     if (!form.email?.trim()) {
-        form.setError('email', 'L\'email est obligatoire');
+        form.setError("email", "L'email est obligatoire");
         return;
     }
     if (!isValidEmail(form.email)) {
-        form.setError('email', 'L\'email n\'est pas valide');
+        form.setError("email", "L'email n'est pas valide");
         return;
     }
 
     // Validation du téléphone (si renseigné)
     if (form.telephone && !isValidPhone(form.telephone)) {
-        form.setError('telephone', 'Le numéro de téléphone doit être au format belge (ex: +32 470 12 34 56 ou 0470 12 34 56)');
+        form.setError(
+            "telephone",
+            "Le numéro de téléphone doit être au format belge (ex: +32 470 12 34 56 ou 0470 12 34 56)"
+        );
         return;
     }
 
     // Validation du mot de passe
     if (!form.password?.trim()) {
-        form.setError('password', 'Le mot de passe est obligatoire');
+        form.setError("password", "Le mot de passe est obligatoire");
         return;
     }
     if (form.password.length < 8) {
-        form.setError('password', 'Le mot de passe doit contenir au moins 8 caractères');
+        form.setError(
+            "password",
+            "Le mot de passe doit contenir au moins 8 caractères"
+        );
         return;
     }
     if (form.password !== form.password_confirmation) {
-        form.setError('password', 'Les mots de passe ne correspondent pas');
-        form.setError('password_confirmation', 'Les mots de passe ne correspondent pas');
+        form.setError("password", "Les mots de passe ne correspondent pas");
+        form.setError(
+            "password_confirmation",
+            "Les mots de passe ne correspondent pas"
+        );
         return;
     }
 
-    // Fonctions de validation
-    const isValidName = (name) => {
-        return /^[a-zA-ZÀ-ÿ\s'-]{2,50}$/.test(name);
-    };
-
-    const isValidEmail = (email) => {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    };
-
-    const isValidPhone = (phone) => {
-        return /^(?:\+32|0)(?:\s?\d{1,2}\s?\d{2,3}\s?\d{2}\s?\d{2})$/.test(phone);
-    };
-
-    form.post(route('users.store'), {
+    form.post(route("users.store"), {
         preserveScroll: true,
         onSuccess: () => {
             showUserForm.value = false;
@@ -158,8 +179,8 @@ const editUser = (user) => {
     editForm.email = user.email;
     editForm.telephone = user.telephone;
     editForm.role = user.role;
-    editForm.password = '';
-    editForm.password_confirmation = '';
+    editForm.password = "";
+    editForm.password_confirmation = "";
     showEditForm.value = true;
 };
 
@@ -172,38 +193,47 @@ const submitEdit = () => {
     editForm.clearErrors();
 
     if (!editForm.name?.trim()) {
-        editForm.setError('name', 'Le nom ne peut pas être vide');
+        editForm.setError("name", "Le nom ne peut pas être vide");
         return;
     }
     if (!editForm.firstname?.trim()) {
-        editForm.setError('firstname', 'Le prénom ne peut pas être vide');
+        editForm.setError("firstname", "Le prénom ne peut pas être vide");
         return;
     }
 
     // Validation du mot de passe uniquement s'il est renseigné
     if (editForm.password) {
         if (editForm.password.length < 8) {
-            editForm.setError('password', 'Le mot de passe doit contenir au moins 8 caractères');
+            editForm.setError(
+                "password",
+                "Le mot de passe doit contenir au moins 8 caractères"
+            );
             return;
         }
         if (editForm.password !== editForm.password_confirmation) {
-            editForm.setError('password', 'Les mots de passe ne correspondent pas');
-            editForm.setError('password_confirmation', 'Les mots de passe ne correspondent pas');
+            editForm.setError(
+                "password",
+                "Les mots de passe ne correspondent pas"
+            );
+            editForm.setError(
+                "password_confirmation",
+                "Les mots de passe ne correspondent pas"
+            );
             return;
         }
     }
 
-    router.put(route('users.update', editForm.id), editForm, {
+    router.put(route("users.update", editForm.id), editForm, {
         preserveScroll: true,
         onSuccess: () => {
             showEditForm.value = false;
             editForm.reset();
         },
         onError: (errors) => {
-            Object.keys(errors).forEach(key => {
+            Object.keys(errors).forEach((key) => {
                 editForm.setError(key, errors[key]);
             });
-        }
+        },
     });
 };
 
@@ -220,21 +250,22 @@ const filteredUsers = computed(() => {
                 user.firstname.toLowerCase().includes(searchLower) ||
                 user.email.toLowerCase().includes(searchLower) ||
                 user.role.toLowerCase().includes(searchLower) ||
-                (user.telephone && user.telephone.replace(/\s/g, "").includes(searchPhone))
+                (user.telephone &&
+                    user.telephone.replace(/\s/g, "").includes(searchPhone))
         );
     }
 
     // Tri
     return users.sort((a, b) => {
         const modifier = sort.value.direction === "asc" ? 1 : -1;
-        const aValue = (a[sort.value.column] || '').toLowerCase();
-        const bValue = (b[sort.value.column] || '').toLowerCase();
+        const aValue = (a[sort.value.column] || "").toLowerCase();
+        const bValue = (b[sort.value.column] || "").toLowerCase();
         return aValue > bValue ? modifier : -modifier;
     });
 });
 
 const displayTelephone = (telephone) => {
-    return telephone || 'N/A';
+    return telephone || "N/A";
 };
 </script>
 
@@ -306,10 +337,19 @@ const displayTelephone = (telephone) => {
                                         @click="toggleSort('name')"
                                         class="p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-700"
                                     >
-                                        <div class="flex items-center space-x-1">
+                                        <div
+                                            class="flex items-center space-x-1"
+                                        >
                                             <span>Nom</span>
-                                            <span v-if="sort.column === 'name'" class="text-xs">
-                                                {{ sort.direction === "asc" ? "▲" : "▼" }}
+                                            <span
+                                                v-if="sort.column === 'name'"
+                                                class="text-xs"
+                                            >
+                                                {{
+                                                    sort.direction === "asc"
+                                                        ? "▲"
+                                                        : "▼"
+                                                }}
                                             </span>
                                         </div>
                                     </th>
@@ -317,10 +357,21 @@ const displayTelephone = (telephone) => {
                                         @click="toggleSort('firstname')"
                                         class="p-3 sm:p-4 text-xs sm:text-sm text-gray-700 dark:text-gray-300 cursor-pointer hover:bg-gray-50 dark:hover:bg-zinc-700"
                                     >
-                                        <div class="flex items-center space-x-1">
+                                        <div
+                                            class="flex items-center space-x-1"
+                                        >
                                             <span>Prénom</span>
-                                            <span v-if="sort.column === 'firstname'" class="text-xs">
-                                                {{ sort.direction === "asc" ? "▲" : "▼" }}
+                                            <span
+                                                v-if="
+                                                    sort.column === 'firstname'
+                                                "
+                                                class="text-xs"
+                                            >
+                                                {{
+                                                    sort.direction === "asc"
+                                                        ? "▲"
+                                                        : "▼"
+                                                }}
                                             </span>
                                         </div>
                                     </th>
@@ -415,14 +466,30 @@ const displayTelephone = (telephone) => {
                                         >
                                             {{ user.firstname }}<br />
                                             {{ user.email }}<br />
-                                            <div class="flex items-center space-x-2">
-                                                <span v-if="!showPhone[user.id]">{{ "•".repeat(10) }}</span>
-                                                <span v-else>{{ displayTelephone(user.telephone) }}</span>
+                                            <div
+                                                class="flex items-center space-x-2"
+                                            >
+                                                <span
+                                                    v-if="!showPhone[user.id]"
+                                                    >{{ "•".repeat(10) }}</span
+                                                >
+                                                <span v-else>{{
+                                                    displayTelephone(
+                                                        user.telephone
+                                                    )
+                                                }}</span>
                                                 <button
-                                                    @click="togglePhone(user.id)"
+                                                    @click="
+                                                        togglePhone(user.id)
+                                                    "
                                                     class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                                                 >
-                                                    <span v-if="!showPhone[user.id]">👁️</span>
+                                                    <span
+                                                        v-if="
+                                                            !showPhone[user.id]
+                                                        "
+                                                        >👁️</span
+                                                    >
                                                     <span v-else>👁️‍🗨️</span>
                                                 </button>
                                             </div>
@@ -442,35 +509,96 @@ const displayTelephone = (telephone) => {
                                     <td
                                         class="hidden sm:table-cell p-3 sm:p-4 text-xs sm:text-sm text-gray-900 dark:text-gray-100"
                                     >
-                                        <div class="flex items-center space-x-2">
-                                            <span v-if="$page.props.auth.user.role === 'admin'">
-                                                {{ displayTelephone(user.telephone) }}
+                                        <div
+                                            class="flex items-center space-x-2"
+                                        >
+                                            <span
+                                                v-if="
+                                                    $page.props.auth.user
+                                                        .role === 'admin'
+                                                "
+                                            >
+                                                {{
+                                                    displayTelephone(
+                                                        user.telephone
+                                                    )
+                                                }}
                                             </span>
                                             <span v-else>
-                                                <template v-if="user.role === 'admin'">
-                                                    <span v-if="!user.show_phone">
+                                                <template
+                                                    v-if="user.role === 'admin'"
+                                                >
+                                                    <span
+                                                        v-if="!user.show_phone"
+                                                    >
                                                         Non autorisé
                                                     </span>
                                                     <template v-else>
-                                                        <span v-if="!showPhone[user.id]">{{ "•".repeat(10) }}</span>
-                                                        <span v-else>{{ displayTelephone(user.telephone) }}</span>
+                                                        <span
+                                                            v-if="
+                                                                !showPhone[
+                                                                    user.id
+                                                                ]
+                                                            "
+                                                            >{{
+                                                                "•".repeat(10)
+                                                            }}</span
+                                                        >
+                                                        <span v-else>{{
+                                                            displayTelephone(
+                                                                user.telephone
+                                                            )
+                                                        }}</span>
                                                         <button
-                                                            @click="togglePhone(user.id)"
+                                                            @click="
+                                                                togglePhone(
+                                                                    user.id
+                                                                )
+                                                            "
                                                             class="ml-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                                                         >
-                                                            <span v-if="!showPhone[user.id]">👁️</span>
-                                                            <span v-else>👁️‍🗨️</span>
+                                                            <span
+                                                                v-if="
+                                                                    !showPhone[
+                                                                        user.id
+                                                                    ]
+                                                                "
+                                                                >👁️</span
+                                                            >
+                                                            <span v-else
+                                                                >👁️‍🗨️</span
+                                                            >
                                                         </button>
                                                     </template>
                                                 </template>
                                                 <template v-else>
-                                                    <span v-if="!showPhone[user.id]">{{ "•".repeat(10) }}</span>
-                                                    <span v-else>{{ displayTelephone(user.telephone) }}</span>
+                                                    <span
+                                                        v-if="
+                                                            !showPhone[user.id]
+                                                        "
+                                                        >{{
+                                                            "•".repeat(10)
+                                                        }}</span
+                                                    >
+                                                    <span v-else>{{
+                                                        displayTelephone(
+                                                            user.telephone
+                                                        )
+                                                    }}</span>
                                                     <button
-                                                        @click="togglePhone(user.id)"
+                                                        @click="
+                                                            togglePhone(user.id)
+                                                        "
                                                         class="ml-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                                                     >
-                                                        <span v-if="!showPhone[user.id]">👁️</span>
+                                                        <span
+                                                            v-if="
+                                                                !showPhone[
+                                                                    user.id
+                                                                ]
+                                                            "
+                                                            >👁️</span
+                                                        >
                                                         <span v-else>👁️‍🗨️</span>
                                                     </button>
                                                 </template>
@@ -605,7 +733,10 @@ const displayTelephone = (telephone) => {
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         />
-                        <InputError :message="form.errors.firstname" class="mt-2" />
+                        <InputError
+                            :message="form.errors.firstname"
+                            class="mt-2"
+                        />
                     </div>
 
                     <div>
@@ -653,7 +784,10 @@ const displayTelephone = (telephone) => {
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         />
-                        <InputError :message="form.errors.password" class="mt-2" />
+                        <InputError
+                            :message="form.errors.password"
+                            class="mt-2"
+                        />
                     </div>
 
                     <div>
@@ -667,7 +801,10 @@ const displayTelephone = (telephone) => {
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         />
-                        <InputError :message="form.errors.password_confirmation" class="mt-2" />
+                        <InputError
+                            :message="form.errors.password_confirmation"
+                            class="mt-2"
+                        />
                     </div>
 
                     <div class="flex justify-end space-x-3">
@@ -721,7 +858,10 @@ const displayTelephone = (telephone) => {
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         />
-                        <InputError :message="editForm.errors.name" class="mt-2" />
+                        <InputError
+                            :message="editForm.errors.name"
+                            class="mt-2"
+                        />
                     </div>
 
                     <div>
@@ -732,7 +872,10 @@ const displayTelephone = (telephone) => {
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                             required
                         />
-                        <InputError :message="editForm.errors.firstname" class="mt-2" />
+                        <InputError
+                            :message="editForm.errors.firstname"
+                            class="mt-2"
+                        />
                     </div>
 
                     <div>
@@ -779,7 +922,10 @@ const displayTelephone = (telephone) => {
                             type="password"
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                         />
-                        <InputError :message="editForm.errors.password" class="mt-2" />
+                        <InputError
+                            :message="editForm.errors.password"
+                            class="mt-2"
+                        />
                     </div>
 
                     <div>
@@ -792,9 +938,11 @@ const displayTelephone = (telephone) => {
                             type="password"
                             class="mt-1 block w-full border-gray-300 dark:border-zinc-700 dark:bg-zinc-900 dark:text-gray-100 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                         />
-                        <InputError :message="editForm.errors.password_confirmation" class="mt-2" />
+                        <InputError
+                            :message="editForm.errors.password_confirmation"
+                            class="mt-2"
+                        />
                     </div>
-
 
                     <div class="flex justify-end space-x-3">
                         <SecondaryButton
